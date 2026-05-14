@@ -4,3 +4,8 @@ include:
   - .well-known
   - .well-known/apple-app-site-association
   - .well-known/assetlinks.json
+
+# Exclude build sources/templates — only built static pages are deployed.
+exclude:
+  - _build
+  - README.md

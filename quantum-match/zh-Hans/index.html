@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>量子配对 — 点击定色,连击爆分</title>
+<meta name="description" content="颜色流动、连击爆发的全新消除益智游戏。点击格子确定颜色,用 NEXT 颜色累积连击。">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="量子配对">
+<meta property="og:description" content="点击定色,连击爆分。全新消除玩法。">
+<meta property="og:image" content="https://winsiner.github.io/quantum-match/og.png">
+<meta property="og:url" content="https://winsiner.github.io/quantum-match/zh-Hans/">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="alternate" hreflang="en" href="https://winsiner.github.io/quantum-match/en/">
+<link rel="alternate" hreflang="ko" href="https://winsiner.github.io/quantum-match/ko/">
+<link rel="alternate" hreflang="ja" href="https://winsiner.github.io/quantum-match/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://winsiner.github.io/quantum-match/zh-Hans/">
+<link rel="alternate" hreflang="zh-Hant" href="https://winsiner.github.io/quantum-match/zh-Hant/">
+<link rel="alternate" hreflang="es" href="https://winsiner.github.io/quantum-match/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://winsiner.github.io/quantum-match/pt-BR/">
+<link rel="alternate" hreflang="fr" href="https://winsiner.github.io/quantum-match/fr/">
+<link rel="alternate" hreflang="de" href="https://winsiner.github.io/quantum-match/de/">
+<link rel="alternate" hreflang="it" href="https://winsiner.github.io/quantum-match/it/">
+<link rel="alternate" hreflang="tr" href="https://winsiner.github.io/quantum-match/tr/">
+<link rel="alternate" hreflang="id" href="https://winsiner.github.io/quantum-match/id/">
+<link rel="alternate" hreflang="x-default" href="https://winsiner.github.io/quantum-match/en/">
+
+<link rel="icon" href="../icon.png">
+
+<style>
+  :root {
+    --c-r:#ff5a6e; --c-r-d:#c8344a;
+    --c-y:#ffd23f; --c-y-d:#c79b1f;
+    --c-b:#4aa8ff; --c-b-d:#1f6cc7;
+    --c-g:#5acf6a; --c-g-d:#2f9a3f;
+    --c-p:#b078ff; --c-p-d:#7a44d6;
+    --text:#22243d;
+    --muted:#5d6280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(180deg, #ffe1d6 0%, #ffd0e1 35%, #d8d0ff 70%, #c0e0ff 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; text-align: center; }
+  h1 { font-size: clamp(40px, 9vw, 64px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 12px; }
+  h1 .accent { background: linear-gradient(135deg, var(--c-r), var(--c-p)); -webkit-background-clip: text; background-clip: text; color: transparent; display: block; }
+  .tag { font-size: 18px; color: var(--muted); margin-bottom: 36px; font-weight: 500; }
+  .mascots { display: flex; justify-content: center; gap: 12px; margin: 24px 0 40px; flex-wrap: wrap; }
+  .m { width: 64px; height: 64px; border-radius: 50%; border: 4px solid white; position: relative; box-shadow: 0 6px 0 var(--shadow), 0 10px 20px rgba(0,0,0,0.12); }
+  .m::before, .m::after { content: ""; position: absolute; width: 13%; height: 15%; border-radius: 50%; background: white; top: 32%; }
+  .m::before { left: 26%; }
+  .m::after  { right: 26%; }
+  .m .mouth { position: absolute; bottom: 22%; left: 50%; transform: translateX(-50%); width: 38%; height: 18%; border-radius: 0 0 99px 99px; background: #333; }
+  .m.r { background: var(--c-r); --shadow: var(--c-r-d); }
+  .m.y { background: var(--c-y); --shadow: var(--c-y-d); }
+  .m.b { background: var(--c-b); --shadow: var(--c-b-d); }
+  .m.g { background: var(--c-g); --shadow: var(--c-g-d); }
+  .m.p { background: var(--c-p); --shadow: var(--c-p-d); }
+  .stores { display: flex; justify-content: center; gap: 16px; margin-bottom: 48px; flex-wrap: wrap; }
+  .store-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; background: #1a1d2e; color: white; text-decoration: none; border-radius: 14px; font-weight: 600; font-size: 16px; box-shadow: 0 6px 0 rgba(26,29,46,0.4), 0 10px 24px rgba(0,0,0,0.2); transition: transform 0.15s ease; }
+  .store-btn:hover { transform: translateY(-2px); }
+  .store-btn:active { transform: translateY(2px); }
+  .store-btn .icon { font-size: 22px; }
+  section { background: rgba(255,255,255,0.55); border-radius: 20px; padding: 28px 24px; margin-bottom: 24px; text-align: start; backdrop-filter: blur(8px); }
+  section h2 { font-size: 22px; margin-bottom: 12px; font-weight: 700; }
+  section p { font-size: 16px; line-height: 1.55; color: var(--muted); }
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+  .feat { background: white; padding: 18px 16px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  .feat .emoji { font-size: 28px; margin-bottom: 6px; display: block; }
+  .feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .feat p { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  .lang-switcher { margin-top: 32px; padding: 16px; background: rgba(255,255,255,0.45); border-radius: 14px; }
+  .lang-switcher .label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .lang-switcher .links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .lang-switcher a { padding: 6px 12px; border-radius: 999px; background: white; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; }
+  .lang-switcher a.active { background: var(--text); color: white; }
+  footer { text-align: center; margin-top: 32px; font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>点击定色,<br><span class="accent">连击爆分。</span></h1>
+  <p class="tag">颜色概率流动的全新消除益智游戏。</p>
+
+  <div class="mascots">
+    <div class="m r"><div class="mouth"></div></div>
+    <div class="m y"><div class="mouth"></div></div>
+    <div class="m b"><div class="mouth"></div></div>
+    <div class="m g"><div class="mouth"></div></div>
+    <div class="m p"><div class="mouth"></div></div>
+  </div>
+
+  <div class="stores">
+    <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
+      <span class="icon">🍎</span> App Store
+    </a>
+    <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
+      <span class="icon">▶</span> Google Play
+    </a>
+  </div>
+
+  <section>
+    <h2>玩法</h2>
+    <p>每个格子由红、蓝、黄混合而成,中间吉祥物代表占比最多的颜色。点击格子可确定其颜色,周围格子的概率也会流动。横向或纵向三个同色即可消除!</p>
+  </section>
+
+  <section>
+    <h2>特色</h2>
+    <div class="features">
+            <div class="feat">
+        <span class="emoji">🎨</span>
+        <h3>NEXT 颜色连击</h3>
+        <p>连续命中 NEXT 颜色,倍率持续上升。</p>
+      </div>
+      <div class="feat">
+        <span class="emoji">🔨</span>
+        <h3>锤子破坏</h3>
+        <p>卡关时击碎一个格子。每局免费3次。</p>
+      </div>
+      <div class="feat">
+        <span class="emoji">🤖</span>
+        <h3>AI 自动玩</h3>
+        <p>看广告,AI 替你玩1000回合。</p>
+      </div>
+      <div class="feat">
+        <span class="emoji">🌍</span>
+        <h3>支持12种语言</h3>
+        <p>简·繁·英·韩·日·西·葡·法·德·意·土·印</p>
+      </div>
+      <div class="feat">
+        <span class="emoji">📴</span>
+        <h3>完全离线</h3>
+        <p>无需登录,随时随地玩。</p>
+      </div>
+      <div class="feat">
+        <span class="emoji">💰</span>
+        <h3>去广告一次买断</h3>
+        <p>一次购买,永久去广告。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="lang-switcher">
+    <div class="label">语言</div>
+    <div class="links">
+            <a href="../en/" class="" hreflang="en">English</a>
+      <a href="../ko/" class="" hreflang="ko">한국어</a>
+      <a href="../ja/" class="" hreflang="ja">日本語</a>
+      <a href="../zh-Hans/" class="active" hreflang="zh-Hans">简体中文</a>
+      <a href="../zh-Hant/" class="" hreflang="zh-Hant">繁體中文</a>
+      <a href="../es/" class="" hreflang="es">Español</a>
+      <a href="../pt-BR/" class="" hreflang="pt-BR">Português (BR)</a>
+      <a href="../fr/" class="" hreflang="fr">Français</a>
+      <a href="../de/" class="" hreflang="de">Deutsch</a>
+      <a href="../it/" class="" hreflang="it">Italiano</a>
+      <a href="../tr/" class="" hreflang="tr">Türkçe</a>
+      <a href="../id/" class="" hreflang="id">Bahasa Indonesia</a>
+    </div>
+  </div>
+
+  <footer>
+    <a href="../privacy.html">隐私政策</a> · <a href="/">winsiner</a> · 2026
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    if (isiOS) document.getElementById('android-btn').style.opacity = '0.55';
+    else if (isAndroid) document.getElementById('ios-btn').style.opacity = '0.55';
+  })();
+</script>
+</body>
+</html>

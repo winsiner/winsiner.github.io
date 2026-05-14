@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OneColor — 다른 색을 찾아라</title>
+<meta name="description" content="1초면 배우지만 완벽한 라운드는 며칠. 6개의 색 블록 중 하나만 다릅니다. 그것을 탭하세요.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="OneColor — 다른 색을 찾아라">
+<meta property="og:description" content="단 하나의 다른 색. 단 한 번의 탭.">
+<meta property="og:image" content="https://winsiner.github.io/onecolor/og.png">
+<meta property="og:url" content="https://winsiner.github.io/onecolor/ko/">
+<meta property="og:locale" content="ko">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="alternate" hreflang="en" href="https://winsiner.github.io/onecolor/en/">
+<link rel="alternate" hreflang="ko" href="https://winsiner.github.io/onecolor/ko/">
+<link rel="alternate" hreflang="ja" href="https://winsiner.github.io/onecolor/ja/">
+<link rel="alternate" hreflang="zh-Hant" href="https://winsiner.github.io/onecolor/zh-Hant/">
+<link rel="alternate" hreflang="es" href="https://winsiner.github.io/onecolor/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://winsiner.github.io/onecolor/pt-BR/">
+<link rel="alternate" hreflang="de" href="https://winsiner.github.io/onecolor/de/">
+<link rel="alternate" hreflang="fr" href="https://winsiner.github.io/onecolor/fr/">
+<link rel="alternate" hreflang="x-default" href="https://winsiner.github.io/onecolor/en/">
+
+<link rel="icon" href="../icon.png">
+
+<style>
+  :root { --bg: #F4F1EA; --ink: #1A1815; --line: #E6E1D6; --muted: #6B655C; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1A1815; --ink: #F4F1EA; --line: #2E2B26; --muted: #9A948A; } }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 80px 28px 80px; }
+  .hero { text-align: center; margin-bottom: 80px; }
+  h1 { font-size: clamp(48px, 11vw, 76px); font-weight: 800; letter-spacing: -2.5px; line-height: 0.98; margin-bottom: 18px; }
+  .tag { font-size: 19px; color: var(--muted); margin-bottom: 48px; line-height: 1.5; font-weight: 400; }
+  .preview { display: grid; grid-template-columns: repeat(3, 96px); grid-template-rows: repeat(2, 96px); gap: 14px; width: max-content; margin: 0 auto 56px; }
+  .preview .block { border-radius: 14px; background: hsl(15 70% 80%); }
+  .preview .b5 { background: hsl(18 73% 76%); }
+  .stores { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .store-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; background: var(--ink); color: var(--bg); text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px; transition: transform 0.15s ease; }
+  .store-btn:hover { transform: translateY(-1px); }
+  .store-btn:active { transform: translateY(1px); }
+  section { margin-bottom: 56px; }
+  section h2 { font-size: 26px; margin-bottom: 18px; font-weight: 700; letter-spacing: -0.5px; }
+  section p { font-size: 17px; line-height: 1.65; color: var(--muted); margin-bottom: 14px; }
+  .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 24px; }
+  .mode { padding: 24px 20px; border: 1px solid var(--line); border-radius: 14px; }
+  .mode h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; }
+  .mode p { font-size: 14px; line-height: 1.5; color: var(--muted); margin: 0; }
+  .features { list-style: none; padding: 0; }
+  .features li { padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .features li:last-child { border-bottom: none; }
+  .features li b { font-weight: 700; }
+  .features li span { color: var(--muted); }
+  .lang-switcher { margin-top: 48px; padding: 20px; border-top: 1px solid var(--line); }
+  .lang-switcher .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; text-align: center; }
+  .lang-switcher .links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .lang-switcher a { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 13px; }
+  .lang-switcher a.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  footer { text-align: center; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>OneColor</h1>
+    <p class="tag">단 하나의 다른 색.<br>단 한 번의 탭. 단 하나의 명료함.</p>
+
+    <div class="preview" aria-hidden="true">
+      <div class="block b1"></div>
+      <div class="block b2"></div>
+      <div class="block b3"></div>
+      <div class="block b4"></div>
+      <div class="block b5"></div>
+      <div class="block b6"></div>
+    </div>
+
+    <div class="stores">
+      <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/onecolor/id0000000000" target="_blank" rel="noopener">App Store</a>
+      <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.onecolor" target="_blank" rel="noopener">Google Play</a>
+    </div>
+  </div>
+
+  <section>
+    <h2>플레이 방법</h2>
+    <p>화면에 6개의 색 블록이 펼쳐집니다. 그중 단 하나만 미묘하게 다른 색. 그것을 찾아 탭하세요. 처음엔 한눈에 보이지만, 레벨이 올라갈수록 색 차이는 미세해지고 그리드는 2×2 → 3×3 → 4×4로 확장됩니다. 단순한 규칙, 끝없는 깊이.</p>
+  </section>
+
+  <section>
+    <h2>세 가지 모드, 세 가지 즐거움</h2>
+    <div class="modes">
+            <div class="mode">
+        <h3>Classic</h3>
+        <p>타이머 없이 정확도에 집중. 천천히 색을 음미하세요.</p>
+      </div>
+      <div class="mode">
+        <h3>Time Attack</h3>
+        <p>15초 카운트다운. 정답마다 +0.5초 보너스.</p>
+      </div>
+      <div class="mode">
+        <h3>Endless</h3>
+        <p>시간 제한 없이 흐름에 몰입.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>모두를 위한 접근성</h2>
+    <ul class="features">
+            <li><b>완전한 다크 모드.</b> <span>눈이 편한 깊은 검정.</span></li>
+      <li><b>Reduced Motion 호환.</b> <span>어지러움 없는 정적 애니메이션.</span></li>
+      <li><b>8개 언어 지원.</b> <span>한·영·일·중·스·포·독·불</span></li>
+      <li><b>광고로 리바이브.</b> <span>게임 오버에서 한 번 더 도전 (판당 1회).</span></li>
+      <li><b>광고 제거 일회성.</b> <span>한 번 결제로 영구 제거.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>왜 OneColor인가</h2>
+    <p>규칙은 1초면 배웁니다. 그러나 완벽한 라운드는 며칠이 걸리죠. OneColor는 화려한 효과 대신 색 그 자체에 집중합니다. 깔끔한 UI, 부드러운 햅틱, 최소한의 광고. 단 하나의 다른 색을 찾는 그 순간의 쾌감을 위해.</p>
+  </section>
+
+  <div class="lang-switcher">
+    <div class="label">언어</div>
+    <div class="links">
+            <a href="../en/" class="" hreflang="en">English</a>
+      <a href="../ko/" class="active" hreflang="ko">한국어</a>
+      <a href="../ja/" class="" hreflang="ja">日本語</a>
+      <a href="../zh-Hant/" class="" hreflang="zh-Hant">繁體中文</a>
+      <a href="../es/" class="" hreflang="es">Español</a>
+      <a href="../pt-BR/" class="" hreflang="pt-BR">Português (BR)</a>
+      <a href="../de/" class="" hreflang="de">Deutsch</a>
+      <a href="../fr/" class="" hreflang="fr">Français</a>
+    </div>
+  </div>
+
+  <footer>
+    <a href="../privacy.html">개인정보처리방침</a> · <a href="/">winsiner</a> · 2026
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    if (isiOS) document.getElementById('android-btn').style.opacity = '0.45';
+    else if (isAndroid) document.getElementById('ios-btn').style.opacity = '0.45';
+  })();
+</script>
+</body>
+</html>

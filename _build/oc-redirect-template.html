@@ -6,15 +6,7 @@
 <meta name="description" content="OneColor — A color-perception puzzle.">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://winsiner.github.io/onecolor/en/">
-<link rel="alternate" hreflang="en" href="https://winsiner.github.io/onecolor/en/">
-<link rel="alternate" hreflang="ko" href="https://winsiner.github.io/onecolor/ko/">
-<link rel="alternate" hreflang="ja" href="https://winsiner.github.io/onecolor/ja/">
-<link rel="alternate" hreflang="zh-Hant" href="https://winsiner.github.io/onecolor/zh-Hant/">
-<link rel="alternate" hreflang="es" href="https://winsiner.github.io/onecolor/es/">
-<link rel="alternate" hreflang="pt-BR" href="https://winsiner.github.io/onecolor/pt-BR/">
-<link rel="alternate" hreflang="de" href="https://winsiner.github.io/onecolor/de/">
-<link rel="alternate" hreflang="fr" href="https://winsiner.github.io/onecolor/fr/">
-<link rel="alternate" hreflang="x-default" href="https://winsiner.github.io/onecolor/en/">
+{{hreflangBlock}}
 <style>
   body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 40px; text-align: center; background: #F4F1EA; min-height: 100vh; color: #1A1815; }
   @media (prefers-color-scheme: dark) { body { background: #1A1815; color: #F4F1EA; } }
@@ -27,18 +19,11 @@
 <p id="msg" style="color:#6B655C;margin-top:8px;">Loading…</p>
 <noscript>
   <p style="color:#6B655C;margin-top:16px;">Choose your language:</p>
-    <a href="./en/">English</a>
-  <a href="./ko/">한국어</a>
-  <a href="./ja/">日本語</a>
-  <a href="./zh-Hant/">繁體中文</a>
-  <a href="./es/">Español</a>
-  <a href="./pt-BR/">Português</a>
-  <a href="./de/">Deutsch</a>
-  <a href="./fr/">Français</a>
+  {{noscriptLinks}}
 </noscript>
 <script>
 (function() {
-  var SUPPORTED = ["en","ko","ja","zh-Hant","es","pt-BR","de","fr"];
+  var SUPPORTED = {{supportedJSON}};
   var DEFAULT_LANG = 'en';
   function pick() {
     try {

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quantum Match — Schlag diese Punktzahl!</title>
+<meta name="description" content="Ein Freund hat groß in Quantum Match gepunktet. Kannst du es schlagen?">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quantum Match — Kannst du diese Punktzahl schlagen?">
+<meta property="og:description" content="Ein Freund fordert dich mit seiner Punktzahl heraus!">
+<meta property="og:image" content="https://winsiner.github.io/quantum-match/og.png">
+<meta property="og:locale" content="de">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="../../icon.png">
+
+<style>
+  :root {
+    --c-r:#ff5a6e; --c-r-d:#c8344a;
+    --c-y:#ffd23f; --c-y-d:#c79b1f;
+    --c-b:#4aa8ff; --c-b-d:#1f6cc7;
+    --c-g:#5acf6a; --c-g-d:#2f9a3f;
+    --c-p:#b078ff; --c-p-d:#7a44d6;
+    --text:#22243d;
+    --muted:#5d6280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(180deg, #ffe1d6 0%, #ffd0e1 35%, #d8d0ff 70%, #c0e0ff 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 40px 24px 40px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .score-card { background: white; border-radius: 28px; padding: 36px 24px 32px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); margin-bottom: 32px; position: relative; overflow: hidden; }
+  .score-card::before { content: ""; position: absolute; inset: -2px; background: linear-gradient(135deg, var(--c-r), var(--c-y), var(--c-b), var(--c-g), var(--c-p)); border-radius: 28px; z-index: -1; opacity: 0.4; }
+  .score-label { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .score-num { font-size: clamp(64px, 18vw, 96px); font-weight: 800; letter-spacing: -2px; line-height: 1; background: linear-gradient(135deg, var(--c-r), var(--c-p)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; }
+  .score-msg { font-size: 17px; color: var(--muted); line-height: 1.45; }
+  .mascots-row { display: flex; justify-content: center; gap: 8px; margin: 20px 0 4px; }
+  .m { width: 36px; height: 36px; border-radius: 50%; border: 3px solid white; position: relative; box-shadow: 0 4px 0 var(--shadow); }
+  .m::before, .m::after { content: ""; position: absolute; width: 13%; height: 15%; border-radius: 50%; background: white; top: 32%; }
+  .m::before { left: 26%; }
+  .m::after  { right: 26%; }
+  .m .mouth { position: absolute; bottom: 22%; left: 50%; transform: translateX(-50%); width: 38%; height: 18%; border-radius: 0 0 99px 99px; background: #333; }
+  .m.r { background: var(--c-r); --shadow: var(--c-r-d); }
+  .m.y { background: var(--c-y); --shadow: var(--c-y-d); }
+  .m.b { background: var(--c-b); --shadow: var(--c-b-d); }
+  .m.g { background: var(--c-g); --shadow: var(--c-g-d); }
+  .m.p { background: var(--c-p); --shadow: var(--c-p-d); }
+  .cta { display: block; width: 100%; padding: 20px 28px; background: linear-gradient(135deg, var(--c-r), var(--c-p)); color: white; text-decoration: none; border-radius: 18px; font-weight: 800; font-size: 22px; box-shadow: 0 8px 0 rgba(120, 60, 130, 0.45), 0 14px 28px rgba(0,0,0,0.2); margin-bottom: 18px; border: none; cursor: pointer; font-family: inherit; }
+  .cta:hover { transform: translateY(-2px); }
+  .cta:active { transform: translateY(2px); }
+  .stores { display: flex; gap: 12px; }
+  .store-btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; background: white; color: var(--text); text-decoration: none; border-radius: 14px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0 rgba(0,0,0,0.08), 0 8px 18px rgba(0,0,0,0.08); }
+  .store-btn .icon { font-size: 18px; }
+  footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="score-card">
+    <div class="score-label">Punktzahl des Freundes</div>
+    <div class="score-num" id="score">—</div>
+    <div class="mascots-row">
+      <div class="m r"><div class="mouth"></div></div>
+      <div class="m y"><div class="mouth"></div></div>
+      <div class="m b"><div class="mouth"></div></div>
+      <div class="m g"><div class="mouth"></div></div>
+      <div class="m p"><div class="mouth"></div></div>
+    </div>
+    <div class="score-msg">Kannst du es schlagen?</div>
+  </div>
+
+  <button class="cta" id="try-it">🎮 Versuch's</button>
+
+  <div class="stores">
+    <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
+      <span class="icon">🍎</span> App Store
+    </a>
+    <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
+      <span class="icon">▶</span> Google Play
+    </a>
+  </div>
+</div>
+
+<footer>
+  <a href="../">Über Quantum Match</a> · <a href="/">winsiner</a> · 2026
+</footer>
+
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var score = parseInt(params.get('score'), 10);
+    if (!isFinite(score) || score < 0) score = 0;
+    var locale = "de";
+    var formatted = score.toLocaleString(locale);
+    document.getElementById('score').textContent = formatted;
+
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    var IOS_STORE = 'https://apps.apple.com/app/quantum-match/id0000000000';
+    var ANDROID_STORE = 'https://play.google.com/store/apps/details?id=com.winsiner.quantummatch';
+
+    if (isiOS) document.getElementById('android-btn').style.opacity = '0.55';
+    else if (isAndroid) document.getElementById('ios-btn').style.opacity = '0.55';
+
+    document.getElementById('try-it').addEventListener('click', function () {
+      if (isiOS) window.location.href = IOS_STORE;
+      else if (isAndroid) window.location.href = ANDROID_STORE;
+      else {
+        var stores = document.querySelector('.stores');
+        if (stores) stores.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  })();
+</script>
+</body>
+</html>

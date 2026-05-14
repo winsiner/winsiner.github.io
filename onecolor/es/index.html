@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OneColor — Encuentra el color diferente</title>
+<meta name="description" content="Un puzzle de percepción del color. Se aprende en un segundo, se domina en semanas. Seis bloques. Uno es diferente. Tócalo.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="OneColor — Encuentra el color diferente">
+<meta property="og:description" content="Un color es diferente. Un toque.">
+<meta property="og:image" content="https://winsiner.github.io/onecolor/og.png">
+<meta property="og:url" content="https://winsiner.github.io/onecolor/es/">
+<meta property="og:locale" content="es">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="alternate" hreflang="en" href="https://winsiner.github.io/onecolor/en/">
+<link rel="alternate" hreflang="ko" href="https://winsiner.github.io/onecolor/ko/">
+<link rel="alternate" hreflang="ja" href="https://winsiner.github.io/onecolor/ja/">
+<link rel="alternate" hreflang="zh-Hant" href="https://winsiner.github.io/onecolor/zh-Hant/">
+<link rel="alternate" hreflang="es" href="https://winsiner.github.io/onecolor/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://winsiner.github.io/onecolor/pt-BR/">
+<link rel="alternate" hreflang="de" href="https://winsiner.github.io/onecolor/de/">
+<link rel="alternate" hreflang="fr" href="https://winsiner.github.io/onecolor/fr/">
+<link rel="alternate" hreflang="x-default" href="https://winsiner.github.io/onecolor/en/">
+
+<link rel="icon" href="../icon.png">
+
+<style>
+  :root { --bg: #F4F1EA; --ink: #1A1815; --line: #E6E1D6; --muted: #6B655C; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1A1815; --ink: #F4F1EA; --line: #2E2B26; --muted: #9A948A; } }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 80px 28px 80px; }
+  .hero { text-align: center; margin-bottom: 80px; }
+  h1 { font-size: clamp(48px, 11vw, 76px); font-weight: 800; letter-spacing: -2.5px; line-height: 0.98; margin-bottom: 18px; }
+  .tag { font-size: 19px; color: var(--muted); margin-bottom: 48px; line-height: 1.5; font-weight: 400; }
+  .preview { display: grid; grid-template-columns: repeat(3, 96px); grid-template-rows: repeat(2, 96px); gap: 14px; width: max-content; margin: 0 auto 56px; }
+  .preview .block { border-radius: 14px; background: hsl(15 70% 80%); }
+  .preview .b5 { background: hsl(18 73% 76%); }
+  .stores { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .store-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; background: var(--ink); color: var(--bg); text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px; transition: transform 0.15s ease; }
+  .store-btn:hover { transform: translateY(-1px); }
+  .store-btn:active { transform: translateY(1px); }
+  section { margin-bottom: 56px; }
+  section h2 { font-size: 26px; margin-bottom: 18px; font-weight: 700; letter-spacing: -0.5px; }
+  section p { font-size: 17px; line-height: 1.65; color: var(--muted); margin-bottom: 14px; }
+  .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 24px; }
+  .mode { padding: 24px 20px; border: 1px solid var(--line); border-radius: 14px; }
+  .mode h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; }
+  .mode p { font-size: 14px; line-height: 1.5; color: var(--muted); margin: 0; }
+  .features { list-style: none; padding: 0; }
+  .features li { padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .features li:last-child { border-bottom: none; }
+  .features li b { font-weight: 700; }
+  .features li span { color: var(--muted); }
+  .lang-switcher { margin-top: 48px; padding: 20px; border-top: 1px solid var(--line); }
+  .lang-switcher .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; text-align: center; }
+  .lang-switcher .links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .lang-switcher a { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 13px; }
+  .lang-switcher a.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  footer { text-align: center; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>OneColor</h1>
+    <p class="tag">Un color es diferente.<br>Un toque. Una chispa de claridad.</p>
+
+    <div class="preview" aria-hidden="true">
+      <div class="block b1"></div>
+      <div class="block b2"></div>
+      <div class="block b3"></div>
+      <div class="block b4"></div>
+      <div class="block b5"></div>
+      <div class="block b6"></div>
+    </div>
+
+    <div class="stores">
+      <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/onecolor/id0000000000" target="_blank" rel="noopener">App Store</a>
+      <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.onecolor" target="_blank" rel="noopener">Google Play</a>
+    </div>
+  </div>
+
+  <section>
+    <h2>Cómo se juega</h2>
+    <p>Aparecen 6 bloques de color. Solo uno es sutilmente diferente. Encuéntralo, tócalo. Al principio salta a la vista — pero al subir de nivel las diferencias se reducen y la rejilla crece de 2×2 a 3×3 a 4×4. Reglas simples. Profundidad infinita.</p>
+  </section>
+
+  <section>
+    <h2>Tres modos, tres ánimos</h2>
+    <div class="modes">
+            <div class="mode">
+        <h3>Classic</h3>
+        <p>Sin tiempo. Pura precisión. Entrena tu ojo.</p>
+      </div>
+      <div class="mode">
+        <h3>Time Attack</h3>
+        <p>Cuenta atrás de 15s. Cada acierto suma 0.5s.</p>
+      </div>
+      <div class="mode">
+        <h3>Endless</h3>
+        <p>Sin reloj, sin presión. Tú y los colores.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hecho para todos</h2>
+    <ul class="features">
+            <li><b>Modo oscuro completo.</b> <span>Profundo, fácil para los ojos.</span></li>
+      <li><b>Compatible Reduced Motion.</b> <span>Animaciones calmadas.</span></li>
+      <li><b>Ocho idiomas.</b> <span>ES · EN · KO · JA · ZH · PT · DE · FR</span></li>
+      <li><b>Revivir con anuncio.</b> <span>Sigue jugando tras un fallo — una vez por ronda.</span></li>
+      <li><b>Quitar anuncios.</b> <span>Una sola compra, para siempre.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Por qué OneColor</h2>
+    <p>Las reglas tardan un segundo. Una ronda perfecta tarda semanas. OneColor elimina el ruido para enfocarse en lo único importante: el color. UI limpia, hápticas suaves, mínimos anuncios. Hecho para esa pequeña chispa de alegría al encontrar el diferente.</p>
+  </section>
+
+  <div class="lang-switcher">
+    <div class="label">Idioma</div>
+    <div class="links">
+            <a href="../en/" class="" hreflang="en">English</a>
+      <a href="../ko/" class="" hreflang="ko">한국어</a>
+      <a href="../ja/" class="" hreflang="ja">日本語</a>
+      <a href="../zh-Hant/" class="" hreflang="zh-Hant">繁體中文</a>
+      <a href="../es/" class="active" hreflang="es">Español</a>
+      <a href="../pt-BR/" class="" hreflang="pt-BR">Português (BR)</a>
+      <a href="../de/" class="" hreflang="de">Deutsch</a>
+      <a href="../fr/" class="" hreflang="fr">Français</a>
+    </div>
+  </div>
+
+  <footer>
+    <a href="../privacy.html">Política de privacidad</a> · <a href="/">winsiner</a> · 2026
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    if (isiOS) document.getElementById('android-btn').style.opacity = '0.45';
+    else if (isAndroid) document.getElementById('ios-btn').style.opacity = '0.45';
+  })();
+</script>
+</body>
+</html>
