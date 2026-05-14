@@ -5,7 +5,17 @@
       "namespace": "android_app",
       "package_name": "com.winsiner.quantummatch",
       "sha256_cert_fingerprints": [
-        "TODO_REPLACE_WITH_PLAY_APP_SIGNING_SHA256"
+        "TODO_REPLACE_WITH_PLAY_APP_SIGNING_SHA256_QUANTUMMATCH"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.winsiner.onecolor",
+      "sha256_cert_fingerprints": [
+        "TODO_REPLACE_WITH_PLAY_APP_SIGNING_SHA256_ONECOLOR"
       ]
     }
   }

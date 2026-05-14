@@ -10,6 +10,15 @@
           "/quantum-match/",
           "/quantum-match"
         ]
+      },
+      {
+        "appID": "D65UHDVCY8.com.winsiner.onecolor",
+        "paths": [
+          "/onecolor/s",
+          "/onecolor/s/*",
+          "/onecolor/",
+          "/onecolor"
+        ]
       }
     ]
   }

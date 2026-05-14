@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OneColor — Beat this score!</title>
+<meta name="description" content="A friend just played OneColor. Can you spot the odd color faster?">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="OneColor — Can you beat this score?">
+<meta property="og:description" content="A friend challenged you with their OneColor score!">
+<meta property="og:image" content="https://winsiner.github.io/onecolor/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="../icon.png">
+
+<style>
+  :root {
+    --bg: #F4F1EA;
+    --ink: #1A1815;
+    --line: #E6E1D6;
+    --muted: #6B655C;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1A1815;
+      --ink: #F4F1EA;
+      --line: #2E2B26;
+      --muted: #9A948A;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 60px 28px 40px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .preview {
+    display: grid;
+    grid-template-columns: repeat(3, 64px);
+    grid-template-rows: repeat(2, 64px);
+    gap: 10px;
+    width: max-content;
+    margin: 0 auto 40px;
+  }
+  .preview .block { border-radius: 10px; }
+  .preview .b1, .preview .b2, .preview .b3,
+  .preview .b4, .preview .b6 { background: hsl(220 70% 56%); }
+  .preview .b5 { background: hsl(217 73% 60%); }
+
+  .mode-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .score-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .score-num {
+    font-size: clamp(72px, 20vw, 108px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .score-msg {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-bottom: 40px;
+  }
+
+  .cta {
+    display: block;
+    width: 100%;
+    padding: 18px 28px;
+    background: var(--ink);
+    color: var(--bg);
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 19px;
+    margin-bottom: 14px;
+    transition: transform 0.15s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .cta:hover { transform: translateY(-1px); }
+  .cta:active { transform: translateY(1px); }
+
+  .stores {
+    display: flex;
+    gap: 10px;
+  }
+  .store-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 28px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="preview" aria-hidden="true">
+    <div class="block b1"></div>
+    <div class="block b2"></div>
+    <div class="block b3"></div>
+    <div class="block b4"></div>
+    <div class="block b5"></div>
+    <div class="block b6"></div>
+  </div>
+
+  <div class="mode-pill" id="mode-pill">CLASSIC</div>
+  <div class="score-label">Friend's score</div>
+  <div class="score-num" id="score">—</div>
+  <div class="score-msg">Can you spot the odd one faster?</div>
+
+  <button class="cta" id="try-it">Try it</button>
+
+  <div class="stores">
+    <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/onecolor/id0000000000" target="_blank" rel="noopener">App Store</a>
+    <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.onecolor" target="_blank" rel="noopener">Google Play</a>
+  </div>
+</div>
+
+<footer>
+  <a href="../">About OneColor</a> · <a href="/">winsiner</a> · 2026
+</footer>
+
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var score = parseInt(params.get('score') || params.get('s'), 10);
+    if (!isFinite(score) || score < 0) score = 0;
+    var mode = (params.get('mode') || 'classic').toLowerCase();
+
+    var modeLabels = {
+      classic: 'CLASSIC',
+      'time-attack': 'TIME ATTACK',
+      timeattack: 'TIME ATTACK',
+      time: 'TIME ATTACK',
+      endless: 'ENDLESS',
+    };
+    var modeLabel = modeLabels[mode] || 'CLASSIC';
+
+    var formatted = score.toLocaleString();
+    document.getElementById('score').textContent = formatted;
+    document.getElementById('mode-pill').textContent = modeLabel;
+    document.title = 'Friend scored ' + formatted + ' in OneColor (' + modeLabel + ')';
+
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    var IOS_STORE = 'https://apps.apple.com/app/onecolor/id0000000000';
+    var ANDROID_STORE = 'https://play.google.com/store/apps/details?id=com.winsiner.onecolor';
+
+    if (isiOS) document.getElementById('android-btn').style.opacity = '0.55';
+    else if (isAndroid) document.getElementById('ios-btn').style.opacity = '0.55';
+
+    document.getElementById('try-it').addEventListener('click', function () {
+      if (isiOS) window.location.href = IOS_STORE;
+      else if (isAndroid) window.location.href = ANDROID_STORE;
+      else {
+        var stores = document.querySelector('.stores');
+        if (stores) stores.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  })();
+</script>
+</body>
+</html>
