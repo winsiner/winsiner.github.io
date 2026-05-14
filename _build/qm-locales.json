@@ -16,12 +16,36 @@
     "howBody": "Every cell mixes red, blue, and yellow. The center mascot shows the dominant color. Tap a cell to commit that color — and the probabilities ripple to its neighbors. Line up 3 of the same color, horizontally or vertically, to match.",
     "featuresTitle": "Features",
     "features": [
-      {"emoji": "🎨", "title": "NEXT-color combos", "body": "Hit the NEXT color in a row to grow your score multiplier."},
-      {"emoji": "🔨", "title": "Smash hammer", "body": "Stuck? Destroy any single cell. 3 free per game."},
-      {"emoji": "🤖", "title": "AI auto-play", "body": "Watch an ad, AI plays 1000 turns for you."},
-      {"emoji": "🌍", "title": "12 languages", "body": "EN · KO · JA · ZH · ES · PT-BR · FR · DE · IT · TR · ID"},
-      {"emoji": "📴", "title": "Fully offline", "body": "Play anywhere. No login. No accounts."},
-      {"emoji": "💰", "title": "One-time remove ads", "body": "Buy once, keep forever. No subscriptions."}
+      {
+        "emoji": "🎨",
+        "title": "NEXT-color combos",
+        "body": "Hit the NEXT color in a row to grow your score multiplier."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Smash hammer",
+        "body": "Stuck? Destroy any single cell. 3 free per game."
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI auto-play",
+        "body": "Watch an ad, AI plays 1000 turns for you."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 languages",
+        "body": "EN · KO · JA · ZH · ES · PT-BR · FR · DE · IT · TR · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Fully offline",
+        "body": "Play anywhere. No login. No accounts."
+      },
+      {
+        "emoji": "💰",
+        "title": "One-time remove ads",
+        "body": "Buy once, keep forever. No subscriptions."
+      }
     ],
     "privacyLink": "Privacy Policy",
     "langLabel": "Language",
@@ -34,7 +58,12 @@
       "msg": "Can you beat it?",
       "cta": "Try it",
       "about": "About Quantum Match"
-    }
+    },
+    "scene1Punch": "One tap.<br><span class=\"accent\">Colors flow.</span>",
+    "scene2Punch": "Hit the right color.<br><span class=\"accent\">Chain the combo.</span>",
+    "scene3Punch": "Stuck?<br><span class=\"accent\">Smash it.</span>",
+    "scene4Punch": "<span class=\"accent\">Big chains,</span><br>bigger scores.",
+    "closingHeadline": "Ready to chain?"
   },
   "ko": {
     "lang": "ko",
@@ -53,12 +82,36 @@
     "howBody": "각 셀에는 빨강·파랑·노랑이 섞여 있고, 가운데 마스코트가 가장 많은 색을 보여줍니다. 셀을 탭하면 색이 확정되고, 주변 셀의 확률도 함께 흐릅니다. 같은 색 3개를 가로나 세로로 맞추면 매치!",
     "featuresTitle": "주요 기능",
     "features": [
-      {"emoji": "🎨", "title": "NEXT 색 콤보", "body": "NEXT 색을 연속 매치하면 점수 배수가 올라가요."},
-      {"emoji": "🔨", "title": "부수기 망치", "body": "막혔을 때 셀 하나를 부숩니다. 판마다 무료 3회."},
-      {"emoji": "🤖", "title": "AI 자동 플레이", "body": "광고 보면 AI가 1000턴 대신 플레이해드려요."},
-      {"emoji": "🌍", "title": "12개 언어", "body": "한·영·일·중·스·포·프·독·이·터·인"},
-      {"emoji": "📴", "title": "완전 오프라인", "body": "로그인 없이 어디서나 플레이."},
-      {"emoji": "💰", "title": "광고 제거 일회성", "body": "한 번 결제로 영구. 구독 없음."}
+      {
+        "emoji": "🎨",
+        "title": "NEXT 색 콤보",
+        "body": "NEXT 색을 연속 매치하면 점수 배수가 올라가요."
+      },
+      {
+        "emoji": "🔨",
+        "title": "부수기 망치",
+        "body": "막혔을 때 셀 하나를 부숩니다. 판마다 무료 3회."
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI 자동 플레이",
+        "body": "광고 보면 AI가 1000턴 대신 플레이해드려요."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12개 언어",
+        "body": "한·영·일·중·스·포·프·독·이·터·인"
+      },
+      {
+        "emoji": "📴",
+        "title": "완전 오프라인",
+        "body": "로그인 없이 어디서나 플레이."
+      },
+      {
+        "emoji": "💰",
+        "title": "광고 제거 일회성",
+        "body": "한 번 결제로 영구. 구독 없음."
+      }
     ],
     "privacyLink": "개인정보처리방침",
     "langLabel": "언어",
@@ -71,7 +124,12 @@
       "msg": "이길 수 있나요?",
       "cta": "도전하기",
       "about": "퀀텀 매치 소개"
-    }
+    },
+    "scene1Punch": "한 번 탭하면<br><span class=\"accent\">색깔이 흐릅니다.</span>",
+    "scene2Punch": "정해진 색을 노려<br><span class=\"accent\">콤보를 폭발</span>시켜요.",
+    "scene3Punch": "막혔다고?<br><span class=\"accent\">부수면 됩니다.</span>",
+    "scene4Punch": "<span class=\"accent\">큰 연쇄,</span><br>더 큰 점수.",
+    "closingHeadline": "지금 콤보 폭발 시키러 가볼까요?"
   },
   "ja": {
     "lang": "ja",
@@ -90,12 +148,36 @@
     "howBody": "各セルには赤・青・黄が混ざっていて、中央のマスコットが最も多い色を表します。タップすると色が確定し、周囲のセルの確率も流れます。同じ色を縦か横に3つ揃えるとマッチ!",
     "featuresTitle": "特徴",
     "features": [
-      {"emoji": "🎨", "title": "NEXT色コンボ", "body": "NEXT色を連続マッチで倍率アップ。"},
-      {"emoji": "🔨", "title": "スマッシュハンマー", "body": "詰まったら1セル破壊。1ゲーム3回無料。"},
-      {"emoji": "🤖", "title": "AI自動プレイ", "body": "広告視聴で1000ターン自動プレイ。"},
-      {"emoji": "🌍", "title": "12言語対応", "body": "日・英・韓・中・西・葡・仏・独・伊・土・尼"},
-      {"emoji": "📴", "title": "完全オフライン", "body": "ログイン不要、どこでもプレイ。"},
-      {"emoji": "💰", "title": "広告除去買い切り", "body": "1回購入で永久。サブスクなし。"}
+      {
+        "emoji": "🎨",
+        "title": "NEXT色コンボ",
+        "body": "NEXT色を連続マッチで倍率アップ。"
+      },
+      {
+        "emoji": "🔨",
+        "title": "スマッシュハンマー",
+        "body": "詰まったら1セル破壊。1ゲーム3回無料。"
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI自動プレイ",
+        "body": "広告視聴で1000ターン自動プレイ。"
+      },
+      {
+        "emoji": "🌍",
+        "title": "12言語対応",
+        "body": "日・英・韓・中・西・葡・仏・独・伊・土・尼"
+      },
+      {
+        "emoji": "📴",
+        "title": "完全オフライン",
+        "body": "ログイン不要、どこでもプレイ。"
+      },
+      {
+        "emoji": "💰",
+        "title": "広告除去買い切り",
+        "body": "1回購入で永久。サブスクなし。"
+      }
     ],
     "privacyLink": "プライバシーポリシー",
     "langLabel": "言語",
@@ -108,7 +190,12 @@
       "msg": "超えられますか?",
       "cta": "挑戦する",
       "about": "クォンタム マッチについて"
-    }
+    },
+    "scene1Punch": "タップ一つで<br><span class=\"accent\">色が流れる。</span>",
+    "scene2Punch": "狙った色を繋いで<br><span class=\"accent\">コンボ爆発。</span>",
+    "scene3Punch": "詰まった?<br><span class=\"accent\">砕けばいい。</span>",
+    "scene4Punch": "<span class=\"accent\">大連鎖、</span><br>もっと大きなスコア。",
+    "closingHeadline": "コンボを爆発させよう。"
   },
   "zh-Hans": {
     "lang": "zh-Hans",
@@ -127,12 +214,36 @@
     "howBody": "每个格子由红、蓝、黄混合而成,中间吉祥物代表占比最多的颜色。点击格子可确定其颜色,周围格子的概率也会流动。横向或纵向三个同色即可消除!",
     "featuresTitle": "特色",
     "features": [
-      {"emoji": "🎨", "title": "NEXT 颜色连击", "body": "连续命中 NEXT 颜色,倍率持续上升。"},
-      {"emoji": "🔨", "title": "锤子破坏", "body": "卡关时击碎一个格子。每局免费3次。"},
-      {"emoji": "🤖", "title": "AI 自动玩", "body": "看广告,AI 替你玩1000回合。"},
-      {"emoji": "🌍", "title": "支持12种语言", "body": "简·繁·英·韩·日·西·葡·法·德·意·土·印"},
-      {"emoji": "📴", "title": "完全离线", "body": "无需登录,随时随地玩。"},
-      {"emoji": "💰", "title": "去广告一次买断", "body": "一次购买,永久去广告。"}
+      {
+        "emoji": "🎨",
+        "title": "NEXT 颜色连击",
+        "body": "连续命中 NEXT 颜色,倍率持续上升。"
+      },
+      {
+        "emoji": "🔨",
+        "title": "锤子破坏",
+        "body": "卡关时击碎一个格子。每局免费3次。"
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI 自动玩",
+        "body": "看广告,AI 替你玩1000回合。"
+      },
+      {
+        "emoji": "🌍",
+        "title": "支持12种语言",
+        "body": "简·繁·英·韩·日·西·葡·法·德·意·土·印"
+      },
+      {
+        "emoji": "📴",
+        "title": "完全离线",
+        "body": "无需登录,随时随地玩。"
+      },
+      {
+        "emoji": "💰",
+        "title": "去广告一次买断",
+        "body": "一次购买,永久去广告。"
+      }
     ],
     "privacyLink": "隐私政策",
     "langLabel": "语言",
@@ -145,7 +256,12 @@
       "msg": "能超越吗?",
       "cta": "挑战",
       "about": "关于量子配对"
-    }
+    },
+    "scene1Punch": "一次点击,<br><span class=\"accent\">颜色就在流动。</span>",
+    "scene2Punch": "锁定目标色,<br><span class=\"accent\">引爆连击。</span>",
+    "scene3Punch": "卡关?<br><span class=\"accent\">砸碎就好。</span>",
+    "scene4Punch": "<span class=\"accent\">史诗连击,</span><br>更高得分。",
+    "closingHeadline": "准备好爆连击了吗?"
   },
   "zh-Hant": {
     "lang": "zh-Hant",
@@ -164,12 +280,36 @@
     "howBody": "每個格子由紅、藍、黃混合而成,中間吉祥物代表佔比最多的顏色。點擊格子可確定其顏色,周圍格子的機率也會流動。橫向或縱向三個同色即可消除!",
     "featuresTitle": "特色",
     "features": [
-      {"emoji": "🎨", "title": "NEXT 顏色連擊", "body": "連續命中 NEXT 顏色,倍率持續上升。"},
-      {"emoji": "🔨", "title": "鎚子破壞", "body": "卡關時擊碎一個格子。每局免費3次。"},
-      {"emoji": "🤖", "title": "AI 自動玩", "body": "看廣告,AI 替你玩1000回合。"},
-      {"emoji": "🌍", "title": "支援12種語言", "body": "繁·簡·英·韓·日·西·葡·法·德·義·土·印"},
-      {"emoji": "📴", "title": "完全離線", "body": "無需登入,隨時隨地玩。"},
-      {"emoji": "💰", "title": "去廣告一次買斷", "body": "一次購買,永久去廣告。"}
+      {
+        "emoji": "🎨",
+        "title": "NEXT 顏色連擊",
+        "body": "連續命中 NEXT 顏色,倍率持續上升。"
+      },
+      {
+        "emoji": "🔨",
+        "title": "鎚子破壞",
+        "body": "卡關時擊碎一個格子。每局免費3次。"
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI 自動玩",
+        "body": "看廣告,AI 替你玩1000回合。"
+      },
+      {
+        "emoji": "🌍",
+        "title": "支援12種語言",
+        "body": "繁·簡·英·韓·日·西·葡·法·德·義·土·印"
+      },
+      {
+        "emoji": "📴",
+        "title": "完全離線",
+        "body": "無需登入,隨時隨地玩。"
+      },
+      {
+        "emoji": "💰",
+        "title": "去廣告一次買斷",
+        "body": "一次購買,永久去廣告。"
+      }
     ],
     "privacyLink": "隱私政策",
     "langLabel": "語言",
@@ -182,7 +322,12 @@
       "msg": "能超越嗎?",
       "cta": "挑戰",
       "about": "關於量子配對"
-    }
+    },
+    "scene1Punch": "一次點擊,<br><span class=\"accent\">顏色就在流動。</span>",
+    "scene2Punch": "鎖定目標色,<br><span class=\"accent\">引爆連擊。</span>",
+    "scene3Punch": "卡關?<br><span class=\"accent\">砸碎就好。</span>",
+    "scene4Punch": "<span class=\"accent\">史詩連擊,</span><br>更高得分。",
+    "closingHeadline": "準備好爆連擊了嗎?"
   },
   "es": {
     "lang": "es",
@@ -201,12 +346,36 @@
     "howBody": "Cada celda mezcla rojo, azul y amarillo. La mascota central muestra el color dominante. Toca una celda para fijar su color — las probabilidades se propagan a las vecinas. Alinea 3 del mismo color, en horizontal o vertical.",
     "featuresTitle": "Funciones",
     "features": [
-      {"emoji": "🎨", "title": "Combos color NEXT", "body": "Encadena el color NEXT y sube el multiplicador."},
-      {"emoji": "🔨", "title": "Martillo", "body": "¿Atascado? Destruye una celda. 3 gratis por partida."},
-      {"emoji": "🤖", "title": "IA auto-play", "body": "Mira un anuncio, la IA juega 1000 turnos."},
-      {"emoji": "🌍", "title": "12 idiomas", "body": "ES · EN · KO · JA · ZH · PT · FR · DE · IT · TR · ID"},
-      {"emoji": "📴", "title": "Sin conexión", "body": "Sin cuentas, juega en cualquier lugar."},
-      {"emoji": "💰", "title": "Quitar anuncios", "body": "Una sola compra, sin suscripciones."}
+      {
+        "emoji": "🎨",
+        "title": "Combos color NEXT",
+        "body": "Encadena el color NEXT y sube el multiplicador."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Martillo",
+        "body": "¿Atascado? Destruye una celda. 3 gratis por partida."
+      },
+      {
+        "emoji": "🤖",
+        "title": "IA auto-play",
+        "body": "Mira un anuncio, la IA juega 1000 turnos."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 idiomas",
+        "body": "ES · EN · KO · JA · ZH · PT · FR · DE · IT · TR · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Sin conexión",
+        "body": "Sin cuentas, juega en cualquier lugar."
+      },
+      {
+        "emoji": "💰",
+        "title": "Quitar anuncios",
+        "body": "Una sola compra, sin suscripciones."
+      }
     ],
     "privacyLink": "Política de privacidad",
     "langLabel": "Idioma",
@@ -219,7 +388,12 @@
       "msg": "¿Puedes superarlo?",
       "cta": "Intentar",
       "about": "Sobre Quantum Match"
-    }
+    },
+    "scene1Punch": "Un toque,<br><span class=\"accent\">el color fluye.</span>",
+    "scene2Punch": "Acierta el color,<br><span class=\"accent\">encadena el combo.</span>",
+    "scene3Punch": "¿Atascado?<br><span class=\"accent\">Rómpelo.</span>",
+    "scene4Punch": "<span class=\"accent\">Cadenas enormes,</span><br>puntuaciones aún mayores.",
+    "closingHeadline": "¿Listo para encadenar?"
   },
   "pt-BR": {
     "lang": "pt-BR",
@@ -238,12 +412,36 @@
     "howBody": "Cada célula mistura vermelho, azul e amarelo. O mascote central mostra a cor dominante. Toque numa célula para fixar a cor — as probabilidades se espalham para as vizinhas. Alinhe 3 da mesma cor.",
     "featuresTitle": "Recursos",
     "features": [
-      {"emoji": "🎨", "title": "Combos cor NEXT", "body": "Encadeie a cor NEXT e aumente o multiplicador."},
-      {"emoji": "🔨", "title": "Martelo", "body": "Travado? Destrua uma célula. 3 grátis por partida."},
-      {"emoji": "🤖", "title": "IA auto-play", "body": "Assista um anúncio, a IA joga 1000 turnos."},
-      {"emoji": "🌍", "title": "12 idiomas", "body": "PT · EN · KO · JA · ZH · ES · FR · DE · IT · TR · ID"},
-      {"emoji": "📴", "title": "Totalmente offline", "body": "Sem login, jogue em qualquer lugar."},
-      {"emoji": "💰", "title": "Remover anúncios", "body": "Compra única, sem assinaturas."}
+      {
+        "emoji": "🎨",
+        "title": "Combos cor NEXT",
+        "body": "Encadeie a cor NEXT e aumente o multiplicador."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Martelo",
+        "body": "Travado? Destrua uma célula. 3 grátis por partida."
+      },
+      {
+        "emoji": "🤖",
+        "title": "IA auto-play",
+        "body": "Assista um anúncio, a IA joga 1000 turnos."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 idiomas",
+        "body": "PT · EN · KO · JA · ZH · ES · FR · DE · IT · TR · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Totalmente offline",
+        "body": "Sem login, jogue em qualquer lugar."
+      },
+      {
+        "emoji": "💰",
+        "title": "Remover anúncios",
+        "body": "Compra única, sem assinaturas."
+      }
     ],
     "privacyLink": "Política de privacidade",
     "langLabel": "Idioma",
@@ -256,7 +454,12 @@
       "msg": "Consegue superar?",
       "cta": "Tentar",
       "about": "Sobre Quantum Match"
-    }
+    },
+    "scene1Punch": "Um toque,<br><span class=\"accent\">a cor flui.</span>",
+    "scene2Punch": "Acerte a cor certa,<br><span class=\"accent\">encadeie o combo.</span>",
+    "scene3Punch": "Travado?<br><span class=\"accent\">Quebre.</span>",
+    "scene4Punch": "<span class=\"accent\">Cadeias gigantes,</span><br>pontuações maiores ainda.",
+    "closingHeadline": "Pronto para encadear?"
   },
   "fr": {
     "lang": "fr",
@@ -275,12 +478,36 @@
     "howBody": "Chaque case mélange rouge, bleu et jaune. La mascotte centrale montre la couleur dominante. Touchez pour fixer la couleur — les probabilités se propagent aux voisines. Alignez 3 de la même couleur.",
     "featuresTitle": "Fonctionnalités",
     "features": [
-      {"emoji": "🎨", "title": "Combos couleur NEXT", "body": "Enchaînez la couleur NEXT pour augmenter le multiplicateur."},
-      {"emoji": "🔨", "title": "Marteau", "body": "Bloqué ? Détruisez une case. 3 gratuits par partie."},
-      {"emoji": "🤖", "title": "IA auto-play", "body": "Une pub courte, l'IA joue 1000 tours."},
-      {"emoji": "🌍", "title": "12 langues", "body": "FR · EN · KO · JA · ZH · ES · PT · DE · IT · TR · ID"},
-      {"emoji": "📴", "title": "Hors ligne", "body": "Sans compte, jouez partout."},
-      {"emoji": "💰", "title": "Supprimer les pubs", "body": "Achat unique, sans abonnement."}
+      {
+        "emoji": "🎨",
+        "title": "Combos couleur NEXT",
+        "body": "Enchaînez la couleur NEXT pour augmenter le multiplicateur."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Marteau",
+        "body": "Bloqué ? Détruisez une case. 3 gratuits par partie."
+      },
+      {
+        "emoji": "🤖",
+        "title": "IA auto-play",
+        "body": "Une pub courte, l'IA joue 1000 tours."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 langues",
+        "body": "FR · EN · KO · JA · ZH · ES · PT · DE · IT · TR · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Hors ligne",
+        "body": "Sans compte, jouez partout."
+      },
+      {
+        "emoji": "💰",
+        "title": "Supprimer les pubs",
+        "body": "Achat unique, sans abonnement."
+      }
     ],
     "privacyLink": "Politique de confidentialité",
     "langLabel": "Langue",
@@ -293,7 +520,12 @@
       "msg": "Pouvez-vous le battre ?",
       "cta": "Essayer",
       "about": "À propos de Quantum Match"
-    }
+    },
+    "scene1Punch": "Un tap,<br><span class=\"accent\">la couleur s'écoule.</span>",
+    "scene2Punch": "Vise la bonne couleur,<br><span class=\"accent\">enchaîne le combo.</span>",
+    "scene3Punch": "Bloqué ?<br><span class=\"accent\">Brise-le.</span>",
+    "scene4Punch": "<span class=\"accent\">Chaînes énormes,</span><br>scores encore plus grands.",
+    "closingHeadline": "Prêt à enchaîner ?"
   },
   "de": {
     "lang": "de",
@@ -312,12 +544,36 @@
     "howBody": "Jede Zelle mischt Rot, Blau und Gelb. Das mittlere Maskottchen zeigt die dominante Farbe. Tippe zum Festlegen — Wahrscheinlichkeiten wandern zu den Nachbarn. Bringe 3 derselben Farbe in eine Reihe.",
     "featuresTitle": "Funktionen",
     "features": [
-      {"emoji": "🎨", "title": "NEXT-Farb-Combos", "body": "Kette die NEXT-Farbe für höhere Multiplikatoren."},
-      {"emoji": "🔨", "title": "Zertrümmern-Hammer", "body": "Festgefahren? Zerstöre eine Zelle. 3 gratis pro Spiel."},
-      {"emoji": "🤖", "title": "KI Auto-Play", "body": "Werbung schauen, KI spielt 1000 Züge."},
-      {"emoji": "🌍", "title": "12 Sprachen", "body": "DE · EN · KO · JA · ZH · ES · PT · FR · IT · TR · ID"},
-      {"emoji": "📴", "title": "Vollständig offline", "body": "Ohne Konto, überall spielbar."},
-      {"emoji": "💰", "title": "Werbung entfernen", "body": "Einmalkauf, kein Abo."}
+      {
+        "emoji": "🎨",
+        "title": "NEXT-Farb-Combos",
+        "body": "Kette die NEXT-Farbe für höhere Multiplikatoren."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Zertrümmern-Hammer",
+        "body": "Festgefahren? Zerstöre eine Zelle. 3 gratis pro Spiel."
+      },
+      {
+        "emoji": "🤖",
+        "title": "KI Auto-Play",
+        "body": "Werbung schauen, KI spielt 1000 Züge."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 Sprachen",
+        "body": "DE · EN · KO · JA · ZH · ES · PT · FR · IT · TR · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Vollständig offline",
+        "body": "Ohne Konto, überall spielbar."
+      },
+      {
+        "emoji": "💰",
+        "title": "Werbung entfernen",
+        "body": "Einmalkauf, kein Abo."
+      }
     ],
     "privacyLink": "Datenschutzrichtlinie",
     "langLabel": "Sprache",
@@ -330,7 +586,12 @@
       "msg": "Kannst du es schlagen?",
       "cta": "Versuch's",
       "about": "Über Quantum Match"
-    }
+    },
+    "scene1Punch": "Ein Tipp,<br><span class=\"accent\">die Farbe fließt.</span>",
+    "scene2Punch": "Triff die richtige Farbe,<br><span class=\"accent\">kette den Combo.</span>",
+    "scene3Punch": "Festgefahren?<br><span class=\"accent\">Brich es.</span>",
+    "scene4Punch": "<span class=\"accent\">Riesige Ketten,</span><br>noch größere Punktzahlen.",
+    "closingHeadline": "Bereit zum Ketten?"
   },
   "it": {
     "lang": "it",
@@ -349,12 +610,36 @@
     "howBody": "Ogni cella mescola rosso, blu e giallo. La mascotte centrale mostra il colore dominante. Tocca per fissare — le probabilità si propagano alle vicine. Allinea 3 dello stesso colore.",
     "featuresTitle": "Caratteristiche",
     "features": [
-      {"emoji": "🎨", "title": "Combo colore NEXT", "body": "Concatena il colore NEXT per moltiplicatori più alti."},
-      {"emoji": "🔨", "title": "Martello", "body": "Bloccato? Distruggi una cella. 3 gratis a partita."},
-      {"emoji": "🤖", "title": "IA auto-play", "body": "Annuncio breve, IA gioca 1000 turni."},
-      {"emoji": "🌍", "title": "12 lingue", "body": "IT · EN · KO · JA · ZH · ES · PT · FR · DE · TR · ID"},
-      {"emoji": "📴", "title": "Completamente offline", "body": "Senza account, ovunque."},
-      {"emoji": "💰", "title": "Rimuovi pubblicità", "body": "Acquisto unico, senza abbonamenti."}
+      {
+        "emoji": "🎨",
+        "title": "Combo colore NEXT",
+        "body": "Concatena il colore NEXT per moltiplicatori più alti."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Martello",
+        "body": "Bloccato? Distruggi una cella. 3 gratis a partita."
+      },
+      {
+        "emoji": "🤖",
+        "title": "IA auto-play",
+        "body": "Annuncio breve, IA gioca 1000 turni."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 lingue",
+        "body": "IT · EN · KO · JA · ZH · ES · PT · FR · DE · TR · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Completamente offline",
+        "body": "Senza account, ovunque."
+      },
+      {
+        "emoji": "💰",
+        "title": "Rimuovi pubblicità",
+        "body": "Acquisto unico, senza abbonamenti."
+      }
     ],
     "privacyLink": "Informativa sulla privacy",
     "langLabel": "Lingua",
@@ -367,7 +652,12 @@
       "msg": "Puoi batterlo?",
       "cta": "Prova",
       "about": "Su Quantum Match"
-    }
+    },
+    "scene1Punch": "Un tocco,<br><span class=\"accent\">il colore scorre.</span>",
+    "scene2Punch": "Colpisci il colore giusto,<br><span class=\"accent\">concatena la combo.</span>",
+    "scene3Punch": "Bloccato?<br><span class=\"accent\">Spaccalo.</span>",
+    "scene4Punch": "<span class=\"accent\">Catene enormi,</span><br>punteggi ancora più grandi.",
+    "closingHeadline": "Pronto a concatenare?"
   },
   "tr": {
     "lang": "tr",
@@ -386,12 +676,36 @@
     "howBody": "Her hücre kırmızı, mavi ve sarıyı karıştırır. Ortadaki maskot baskın rengi gösterir. Dokunarak rengi sabitle — olasılıklar komşulara yayılır. 3 aynı renk sırala.",
     "featuresTitle": "Özellikler",
     "features": [
-      {"emoji": "🎨", "title": "NEXT renk kombosu", "body": "NEXT rengini zincirle, çarpanı büyüt."},
-      {"emoji": "🔨", "title": "Çekiç", "body": "Sıkıştın mı? Bir hücre yık. Oyun başına 3 ücretsiz."},
-      {"emoji": "🤖", "title": "YZ otomatik", "body": "Kısa reklam, YZ 1000 tur oynar."},
-      {"emoji": "🌍", "title": "12 dil", "body": "TR · EN · KO · JA · ZH · ES · PT · FR · DE · IT · ID"},
-      {"emoji": "📴", "title": "Tamamen çevrimdışı", "body": "Hesapsız, her yerde."},
-      {"emoji": "💰", "title": "Reklam kaldırma", "body": "Tek seferlik alım, abonelik yok."}
+      {
+        "emoji": "🎨",
+        "title": "NEXT renk kombosu",
+        "body": "NEXT rengini zincirle, çarpanı büyüt."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Çekiç",
+        "body": "Sıkıştın mı? Bir hücre yık. Oyun başına 3 ücretsiz."
+      },
+      {
+        "emoji": "🤖",
+        "title": "YZ otomatik",
+        "body": "Kısa reklam, YZ 1000 tur oynar."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 dil",
+        "body": "TR · EN · KO · JA · ZH · ES · PT · FR · DE · IT · ID"
+      },
+      {
+        "emoji": "📴",
+        "title": "Tamamen çevrimdışı",
+        "body": "Hesapsız, her yerde."
+      },
+      {
+        "emoji": "💰",
+        "title": "Reklam kaldırma",
+        "body": "Tek seferlik alım, abonelik yok."
+      }
     ],
     "privacyLink": "Gizlilik politikası",
     "langLabel": "Dil",
@@ -404,7 +718,12 @@
       "msg": "Geçebilir misin?",
       "cta": "Dene",
       "about": "Quantum Match hakkında"
-    }
+    },
+    "scene1Punch": "Bir dokunuş,<br><span class=\"accent\">renkler akıyor.</span>",
+    "scene2Punch": "Doğru rengi vur,<br><span class=\"accent\">komboyu zincirle.</span>",
+    "scene3Punch": "Sıkıştın mı?<br><span class=\"accent\">Parçala.</span>",
+    "scene4Punch": "<span class=\"accent\">Devasa zincirler,</span><br>daha büyük skorlar.",
+    "closingHeadline": "Zincirlemeye hazır mısın?"
   },
   "id": {
     "lang": "id",
@@ -423,12 +742,36 @@
     "howBody": "Setiap sel adalah campuran merah, biru, dan kuning. Maskot tengah menunjukkan warna dominan. Ketuk untuk menetapkan — probabilitas merambat ke tetangga. Sejajarkan 3 warna sama.",
     "featuresTitle": "Fitur",
     "features": [
-      {"emoji": "🎨", "title": "Combo warna NEXT", "body": "Rangkai warna NEXT untuk pengganda lebih tinggi."},
-      {"emoji": "🔨", "title": "Palu", "body": "Buntu? Hancurkan satu sel. 3 gratis per game."},
-      {"emoji": "🤖", "title": "AI auto-play", "body": "Iklan singkat, AI main 1000 putaran."},
-      {"emoji": "🌍", "title": "12 bahasa", "body": "ID · EN · KO · JA · ZH · ES · PT · FR · DE · IT · TR"},
-      {"emoji": "📴", "title": "Sepenuhnya offline", "body": "Tanpa akun, di mana saja."},
-      {"emoji": "💰", "title": "Hapus iklan", "body": "Sekali beli, tanpa langganan."}
+      {
+        "emoji": "🎨",
+        "title": "Combo warna NEXT",
+        "body": "Rangkai warna NEXT untuk pengganda lebih tinggi."
+      },
+      {
+        "emoji": "🔨",
+        "title": "Palu",
+        "body": "Buntu? Hancurkan satu sel. 3 gratis per game."
+      },
+      {
+        "emoji": "🤖",
+        "title": "AI auto-play",
+        "body": "Iklan singkat, AI main 1000 putaran."
+      },
+      {
+        "emoji": "🌍",
+        "title": "12 bahasa",
+        "body": "ID · EN · KO · JA · ZH · ES · PT · FR · DE · IT · TR"
+      },
+      {
+        "emoji": "📴",
+        "title": "Sepenuhnya offline",
+        "body": "Tanpa akun, di mana saja."
+      },
+      {
+        "emoji": "💰",
+        "title": "Hapus iklan",
+        "body": "Sekali beli, tanpa langganan."
+      }
     ],
     "privacyLink": "Kebijakan privasi",
     "langLabel": "Bahasa",
@@ -441,6 +784,11 @@
       "msg": "Bisa lampaui?",
       "cta": "Coba",
       "about": "Tentang Quantum Match"
-    }
+    },
+    "scene1Punch": "Satu ketukan,<br><span class=\"accent\">warna mengalir.</span>",
+    "scene2Punch": "Sasar warna yang tepat,<br><span class=\"accent\">rangkai combo.</span>",
+    "scene3Punch": "Buntu?<br><span class=\"accent\">Hancurkan.</span>",
+    "scene4Punch": "<span class=\"accent\">Rantai raksasa,</span><br>skor lebih besar lagi.",
+    "closingHeadline": "Siap merangkai?"
   }
 }

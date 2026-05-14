@@ -32,70 +32,188 @@
 
 <style>
   :root {
-    --c-r:#ff5a6e; --c-r-d:#c8344a;
-    --c-y:#ffd23f; --c-y-d:#c79b1f;
-    --c-b:#4aa8ff; --c-b-d:#1f6cc7;
-    --c-g:#5acf6a; --c-g-d:#2f9a3f;
-    --c-p:#b078ff; --c-p-d:#7a44d6;
-    --text:#22243d;
-    --muted:#5d6280;
+    --r: 255,107,139;   --r-dark: 208,64,96;
+    --y: 255,206,90;    --y-dark: 216,160,48;
+    --b: 95,179,255;    --b-dark: 64,144,216;
+    --accent-r: #ff5a6e;
+    --accent-p: #b078ff;
+    --text: #22243d;
+    --muted: #5d6280;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: linear-gradient(180deg, #ffe1d6 0%, #ffd0e1 35%, #d8d0ff 70%, #c0e0ff 100%);
     color: var(--text);
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; text-align: center; }
-  h1 { font-size: clamp(40px, 9vw, 64px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 12px; }
-  h1 .accent { background: linear-gradient(135deg, var(--c-r), var(--c-p)); -webkit-background-clip: text; background-clip: text; color: transparent; display: block; }
-  .tag { font-size: 18px; color: var(--muted); margin-bottom: 36px; font-weight: 500; }
-  .mascots { display: flex; justify-content: center; gap: 12px; margin: 24px 0 40px; flex-wrap: wrap; }
-  .m { width: 64px; height: 64px; border-radius: 50%; border: 4px solid white; position: relative; box-shadow: 0 6px 0 var(--shadow), 0 10px 20px rgba(0,0,0,0.12); }
-  .m::before, .m::after { content: ""; position: absolute; width: 13%; height: 15%; border-radius: 50%; background: white; top: 32%; }
-  .m::before { left: 26%; }
-  .m::after  { right: 26%; }
-  .m .mouth { position: absolute; bottom: 22%; left: 50%; transform: translateX(-50%); width: 38%; height: 18%; border-radius: 0 0 99px 99px; background: #333; }
-  .m.r { background: var(--c-r); --shadow: var(--c-r-d); }
-  .m.y { background: var(--c-y); --shadow: var(--c-y-d); }
-  .m.b { background: var(--c-b); --shadow: var(--c-b-d); }
-  .m.g { background: var(--c-g); --shadow: var(--c-g-d); }
-  .m.p { background: var(--c-p); --shadow: var(--c-p-d); }
-  .stores { display: flex; justify-content: center; gap: 16px; margin-bottom: 48px; flex-wrap: wrap; }
-  .store-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; background: #1a1d2e; color: white; text-decoration: none; border-radius: 14px; font-weight: 600; font-size: 16px; box-shadow: 0 6px 0 rgba(26,29,46,0.4), 0 10px 24px rgba(0,0,0,0.2); transition: transform 0.15s ease; }
+
+  /* ── Hero ───────────────────────────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 64px 24px 0;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: clamp(48px, 12vw, 88px);
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    line-height: 0.95;
+    background: linear-gradient(135deg, var(--accent-r), var(--accent-p));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 16px;
+  }
+  .tag {
+    font-size: clamp(16px, 4vw, 20px);
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 500;
+  }
+  /* Mascot trio (red / blue / yellow only — green & purple stay hidden as
+     unlock rewards in-game) using the in-game flat .go-mascot style. */
+  .mascots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 24px 0 36px;
+  }
+  .m {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    border: 4px solid white;
+    position: relative;
+    margin: 0 -8px;
+  }
+  .m::before, .m::after {
+    content: ""; position: absolute;
+    width: 11.5%; height: 13.5%;
+    background: white;
+    border-radius: 50%;
+    top: 32%;
+  }
+  .m::before { left: 28%; }
+  .m::after  { right: 28%; }
+  .m .gm {
+    position: absolute;
+    bottom: 24%; left: 50%;
+    transform: translateX(-50%);
+    width: 38%; height: 16%;
+    background: white;
+    border-radius: 0 0 99px 99px;
+  }
+  .m.r { background: rgb(var(--r)); box-shadow: 0 6px 0 rgb(var(--r-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 1; }
+  .m.b { background: rgb(var(--b)); box-shadow: 0 6px 0 rgb(var(--b-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 2; }
+  .m.y { background: rgb(var(--y)); box-shadow: 0 6px 0 rgb(var(--y-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 3; }
+
+  .stores {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+  }
+  .store-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: #1a1d2e;
+    color: white;
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 6px 0 rgba(26,29,46,0.4), 0 10px 24px rgba(0,0,0,0.2);
+    transition: transform 0.15s ease;
+  }
   .store-btn:hover { transform: translateY(-2px); }
   .store-btn:active { transform: translateY(2px); }
   .store-btn .icon { font-size: 22px; }
-  section { background: rgba(255,255,255,0.55); border-radius: 20px; padding: 28px 24px; margin-bottom: 24px; text-align: start; backdrop-filter: blur(8px); }
-  section h2 { font-size: 22px; margin-bottom: 12px; font-weight: 700; }
-  section p { font-size: 16px; line-height: 1.55; color: var(--muted); }
-  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
-  .feat { background: white; padding: 18px 16px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-  .feat .emoji { font-size: 28px; margin-bottom: 6px; display: block; }
-  .feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-  .feat p { font-size: 14px; color: var(--muted); line-height: 1.45; }
-  .lang-switcher { margin-top: 32px; padding: 16px; background: rgba(255,255,255,0.45); border-radius: 14px; }
-  .lang-switcher .label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+  /* ── Screenshot sections ────────────────────────────── */
+  .scenes {
+    max-width: 520px;
+    margin: 24px auto 0;
+    padding: 24px;
+  }
+  .scene {
+    margin-bottom: 64px;
+    text-align: center;
+  }
+  .scene img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 32px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+    margin-bottom: 20px;
+  }
+  .scene .punch {
+    font-size: clamp(28px, 7vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    line-height: 1.05;
+    color: var(--text);
+    margin-top: 12px;
+  }
+  .scene .punch .accent {
+    background: linear-gradient(135deg, var(--accent-r), var(--accent-p));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ── Closing CTA ───────────────────────────────────── */
+  .closing {
+    text-align: center;
+    padding: 24px 24px 32px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .closing h2 {
+    font-size: clamp(32px, 8vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, var(--accent-r), var(--accent-p));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ── Language switcher ─────────────────────────────── */
+  .lang-switcher {
+    margin: 48px auto 0;
+    max-width: 720px;
+    padding: 20px;
+    background: rgba(255,255,255,0.45);
+    border-radius: 14px;
+  }
+  .lang-switcher .label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; text-align: center; }
   .lang-switcher .links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
   .lang-switcher a { padding: 6px 12px; border-radius: 999px; background: white; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; }
   .lang-switcher a.active { background: var(--text); color: white; }
-  footer { text-align: center; margin-top: 32px; font-size: 13px; color: var(--muted); }
+
+  footer {
+    text-align: center;
+    margin-top: 24px;
+    padding: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
   footer a { color: var(--muted); text-decoration: underline; }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <h1>Defina cores,<br><span class="accent">encadeie combos.</span></h1>
+<section class="hero">
+  <h1>Defina cores,<br>encadeie combos.</h1>
   <p class="tag">Um match-3 fresco onde as probabilidades de cor fluem.</p>
 
   <div class="mascots">
-    <div class="m r"><div class="mouth"></div></div>
-    <div class="m y"><div class="mouth"></div></div>
-    <div class="m b"><div class="mouth"></div></div>
-    <div class="m g"><div class="mouth"></div></div>
-    <div class="m p"><div class="mouth"></div></div>
+    <div class="m r"><div class="gm"></div></div>
+    <div class="m b"><div class="gm"></div></div>
+    <div class="m y"><div class="gm"></div></div>
   </div>
 
   <div class="stores">
@@ -106,52 +224,43 @@
       <span class="icon">▶</span> Google Play
     </a>
   </div>
+</section>
 
-  <section>
-    <h2>Como jogar</h2>
-    <p>Cada célula mistura vermelho, azul e amarelo. O mascote central mostra a cor dominante. Toque numa célula para fixar a cor — as probabilidades se espalham para as vizinhas. Alinhe 3 da mesma cor.</p>
-  </section>
+<section class="scenes">
+  <div class="scene">
+    <img src="../shots/pt-BR/1-hero.png" alt="" loading="lazy">
+    <p class="punch">Um toque,<br><span class="accent">a cor flui.</span></p>
+  </div>
+  <div class="scene">
+    <img src="../shots/pt-BR/2-target.png" alt="" loading="lazy">
+    <p class="punch">Acerte a cor certa,<br><span class="accent">encadeie o combo.</span></p>
+  </div>
+  <div class="scene">
+    <img src="../shots/pt-BR/3-smash.png" alt="" loading="lazy">
+    <p class="punch">Travado?<br><span class="accent">Quebre.</span></p>
+  </div>
+  <div class="scene">
+    <img src="../shots/pt-BR/4-cascade.png" alt="" loading="lazy">
+    <p class="punch"><span class="accent">Cadeias gigantes,</span><br>pontuações maiores ainda.</p>
+  </div>
+</section>
 
-  <section>
-    <h2>Recursos</h2>
-    <div class="features">
-            <div class="feat">
-        <span class="emoji">🎨</span>
-        <h3>Combos cor NEXT</h3>
-        <p>Encadeie a cor NEXT e aumente o multiplicador.</p>
-      </div>
-      <div class="feat">
-        <span class="emoji">🔨</span>
-        <h3>Martelo</h3>
-        <p>Travado? Destrua uma célula. 3 grátis por partida.</p>
-      </div>
-      <div class="feat">
-        <span class="emoji">🤖</span>
-        <h3>IA auto-play</h3>
-        <p>Assista um anúncio, a IA joga 1000 turnos.</p>
-      </div>
-      <div class="feat">
-        <span class="emoji">🌍</span>
-        <h3>12 idiomas</h3>
-        <p>PT · EN · KO · JA · ZH · ES · FR · DE · IT · TR · ID</p>
-      </div>
-      <div class="feat">
-        <span class="emoji">📴</span>
-        <h3>Totalmente offline</h3>
-        <p>Sem login, jogue em qualquer lugar.</p>
-      </div>
-      <div class="feat">
-        <span class="emoji">💰</span>
-        <h3>Remover anúncios</h3>
-        <p>Compra única, sem assinaturas.</p>
-      </div>
-    </div>
-  </section>
+<section class="closing">
+  <h2>Pronto para encadear?</h2>
+  <div class="stores">
+    <a class="store-btn" id="ios-btn-2" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
+      <span class="icon">🍎</span> App Store
+    </a>
+    <a class="store-btn" id="android-btn-2" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
+      <span class="icon">▶</span> Google Play
+    </a>
+  </div>
+</section>
 
-  <div class="lang-switcher">
-    <div class="label">Idioma</div>
-    <div class="links">
-            <a href="../en/" class="" hreflang="en">English</a>
+<div class="lang-switcher">
+  <div class="label">Idioma</div>
+  <div class="links">
+          <a href="../en/" class="" hreflang="en">English</a>
       <a href="../ko/" class="" hreflang="ko">한국어</a>
       <a href="../ja/" class="" hreflang="ja">日本語</a>
       <a href="../zh-Hans/" class="" hreflang="zh-Hans">简体中文</a>
@@ -163,21 +272,25 @@
       <a href="../it/" class="" hreflang="it">Italiano</a>
       <a href="../tr/" class="" hreflang="tr">Türkçe</a>
       <a href="../id/" class="" hreflang="id">Bahasa Indonesia</a>
-    </div>
   </div>
-
-  <footer>
-    <a href="../privacy.html">Política de privacidade</a> · <a href="/">winsiner</a> · 2026
-  </footer>
 </div>
+
+<footer>
+  <a href="../privacy.html">Política de privacidade</a> · <a href="/">winsiner</a> · 2026
+</footer>
 
 <script>
   (function () {
     var ua = navigator.userAgent || '';
     var isiOS = /iPhone|iPad|iPod/i.test(ua);
     var isAndroid = /Android/i.test(ua);
-    if (isiOS) document.getElementById('android-btn').style.opacity = '0.55';
-    else if (isAndroid) document.getElementById('ios-btn').style.opacity = '0.55';
+    if (isiOS) {
+      document.getElementById('android-btn').style.opacity = '0.55';
+      document.getElementById('android-btn-2').style.opacity = '0.55';
+    } else if (isAndroid) {
+      document.getElementById('ios-btn').style.opacity = '0.55';
+      document.getElementById('ios-btn-2').style.opacity = '0.55';
+    }
   })();
 </script>
 </body>
