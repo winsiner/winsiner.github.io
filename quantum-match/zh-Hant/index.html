@@ -50,11 +50,35 @@
   }
 
   /* ── Hero ───────────────────────────────────────────── */
+  /* Fountain background wraps the hero block. The image fades into the
+     surrounding gradient at the bottom so the page scrolls without a hard
+     edge. On narrow viewports we crop in tighter so the side mascots
+     stay visible. */
+  .hero-wrap {
+    position: relative;
+    background-image: url('../hero-fountain.png');
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+  }
+  .hero-wrap::after {
+    /* Soft fade at the bottom so the fountain image dissolves into the
+       page's main gradient — no hard cut line. */
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, #d8d0ff);
+    pointer-events: none;
+  }
   .hero {
     text-align: center;
-    padding: 64px 24px 0;
+    padding: 64px 24px 48px;
     max-width: 720px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
   }
   h1 {
     font-size: clamp(48px, 12vw, 88px);
@@ -206,25 +230,21 @@
 </head>
 <body>
 
-<section class="hero">
-  <h1>點擊定色,<br>連擊爆分。</h1>
-  <p class="tag">顏色機率流動的全新消除益智遊戲。</p>
+<div class="hero-wrap">
+  <section class="hero">
+    <h1>點擊定色,<br>連擊爆分。</h1>
+    <p class="tag">顏色機率流動的全新消除益智遊戲。</p>
 
-  <div class="mascots">
-    <div class="m r"><div class="gm"></div></div>
-    <div class="m b"><div class="gm"></div></div>
-    <div class="m y"><div class="gm"></div></div>
-  </div>
-
-  <div class="stores">
-    <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
-      <span class="icon">🍎</span> App Store
-    </a>
-    <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
-      <span class="icon">▶</span> Google Play
-    </a>
-  </div>
-</section>
+    <div class="stores">
+      <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
+        <span class="icon">🍎</span> App Store
+      </a>
+      <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
+        <span class="icon">▶</span> Google Play
+      </a>
+    </div>
+  </section>
+</div>
 
 <section class="scenes">
   <div class="scene">
