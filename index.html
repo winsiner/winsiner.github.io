@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>winsiner — games</title>
+<style>
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: #06060a;
+    color: #d8d8e8;
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .wrap { padding: 40px 24px; }
+  h1 {
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, #ff5a6e, #b078ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  p { color: #8a90a8; font-size: 17px; margin-bottom: 32px; }
+  .games { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  a.card {
+    display: block;
+    padding: 18px 24px;
+    background: #1a1d2e;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 700;
+    border: 1px solid #2a2d44;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  a.card:hover { transform: translateY(-2px); border-color: #5d6280; }
+  footer { margin-top: 48px; color: #5a5d72; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>winsiner</h1>
+  <p>Indie games. Small, fast, well-crafted.</p>
+
+  <div class="games">
+    <a class="card" href="/quantum-match/">🎨 Quantum Match</a>
+  </div>
+
+  <footer>winsiner · 2026</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Jekyll config for winsiner.github.io
+# Include .well-known so Apple/Google can fetch app-link verification files.
+include:
+  - .well-known
+  - .well-known/apple-app-site-association
+  - .well-known/assetlinks.json

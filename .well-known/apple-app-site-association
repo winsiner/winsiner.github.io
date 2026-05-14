@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "D65UHDVCY8.com.winsiner.quantummatch",
+        "paths": [
+          "/quantum-match/s",
+          "/quantum-match/s/*",
+          "/quantum-match/",
+          "/quantum-match"
+        ]
+      }
+    ]
+  }
+}
