@@ -7,6 +7,8 @@
         "paths": [
           "/quantum-match/s",
           "/quantum-match/s/*",
+          "/quantum-match/*/s",
+          "/quantum-match/*/s/*",
           "/quantum-match/",
           "/quantum-match"
         ]
@@ -16,6 +18,8 @@
         "paths": [
           "/onecolor/s",
           "/onecolor/s/*",
+          "/onecolor/*/s",
+          "/onecolor/*/s/*",
           "/onecolor/",
           "/onecolor"
         ]
