@@ -7,10 +7,13 @@ winsiner의 게임 랜딩 페이지 모음. `https://winsiner.github.io/` 에 �
 ```
 /                                   → 회사 메인 (게임 목록)
 /quantum-match/                     → Quantum Match 랜딩
-/quantum-match/s/?score=12345       → 점수 공유 페이지 (Universal Link target)
+/quantum-match/s/?score=12345       → 점수 공유 (Universal Link target)
 /quantum-match/privacy.html         → 개인정보처리방침
-/.well-known/apple-app-site-association  → iOS Universal Link 검증
-/.well-known/assetlinks.json        → Android App Link 검증
+/onecolor/                          → OneColor 랜딩
+/onecolor/s/?score=287&mode=classic → 점수 공유 (mode: classic | time-attack | endless)
+/onecolor/privacy.html              → 개인정보처리방침
+/.well-known/apple-app-site-association  → iOS Universal Link 검증 (모든 앱 통합)
+/.well-known/assetlinks.json        → Android App Link 검증 (모든 앱 통합)
 ```
 
 ## 추가/수정 시 주의
