@@ -80,17 +80,30 @@ function buildModesHTMLOC(modes) {
       </div>`).join('\n');
 }
 
+const LANG_LABEL = {
+  'en': 'English', 'ko': '한국어', 'ja': '日本語', 'zh-Hans': '简体中文', 'zh-Hant': '繁體中文',
+  'es': 'Español', 'pt-BR': 'Português (BR)', 'fr': 'Français', 'de': 'Deutsch',
+  'it': 'Italiano', 'tr': 'Türkçe', 'id': 'Bahasa Indonesia',
+};
+
 function buildLangLinksHTML(slug, locales, currentLang) {
   return locales.map(l => {
     const cls = l.lang === currentLang ? 'active' : '';
-    const labelMap = {
-      'en': 'English', 'ko': '한국어', 'ja': '日本語', 'zh-Hans': '简体中文', 'zh-Hant': '繁體中文',
-      'es': 'Español', 'pt-BR': 'Português (BR)', 'fr': 'Français', 'de': 'Deutsch',
-      'it': 'Italiano', 'tr': 'Türkçe', 'id': 'Bahasa Indonesia',
-    };
-    const label = labelMap[l.lang] || l.lang;
+    const label = LANG_LABEL[l.lang] || l.lang;
     return `      <a href="../${l.lang}/" class="${cls}" hreflang="${l.htmlLang}">${escapeHtml(label)}</a>`;
   }).join('\n');
+}
+
+function buildLangOptionsHTML(locales, currentLang) {
+  return locales.map(l => {
+    const sel = l.lang === currentLang ? ' selected' : '';
+    const label = LANG_LABEL[l.lang] || l.lang;
+    return `      <option value="${l.lang}"${sel}>${escapeHtml(label)}</option>`;
+  }).join('\n');
+}
+
+function currentLangLabel(lang) {
+  return LANG_LABEL[lang] || lang;
 }
 
 function buildHreflangBlock(slug, locales, currentLang, subPath = '') {
@@ -136,10 +149,19 @@ function buildGame(game) {
     if (loc.modes) modesHTML = buildModesHTMLOC(loc.modes);
 
     const langLinksHTML = buildLangLinksHTML(game.slug, localeList, loc.lang);
+    const langOptionsHTML = buildLangOptionsHTML(localeList, loc.lang);
     const hreflangLanding = buildHreflangBlock(game.slug, localeList, loc.lang, '');
     const hreflangShare = buildHreflangBlock(game.slug, localeList, loc.lang, 's/');
 
-    const landingData = { ...loc, featuresHTML, modesHTML, langLinksHTML, hreflangBlock: hreflangLanding };
+    const landingData = {
+      ...loc,
+      featuresHTML,
+      modesHTML,
+      langLinksHTML,
+      langOptionsHTML,
+      currentLangLabel: currentLangLabel(loc.lang),
+      hreflangBlock: hreflangLanding,
+    };
     const shareData = { ...loc, hreflangBlock: hreflangShare };
 
     const landingHtml = interpolate(landingTpl, landingData);

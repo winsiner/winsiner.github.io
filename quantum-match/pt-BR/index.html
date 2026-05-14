@@ -132,30 +132,30 @@
   .m.b { background: rgb(var(--b)); box-shadow: 0 6px 0 rgb(var(--b-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 2; }
   .m.y { background: rgb(var(--y)); box-shadow: 0 6px 0 rgb(var(--y-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 3; }
 
+  /* Official store badges — Apple "Download on the App Store" and Google's
+     "Get it on Google Play" per Apple Marketing Guidelines + Google brand
+     guidelines. Both badges are PNG/SVG provided by the respective store
+     and must be rendered at the original aspect ratio without
+     modification. We just size by height. */
   .stores {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
-    padding-bottom: 8px;
-  }
-  .store-btn {
-    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 22px;
-    background: #1a1d2e;
-    color: white;
+  }
+  .store-badge {
+    display: inline-block;
     text-decoration: none;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 16px;
-    box-shadow: 0 6px 0 rgba(26,29,46,0.4), 0 10px 24px rgba(0,0,0,0.2);
     transition: transform 0.15s ease;
   }
-  .store-btn:hover { transform: translateY(-2px); }
-  .store-btn:active { transform: translateY(2px); }
-  .store-btn .icon { font-size: 22px; }
+  .store-badge img {
+    display: block;
+    height: 52px;
+    width: auto;
+  }
+  .store-badge:hover { transform: translateY(-1px); }
+  .store-badge:active { transform: translateY(1px); }
 
   /* ── Screenshot sections ────────────────────────────── */
   .scenes {
@@ -205,18 +205,45 @@
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
 
-  /* ── Language switcher ─────────────────────────────── */
-  .lang-switcher {
-    margin: 48px auto 0;
-    max-width: 720px;
-    padding: 20px;
-    background: rgba(255,255,255,0.45);
-    border-radius: 14px;
+  /* ── Language dropdown (top-right, fixed) ──────────── */
+  /* Native <select> so mobile users get the OS picker. The visual wrap
+     is a pill with a small caret; the actual <select> covers it via
+     opacity:0 so clicks are still handled natively. */
+  .lang-picker {
+    position: fixed;
+    top: 16px; right: 16px;
+    z-index: 50;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 8px 30px 8px 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.4) inset;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 700 13px/1 'Fredoka', -apple-system, system-ui, sans-serif;
+    color: var(--text);
+    pointer-events: none;
   }
-  .lang-switcher .label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; text-align: center; }
-  .lang-switcher .links { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-  .lang-switcher a { padding: 6px 12px; border-radius: 999px; background: white; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; }
-  .lang-switcher a.active { background: var(--text); color: white; }
+  .lang-picker::after {
+    /* Caret */
+    content: "";
+    position: absolute;
+    right: 14px; top: 50%;
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--text);
+    border-bottom: 2px solid var(--text);
+    transform: translateY(-70%) rotate(45deg);
+  }
+  .lang-picker select {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    font: inherit;
+  }
 
   footer {
     text-align: center;
@@ -230,17 +257,35 @@
 </head>
 <body>
 
+<div class="lang-picker">
+  <span id="lang-picker-label">Português (BR)</span>
+  <select id="lang-picker-select" aria-label="Idioma">
+          <option value="en">English</option>
+      <option value="ko">한국어</option>
+      <option value="ja">日本語</option>
+      <option value="zh-Hans">简体中文</option>
+      <option value="zh-Hant">繁體中文</option>
+      <option value="es">Español</option>
+      <option value="pt-BR" selected>Português (BR)</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="it">Italiano</option>
+      <option value="tr">Türkçe</option>
+      <option value="id">Bahasa Indonesia</option>
+  </select>
+</div>
+
 <div class="hero-wrap">
   <section class="hero">
     <h1>Defina cores,<br>encadeie combos.</h1>
     <p class="tag">Um match-3 fresco onde as probabilidades de cor fluem.</p>
 
     <div class="stores">
-      <a class="store-btn" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
-        <span class="icon">🍎</span> App Store
+      <a class="store-badge" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener" aria-label="App Store">
+        <img src="../badges/app-store-en.svg" alt="App Store">
       </a>
-      <a class="store-btn" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
-        <span class="icon">▶</span> Google Play
+      <a class="store-badge" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener" aria-label="Google Play">
+        <img src="../badges/google-play-en.svg" alt="Google Play">
       </a>
     </div>
   </section>
@@ -268,32 +313,14 @@
 <section class="closing">
   <h2>Pronto para encadear?</h2>
   <div class="stores">
-    <a class="store-btn" id="ios-btn-2" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener">
-      <span class="icon">🍎</span> App Store
+    <a class="store-badge" id="ios-btn-2" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener" aria-label="App Store">
+      <img src="../badges/app-store-en.svg" alt="App Store">
     </a>
-    <a class="store-btn" id="android-btn-2" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener">
-      <span class="icon">▶</span> Google Play
+    <a class="store-badge" id="android-btn-2" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener" aria-label="Google Play">
+      <img src="../badges/google-play-en.svg" alt="Google Play">
     </a>
   </div>
 </section>
-
-<div class="lang-switcher">
-  <div class="label">Idioma</div>
-  <div class="links">
-          <a href="../en/" class="" hreflang="en">English</a>
-      <a href="../ko/" class="" hreflang="ko">한국어</a>
-      <a href="../ja/" class="" hreflang="ja">日本語</a>
-      <a href="../zh-Hans/" class="" hreflang="zh-Hans">简体中文</a>
-      <a href="../zh-Hant/" class="" hreflang="zh-Hant">繁體中文</a>
-      <a href="../es/" class="" hreflang="es">Español</a>
-      <a href="../pt-BR/" class="active" hreflang="pt-BR">Português (BR)</a>
-      <a href="../fr/" class="" hreflang="fr">Français</a>
-      <a href="../de/" class="" hreflang="de">Deutsch</a>
-      <a href="../it/" class="" hreflang="it">Italiano</a>
-      <a href="../tr/" class="" hreflang="tr">Türkçe</a>
-      <a href="../id/" class="" hreflang="id">Bahasa Indonesia</a>
-  </div>
-</div>
 
 <footer>
   <a href="../privacy.html">Política de privacidade</a> · <a href="/">winsiner</a> · 2026
@@ -310,6 +337,26 @@
     } else if (isAndroid) {
       document.getElementById('ios-btn').style.opacity = '0.55';
       document.getElementById('ios-btn-2').style.opacity = '0.55';
+    }
+
+    // Language picker: navigate to the chosen locale on change. We swap the
+    // last path segment (current lang) for the new one, preserving the rest.
+    var sel = document.getElementById('lang-picker-select');
+    if (sel) {
+      sel.addEventListener('change', function () {
+        var target = sel.value;
+        if (!target) return;
+        // Path looks like /quantum-match/<lang>/ — replace <lang> in place.
+        var parts = window.location.pathname.split('/');
+        // Find the quantum-match segment then replace the following one.
+        for (var i = 0; i < parts.length - 1; i++) {
+          if (parts[i] === 'quantum-match') {
+            parts[i + 1] = target;
+            break;
+          }
+        }
+        window.location.href = parts.join('/') || ('/quantum-match/' + target + '/');
+      });
     }
   })();
 </script>
