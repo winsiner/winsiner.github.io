@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="{{htmlLang}}" dir="{{dir}}">
+<head>
+<meta charset="utf-8">
+<title>OG · {{lang}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Fredoka:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Cafe24Ssurround';
+  src: url('fonts/Cafe24Ssurround.woff2') format('woff2'),
+       url('fonts/Cafe24Ssurround.woff')  format('woff');
+  font-display: block;
+  unicode-range: U+AC00-D7AF, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+}
+@font-face {
+  font-family: 'KosugiMaru';
+  src: url('fonts/KosugiMaru-Regular.ttf') format('truetype');
+  font-display: block;
+  unicode-range: U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF;
+}
+:root {
+  --c-r:#ff5a6e; --c-r-d:#c8344a;
+  --c-y:#ffd23f; --c-y-d:#c79b1f;
+  --c-b:#4aa8ff; --c-b-d:#1f6cc7;
+  --c-g:#5acf6a; --c-g-d:#2f9a3f;
+  --c-p:#b078ff; --c-p-d:#7a44d6;
+  --text:#22243d;
+  --muted:#5d6280;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1200px; height: 630px; overflow: hidden; }
+body {
+  font-family: 'Baloo 2', 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  background: linear-gradient(180deg, #ffe1d6 0%, #ffd0e1 35%, #d8d0ff 70%, #c0e0ff 100%);
+  color: var(--text);
+  position: relative;
+}
+
+.card {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 36px;
+  padding: 56px 64px 56px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  text-align: center;
+  width: 740px;
+  z-index: 2;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 36px;
+  background: linear-gradient(135deg, var(--c-r), var(--c-y), var(--c-b), var(--c-g), var(--c-p));
+  z-index: -1;
+  opacity: 0.45;
+}
+.brand {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+.headline {
+  font-size: 70px;
+  font-weight: 800;
+  letter-spacing: -1.6px;
+  line-height: 1.08;
+  background: linear-gradient(135deg, var(--c-r), var(--c-p));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+/* Korean/Japanese/Chinese tend to be denser; nudge the headline down a notch
+   so it never butts against the card edges. The unicode-range font-faces
+   already auto-pick the script-specific face, so we only need size + tracking. */
+:lang(ko) .headline,
+:lang(ja) .headline,
+:lang(zh-Hans) .headline,
+:lang(zh-Hant) .headline {
+  font-size: 62px;
+  letter-spacing: -0.5px;
+  line-height: 1.18;
+}
+
+/* ── Mascot fountain — twin sprays from the bottom corners ───────── */
+.fountain {
+  position: absolute;
+  bottom: 0;
+  width: 520px;
+  height: 580px;
+  pointer-events: none;
+  z-index: 0;
+  --u: 110px;
+}
+.fountain.left  { left: -80px; }
+.fountain.right { right: -80px; transform: scaleX(-1); }
+.fm {
+  position: absolute;
+  border-radius: 50%;
+  border: 0.06em solid white;
+  box-sizing: border-box;
+}
+.fm::before, .fm::after {
+  content: ""; position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.fm::before { left: 28%; }
+.fm::after  { right: 28%; }
+.fm .fgm {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  background: white;
+  border-radius: 0 0 99px 99px;
+}
+.fm.r { background: var(--c-r); box-shadow: 0 0.06em 0 var(--c-r-d), 0 0.09em 0.22em rgba(0,0,0,0.18); }
+.fm.b { background: var(--c-b); box-shadow: 0 0.06em 0 var(--c-b-d), 0 0.09em 0.22em rgba(0,0,0,0.18); }
+.fm.y { background: var(--c-y); box-shadow: 0 0.06em 0 var(--c-y-d), 0 0.09em 0.22em rgba(0,0,0,0.18); }
+.fm        { width: var(--u);              height: var(--u);              font-size: var(--u); }
+.fm.lg     { width: calc(var(--u) * 1.4);  height: calc(var(--u) * 1.4);  font-size: calc(var(--u) * 1.4); }
+.fm.md     { width: calc(var(--u) * 0.95); height: calc(var(--u) * 0.95); font-size: calc(var(--u) * 0.95); }
+.fm.sm     { width: calc(var(--u) * 0.6);  height: calc(var(--u) * 0.6);  font-size: calc(var(--u) * 0.6); }
+.fm.xs     { width: calc(var(--u) * 0.38); height: calc(var(--u) * 0.38); font-size: calc(var(--u) * 0.38); }
+.fm.tiny   { width: calc(var(--u) * 0.24); height: calc(var(--u) * 0.24); font-size: calc(var(--u) * 0.24); }
+</style>
+</head>
+<body>
+<div class="fountain left">
+  <div class="fm b lg"   style="bottom: 0%;  left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r"      style="bottom: 4%;  left: 30%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y"      style="bottom: 4%;  left: 70%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 24%; left: 14%; transform: translateX(-50%) rotate(-12deg);"><div class="fgm"></div></div>
+  <div class="fm y md"   style="bottom: 26%; left: 82%; transform: translateX(-50%) rotate(14deg);"><div class="fgm"></div></div>
+  <div class="fm b md"   style="bottom: 42%; left: 36%; transform: translateX(-50%) rotate(-5deg);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 44%; left: 64%; transform: translateX(-50%) rotate(8deg);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 58%; left: 10%; transform: translateX(-50%) rotate(-22deg);"><div class="fgm"></div></div>
+  <div class="fm b sm"   style="bottom: 64%; left: 28%; transform: translateX(-50%) rotate(-10deg);"><div class="fgm"></div></div>
+  <div class="fm r sm"   style="bottom: 72%; left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 66%; left: 72%; transform: translateX(-50%) rotate(12deg);"><div class="fgm"></div></div>
+  <div class="fm r xs"   style="bottom: 82%; left: 38%; transform: translateX(-50%) rotate(-15deg);"><div class="fgm"></div></div>
+  <div class="fm b xs"   style="bottom: 88%; left: 56%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y tiny" style="bottom: 95%; left: 46%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r tiny" style="bottom: 92%; left: 64%; transform: translateX(-50%);"><div class="fgm"></div></div>
+</div>
+<div class="fountain right">
+  <div class="fm b lg"   style="bottom: 0%;  left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r"      style="bottom: 4%;  left: 30%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y"      style="bottom: 4%;  left: 70%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 24%; left: 14%; transform: translateX(-50%) rotate(-12deg);"><div class="fgm"></div></div>
+  <div class="fm y md"   style="bottom: 26%; left: 82%; transform: translateX(-50%) rotate(14deg);"><div class="fgm"></div></div>
+  <div class="fm b md"   style="bottom: 42%; left: 36%; transform: translateX(-50%) rotate(-5deg);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 44%; left: 64%; transform: translateX(-50%) rotate(8deg);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 58%; left: 10%; transform: translateX(-50%) rotate(-22deg);"><div class="fgm"></div></div>
+  <div class="fm b sm"   style="bottom: 64%; left: 28%; transform: translateX(-50%) rotate(-10deg);"><div class="fgm"></div></div>
+  <div class="fm r sm"   style="bottom: 72%; left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 66%; left: 72%; transform: translateX(-50%) rotate(12deg);"><div class="fgm"></div></div>
+  <div class="fm r xs"   style="bottom: 82%; left: 38%; transform: translateX(-50%) rotate(-15deg);"><div class="fgm"></div></div>
+  <div class="fm b xs"   style="bottom: 88%; left: 56%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y tiny" style="bottom: 95%; left: 46%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r tiny" style="bottom: 92%; left: 64%; transform: translateX(-50%);"><div class="fgm"></div></div>
+</div>
+
+<div class="card">
+  <div class="brand">{{name}}</div>
+  <div class="headline">{{headline}}</div>
+</div>
+</body>
+</html>
