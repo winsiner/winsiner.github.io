@@ -5,6 +5,12 @@
       {
         "appID": "D65UHDVCY8.com.winsiner.quantummatch",
         "paths": [
+          "/cell-match/s",
+          "/cell-match/s/*",
+          "/cell-match/*/s",
+          "/cell-match/*/s/*",
+          "/cell-match/",
+          "/cell-match",
           "/quantum-match/s",
           "/quantum-match/s/*",
           "/quantum-match/*/s",
