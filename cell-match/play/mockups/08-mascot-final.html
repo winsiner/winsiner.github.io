@@ -1,0 +1,1251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mascot Final — 풀 시퀀스</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Baloo+2:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --r: #ff6b8b; --r-dark: #d04060; --r-shadow: rgba(255,107,139,0.4);
+    --b: #5fb3ff; --b-dark: #4090d8; --b-shadow: rgba(95,179,255,0.4);
+    --y: #ffce5a; --y-dark: #d8a030; --y-shadow: rgba(255,206,90,0.4);
+    --g: #6fdb8a; --g-dark: #45a560; --g-shadow: rgba(111,219,138,0.4);
+    --p: #b885ff; --p-dark: #8855d8; --p-shadow: rgba(184,133,255,0.4);
+    --bg-1: #fff4d9;
+    --bg-2: #ffe0e8;
+    --ink: #443322;
+    --shadow: rgba(140, 80, 80, 0.2);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  body {
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    color: var(--ink);
+    padding: 32px 24px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 32px;
+    text-align: center;
+    background: linear-gradient(90deg, var(--r), var(--y), var(--g), var(--p));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    margin: 0 0 8px;
+  }
+  .sub { text-align: center; color: #a08070; margin-bottom: 32px; }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 28px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .state-wrap {
+    display: flex; flex-direction: column;
+    align-items: center;
+  }
+  .state-label {
+    font-family: 'Baloo 2';
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--ink);
+    background: white;
+    padding: 6px 16px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+  .state-desc {
+    font-size: 12px;
+    color: #a08070;
+    margin-top: 8px;
+    text-align: center;
+    max-width: 350px;
+  }
+
+  /* === Phone shell === */
+  .phone {
+    width: 380px; height: 800px;
+    border-radius: 36px;
+    background:
+      radial-gradient(circle at 80% 12%, rgba(255,206,90,0.18), transparent 35%),
+      radial-gradient(circle at 18% 88%, rgba(184,133,255,0.16), transparent 38%),
+      radial-gradient(circle at 88% 92%, rgba(95,179,255,0.14), transparent 32%),
+      linear-gradient(170deg, #fffaee, #ffeae6);
+    overflow: hidden;
+    box-shadow: 0 20px 50px var(--shadow), 0 0 0 5px white;
+    position: relative;
+    padding: 18px;
+    display: flex; flex-direction: column;
+  }
+  /* Floating ambient sparkles in the margins */
+  .phone::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(1.5px 1.5px at 30px 100px, rgba(184,133,255,0.6), transparent),
+      radial-gradient(2px 2px at 320px 220px, rgba(255,206,90,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 350px 660px, rgba(95,179,255,0.6), transparent),
+      radial-gradient(2px 2px at 50px 720px, rgba(255,107,139,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 200px 760px, rgba(111,219,138,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 340px 90px, rgba(255,107,139,0.5), transparent);
+    z-index: 1;
+  }
+  .phone > * { position: relative; z-index: 2; }
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .title-wrap { display: flex; align-items: center; gap: 8px; }
+  .title-icons { display: flex; }
+  .icon-mini {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 900;
+    color: white;
+    border: 2px solid white;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.18);
+    margin-left: -8px;
+  }
+  .icon-mini:first-child { margin-left: 0; background: var(--r); }
+  .icon-mini.b { background: var(--b); }
+  .icon-mini.y { background: var(--y); color: var(--ink); }
+  .icon-mini.g { background: var(--g); }
+  .icon-mini.p { background: var(--p); }
+  .title {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 22px;
+    background: linear-gradient(90deg, var(--r), var(--y));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    letter-spacing: -0.3px;
+  }
+  .menu-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 10px var(--shadow);
+    display: grid; place-items: center;
+    font-size: 16px;
+  }
+
+  /* === Score card === */
+  .score-card {
+    background: white;
+    border-radius: 18px;
+    padding: 12px 18px;
+    box-shadow: 0 6px 16px var(--shadow);
+    margin-bottom: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .score-label { font-size: 10px; color: #b89890; font-weight: 700; letter-spacing: 2px; }
+  .score-value {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 30px;
+    color: var(--r);
+    line-height: 1;
+    margin-top: 2px;
+    letter-spacing: -0.5px;
+  }
+  .best-label { font-size: 9px; color: #b89890; font-weight: 700; letter-spacing: 1.2px; text-align: right; }
+  .best-value { font-family: 'Baloo 2'; font-weight: 800; font-size: 16px; color: var(--b); text-align: right; margin-top: 2px; }
+
+  /* === Progress bar (threshold system) === */
+  .progress-card {
+    background: white;
+    border-radius: 14px;
+    padding: 8px 12px;
+    box-shadow: 0 3px 10px var(--shadow);
+    margin-bottom: 8px;
+  }
+  .progress-bar-wrap {
+    position: relative;
+    height: 8px;
+    background: #f3eadc;
+    border-radius: 999px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    margin: 14px 0 4px;
+  }
+  .progress-fill {
+    position: absolute;
+    inset: 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--r), var(--y));
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(255,150,80,0.5);
+    transition: width 0.6s ease;
+  }
+  .progress-tick {
+    position: absolute;
+    top: -5px;
+    width: 2px;
+    height: 18px;
+    background: #ccc;
+    border-radius: 1px;
+  }
+  .progress-tick.left  { left: 33.3%; }
+  .progress-tick.right { left: 66.6%; }
+  .progress-tick .tooltip {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Baloo 2';
+    font-weight: 800;
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .progress-tick.left .tooltip { background: var(--g-dark); }
+  .progress-tick.right .tooltip { background: var(--p-dark); }
+  .progress-tick.passed { background: var(--g-dark); }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #b89890;
+    font-weight: 700;
+  }
+
+  /* === Mascot atom === */
+  .mascot {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--next-color, var(--b));
+    position: relative;
+    box-shadow: 0 4px 0 var(--next-dark, var(--b-dark)), 0 6px 14px var(--next-shadow, rgba(70,130,200,0.4));
+    animation: hop 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes hop {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+  }
+  .mascot::before, .mascot::after {
+    content: "";
+    position: absolute;
+    width: 6px; height: 7px;
+    border-radius: 50%;
+    background: white;
+    top: 32%;
+  }
+  .mascot::before { left: 26%; }
+  .mascot::after { right: 26%; }
+  .mascot[data-c="y"]::before, .mascot[data-c="y"]::after { background: var(--ink); }
+  .mouth {
+    position: absolute;
+    bottom: 24%; left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 7px;
+    border-radius: 0 0 14px 14px;
+    background: #333;
+  }
+  .mouth.smile {
+    width: 16px; height: 8px;
+    background: white;
+  }
+  .mascot[data-c="y"] .mouth.smile { background: var(--ink); }
+  .mouth.surprised {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    bottom: 22%;
+  }
+  .mouth.sad {
+    width: 14px; height: 6px;
+    border-radius: 14px 14px 0 0;
+    bottom: 18%;
+    background: transparent;
+    border: 2.5px solid #333;
+    border-bottom: none;
+  }
+  .mouth.party {
+    width: 18px; height: 10px;
+    border-radius: 0 0 18px 18px;
+    background: #333;
+  }
+
+  /* === Board container with NEXT strip — vertically centered in remaining space === */
+  .board-frame {
+    background: white;
+    border-radius: 22px;
+    padding: 0 0 10px;
+    box-shadow: 0 8px 22px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    margin: auto 0;  /* push to vertical center between score-card and footer-stats */
+  }
+  .next-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: linear-gradient(180deg, var(--next-color, var(--b)), color-mix(in oklch, var(--next-color, var(--b)) 80%, white));
+    border-radius: 22px 22px 0 0;
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  .next-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 800;
+    letter-spacing: 3px;
+  }
+  .next-text {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 20px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: 0.5px;
+  }
+  /* Yellow NEXT needs dark text for legibility on light bg */
+  .next-strip[data-c="y"] .next-label { color: rgba(68,51,34,0.7); }
+  .next-strip[data-c="y"] .next-text { color: var(--ink); text-shadow: 0 1px 2px rgba(255,255,255,0.5); }
+
+  /* === Combo badge — pinned to top-right just below the score card === */
+  .combo-badge {
+    position: absolute;
+    top: 96px; right: 12px;
+    background: white;
+    padding: 6px 14px 6px 6px;
+    border-radius: 999px;
+    box-shadow: 0 6px 16px rgba(255,107,139,0.45);
+    display: flex; align-items: center; gap: 8px;
+    transform: rotate(-6deg);
+    z-index: 5;
+  }
+  .combo-mascot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--r);
+    position: relative;
+    box-shadow: 0 3px 0 var(--r-dark);
+    flex-shrink: 0;
+  }
+  .combo-mascot::before, .combo-mascot::after {
+    content: "";
+    position: absolute;
+    width: 5px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    top: 30%;
+  }
+  .combo-mascot::before { left: 28%; }
+  .combo-mascot::after { right: 28%; }
+  .combo-mascot .m-mouth {
+    position: absolute;
+    bottom: 24%; left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 5px;
+    border-radius: 0 0 12px 12px;
+    background: #333;
+  }
+  .combo-text {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--r);
+  }
+
+  /* === Speech bubbles === */
+  .speech-bubble {
+    position: absolute;
+    background: white;
+    padding: 6px 10px;
+    border-radius: 12px 12px 12px 4px;
+    box-shadow: 0 3px 8px var(--shadow);
+    font-family: 'Baloo 2';
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--ink);
+    z-index: 6;
+    transform: rotate(-2deg);
+    white-space: nowrap;
+  }
+  .speech-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -6px; left: 12px;
+    width: 0; height: 0;
+    border-top: 8px solid white;
+    border-right: 6px solid transparent;
+  }
+
+  /* === Board === */
+  .board-wrap {
+    display: grid;
+    place-items: center;
+    padding: 10px;
+  }
+  .board {
+    width: 100%;
+    aspect-ratio: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 6px;
+    padding: 0;
+    background: transparent;
+  }
+  .cell {
+    border-radius: 10px;
+    position: relative;
+    display: grid; place-items: center;
+    background: #f8f0ea;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+  }
+
+  /* Super: donut + mini mascot */
+  .cell.super .donut {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 88%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--donut, conic-gradient(var(--r) 0% 33.3%, var(--b) 33.3% 66.6%, var(--y) 66.6% 100%));
+    -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+    mask: radial-gradient(circle, transparent 60%, black 64%);
+  }
+  .cell.super .mini {
+    width: 50%; aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--pip);
+    box-shadow: 0 2px 0 var(--pip-dark);
+    position: relative;
+    z-index: 2;
+  }
+  .cell.super .mini::before, .cell.super .mini::after {
+    content: "";
+    position: absolute;
+    width: 3.5px; height: 4px;
+    background: white;
+    border-radius: 50%;
+    top: 32%;
+  }
+  .cell.super .mini::before { left: 24%; }
+  .cell.super .mini::after { right: 24%; }
+  .cell.super[data-pip-c="y"] .mini::before,
+  .cell.super[data-pip-c="y"] .mini::after { background: var(--ink); }
+  .cell.super .mini .mm {
+    position: absolute;
+    bottom: 22%; left: 50%;
+    transform: translateX(-50%);
+    width: 36%; height: 12%;
+    border-radius: 0 0 99px 99px;
+    background: white;
+  }
+  .cell.super[data-pip-c="y"] .mini .mm { background: var(--ink); }
+
+  /* Observed full face */
+  .cell.observed {
+    background: var(--obs);
+    box-shadow: 0 3px 0 var(--obs-dark), 0 4px 10px var(--obs-shadow);
+  }
+  .cell.observed[data-c="r"] { --obs: var(--r); --obs-dark: var(--r-dark); --obs-shadow: var(--r-shadow); }
+  .cell.observed[data-c="b"] { --obs: var(--b); --obs-dark: var(--b-dark); --obs-shadow: var(--b-shadow); }
+  .cell.observed[data-c="y"] { --obs: var(--y); --obs-dark: var(--y-dark); --obs-shadow: var(--y-shadow); }
+  .cell.observed[data-c="g"] { --obs: var(--g); --obs-dark: var(--g-dark); --obs-shadow: var(--g-shadow); }
+  .cell.observed[data-c="p"] { --obs: var(--p); --obs-dark: var(--p-dark); --obs-shadow: var(--p-shadow); }
+  .cell.observed::before, .cell.observed::after {
+    content: "";
+    position: absolute;
+    width: 4.5px; height: 5.5px;
+    background: white;
+    border-radius: 50%;
+    top: 30%;
+  }
+  .cell.observed::before { left: 26%; }
+  .cell.observed::after { right: 26%; }
+  .cell.observed[data-c="y"]::before, .cell.observed[data-c="y"]::after { background: var(--ink); }
+  .cell.observed .face-mouth {
+    position: absolute;
+    bottom: 26%; left: 50%;
+    transform: translateX(-50%);
+    width: 35%; height: 11%;
+    border-radius: 0 0 99px 99px;
+    background: white;
+  }
+  .cell.observed[data-c="y"] .face-mouth { background: var(--ink); }
+
+  /* Exploding */
+  .cell.exploding {
+    animation: explode 0.5s cubic-bezier(.3,.6,.4,1) infinite;
+  }
+  @keyframes explode {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.3); filter: brightness(2) saturate(1.3); }
+    100% { transform: scale(0.5); opacity: 0; }
+  }
+  .particles { position: absolute; inset: 0; pointer-events: none; }
+  .particles::before, .particles::after {
+    content: "⭐";
+    position: absolute;
+    font-size: 12px;
+    animation: floatParticle 1.5s ease-out infinite;
+  }
+  .particles::before { top: 30%; left: 15%; }
+  .particles::after { top: 50%; right: 20%; animation-delay: 0.3s; content: "💫"; }
+  @keyframes floatParticle {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0.5) rotate(0); }
+    20%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(15px, -30px) scale(1.3) rotate(180deg); }
+  }
+
+  /* === Popup === */
+  .popup {
+    position: absolute;
+    top: 270px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 44px;
+    background: linear-gradient(180deg, var(--y), var(--r));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    letter-spacing: -1.5px;
+    pointer-events: none;
+    z-index: 6;
+    animation: popupFloat 1.5s ease-in-out infinite;
+  }
+  @keyframes popupFloat {
+    0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+    50%      { transform: translateX(-50%) translateY(-6px) scale(1.06); }
+  }
+
+  /* === Color unlock overlay === */
+  .unlock-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
+    backdrop-filter: blur(4px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9;
+    padding: 24px;
+  }
+  .unlock-mascot {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: var(--unlock-color);
+    position: relative;
+    box-shadow: 0 8px 0 var(--unlock-dark), 0 16px 40px var(--unlock-shadow);
+    animation: unlockHop 0.6s ease-in-out infinite alternate, unlockGlow 1.5s ease-in-out infinite;
+    margin-bottom: 16px;
+  }
+  @keyframes unlockHop {
+    from { transform: translateY(0) rotate(-5deg); }
+    to   { transform: translateY(-8px) rotate(5deg); }
+  }
+  @keyframes unlockGlow {
+    0%, 100% { box-shadow: 0 8px 0 var(--unlock-dark), 0 16px 40px var(--unlock-shadow); }
+    50%      { box-shadow: 0 8px 0 var(--unlock-dark), 0 0 60px var(--unlock-color), 0 16px 50px var(--unlock-shadow); }
+  }
+  .unlock-mascot::before, .unlock-mascot::after {
+    content: "";
+    position: absolute;
+    width: 14px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 32%;
+  }
+  .unlock-mascot::before { left: 26%; }
+  .unlock-mascot::after { right: 26%; }
+  .unlock-mascot .um {
+    position: absolute;
+    bottom: 22%; left: 50%;
+    transform: translateX(-50%);
+    width: 38px; height: 18px;
+    border-radius: 0 0 38px 38px;
+    background: white;
+  }
+  .unlock-title {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--unlock-dark);
+    text-shadow: 0 3px 0 white;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .unlock-sub {
+    font-family: 'Baloo 2';
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    text-align: center;
+    background: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    box-shadow: 0 4px 10px var(--shadow);
+  }
+  .unlock-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .unlock-sparkles span {
+    position: absolute;
+    font-size: 24px;
+    animation: sparkleFloat 2s ease-in-out infinite;
+  }
+  .unlock-sparkles span:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+  .unlock-sparkles span:nth-child(2) { top: 25%; right: 18%; animation-delay: 0.3s; }
+  .unlock-sparkles span:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 0.6s; }
+  .unlock-sparkles span:nth-child(4) { bottom: 20%; right: 22%; animation-delay: 0.9s; }
+  @keyframes sparkleFloat {
+    0%, 100% { opacity: 0.4; transform: scale(0.8) rotate(0deg); }
+    50%      { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  }
+
+  /* === Game over === */
+  .gameover {
+    position: absolute; inset: 0;
+    background: rgba(255, 244, 217, 0.94);
+    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 10;
+  }
+  .go-trio {
+    display: flex; margin-bottom: 14px;
+  }
+  .go-mascot {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    margin: 0 -6px;
+    position: relative;
+    box-shadow: 0 3px 0 var(--c-dark), 0 5px 12px rgba(0,0,0,0.2);
+    border: 3px solid white;
+    animation: hop 1s ease-in-out infinite;
+  }
+  .go-mascot:nth-child(2) { animation-delay: 0.1s; z-index: 2; }
+  .go-mascot:nth-child(3) { animation-delay: 0.2s; }
+  .go-mascot:nth-child(4) { animation-delay: 0.3s; }
+  .go-mascot:nth-child(5) { animation-delay: 0.4s; }
+  .go-mascot.r { background: var(--r); --c-dark: var(--r-dark); }
+  .go-mascot.b { background: var(--b); --c-dark: var(--b-dark); }
+  .go-mascot.y { background: var(--y); --c-dark: var(--y-dark); }
+  .go-mascot.g { background: var(--g); --c-dark: var(--g-dark); }
+  .go-mascot.p { background: var(--p); --c-dark: var(--p-dark); }
+  .go-mascot::before, .go-mascot::after {
+    content: "";
+    position: absolute;
+    width: 5px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    top: 32%;
+  }
+  .go-mascot.y::before, .go-mascot.y::after { background: var(--ink); }
+  .go-mascot::before { left: 28%; }
+  .go-mascot::after { right: 28%; }
+  .go-mascot .gm {
+    position: absolute;
+    bottom: 24%; left: 50%;
+    transform: translateX(-50%);
+    width: 18px; height: 7px;
+    background: white;
+    border-radius: 0 0 18px 18px;
+  }
+  .go-mascot.y .gm { background: var(--ink); }
+  .go-title {
+    font-family: 'Baloo 2';
+    font-weight: 900;
+    font-size: 22px;
+    background: linear-gradient(90deg, var(--r), var(--y));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    margin-bottom: 8px;
+  }
+  .go-score-card {
+    background: white;
+    border-radius: 18px;
+    padding: 16px 24px;
+    box-shadow: 0 8px 22px var(--shadow);
+    text-align: center;
+    margin-bottom: 10px;
+    transform: rotate(-2deg);
+  }
+  .go-score-label { font-size: 10px; color: #b89890; letter-spacing: 1.5px; font-weight: 700; }
+  .go-score { font-family: 'Baloo 2'; font-weight: 900; font-size: 42px; color: var(--r); line-height: 1; }
+  .go-stats { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; justify-content: center; }
+  .go-stat {
+    background: white;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-family: 'Baloo 2';
+    font-weight: 700;
+    font-size: 11px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .go-stat b { color: var(--r); }
+  .go-actions { display: flex; gap: 8px; }
+  .go-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-family: 'Baloo 2';
+    font-weight: 800;
+    font-size: 12px;
+    border: none; cursor: pointer;
+  }
+  .go-btn.share { background: linear-gradient(135deg, var(--r), var(--y)); color: white; box-shadow: 0 5px 12px rgba(255,107,139,0.5); }
+  .go-btn.restart { background: white; color: var(--ink); box-shadow: 0 3px 8px var(--shadow); }
+  .go-tag {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: linear-gradient(135deg, var(--y), #ff8866);
+    color: white;
+    font-family: 'Baloo 2';
+    font-weight: 800;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    transform: rotate(8deg);
+    box-shadow: 0 3px 10px rgba(255,140,100,0.5);
+  }
+
+  .footer-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .stat-pill {
+    background: white;
+    border-radius: 999px;
+    padding: 7px 16px;
+    box-shadow: 0 4px 10px var(--shadow);
+    font-family: 'Fredoka';
+    font-size: 12px;
+    font-weight: 600;
+    color: #a08070;
+  }
+  .stat-pill b { color: var(--r); font-size: 14px; font-weight: 800; margin-left: 4px; }
+</style>
+</head>
+<body>
+<h1>🎭 Mascot Final — 5색 진화 풀 시퀀스</h1>
+<div class="sub">선택: 팔레트 A(RBYGP) · 도넛+미니 마스코트 · 점수 임계값 진행</div>
+
+<div class="gallery">
+
+  <!-- ============ State 1: Start (3색) ============ -->
+  <div class="state-wrap">
+    <div class="state-label">① 시작 (3색)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+          </div>
+          <div class="title">Quantum Trio!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="speech-bubble" style="top: 50px; left: 14px;">안녕! Red부터 시작! 💕</div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">0</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--r); --next-dark: var(--r-dark); --next-shadow: var(--r-shadow);">
+        <div class="next-strip" data-c="r">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="r"><div class="mouth smile"></div></div>
+          <span class="next-text">RED</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="start-3"></div></div>
+      </div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>0</b></div>
+        <div class="stat-pill">매치 <b>0</b></div>
+      </div>
+    </div>
+    <div class="state-desc">3색 (R/B/Y) 균등 도넛. NEXT 띠가 보드 상단에 일체화.</div>
+  </div>
+
+  <!-- ============ State 2: Mid 3색 (700점) ============ -->
+  <div class="state-wrap">
+    <div class="state-label">② 진행 중 (3색, 700점)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+          </div>
+          <div class="title">Quantum Trio!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">700</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--b); --next-dark: var(--b-dark); --next-shadow: var(--b-shadow);">
+        <div class="next-strip" data-c="b">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="b"><div class="mouth smile"></div></div>
+          <span class="next-text">BLUE</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="mid-3"></div></div>
+      </div>
+      <div class="combo-badge">
+        <div class="combo-mascot"><div class="m-mouth"></div></div>
+        <div class="combo-text">×3 콤보!</div>
+      </div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>14</b></div>
+        <div class="stat-pill">매치 <b>5</b></div>
+      </div>
+    </div>
+    <div class="state-desc">3색 보드, 셀마다 도넛 분포 다양. 점수 700점 — 곧 4색 진입.</div>
+  </div>
+
+  <!-- ============ State 3: GREEN unlock! ============ -->
+  <div class="state-wrap">
+    <div class="state-label">③ 4색 전환 직후 (1,020점)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+            <span class="icon-mini g">G</span>
+          </div>
+          <div class="title">Quantum 4!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">1,020</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--y); --next-dark: var(--y-dark); --next-shadow: var(--y-shadow);">
+        <div class="next-strip" data-c="y">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="y"><div class="mouth smile"></div></div>
+          <span class="next-text">YELLOW</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="mid-4"></div></div>
+      </div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>22</b></div>
+        <div class="stat-pill">매치 <b>8</b></div>
+      </div>
+    </div>
+    <div class="state-desc">1,000점 돌파. 헤더 미니 아이콘에 G 추가, 보드에 GREEN 셀이 자연스럽게 섞이기 시작.</div>
+  </div>
+
+  <!-- ============ State 4: Mid 4색 ============ -->
+  <div class="state-wrap">
+    <div class="state-label">④ 4색 플레이 (1,800점)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+            <span class="icon-mini g">G</span>
+          </div>
+          <div class="title">Quantum 4!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">1,800</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--g); --next-dark: var(--g-dark); --next-shadow: var(--g-shadow);">
+        <div class="next-strip" data-c="g">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="g"><div class="mouth smile"></div></div>
+          <span class="next-text">GREEN</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="mid-4"></div></div>
+      </div>
+      <div class="combo-badge">
+        <div class="combo-mascot"><div class="m-mouth"></div></div>
+        <div class="combo-text">×4 콤보!</div>
+      </div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>34</b></div>
+        <div class="stat-pill">매치 <b>13</b></div>
+      </div>
+    </div>
+    <div class="state-desc">4색 보드. G가 셀에 섞여 들어옴. 도넛도 4색 비율로 그려짐.</div>
+  </div>
+
+  <!-- ============ State 5: Match explosion (4색) ============ -->
+  <div class="state-wrap">
+    <div class="state-label">⑤ 매치 폭발! (×5 SUPER)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+            <span class="icon-mini g">G</span>
+          </div>
+          <div class="title">Quantum 4!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">2,520</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--r); --next-dark: var(--r-dark); --next-shadow: var(--r-shadow);">
+        <div class="next-strip" data-c="r">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="r"><div class="mouth party"></div></div>
+          <span class="next-text">RED</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="exploding-4"></div></div>
+      </div>
+      <div class="combo-badge" style="transform: rotate(-4deg) scale(1.1);">
+        <div class="combo-mascot"><div class="m-mouth"></div></div>
+        <div class="combo-text">×5 SUPER!</div>
+      </div>
+      <div class="popup">+180 야호!</div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>40</b></div>
+        <div class="stat-pill">매치 <b>15</b></div>
+      </div>
+    </div>
+    <div class="state-desc">G 매치 3개 폭발. 콤보 ×5 (×3.0 배수) = +180점. PURPLE 임계값 거의 도달.</div>
+  </div>
+
+  <!-- ============ State 6: PURPLE unlock! ============ -->
+  <div class="state-wrap">
+    <div class="state-label">⑥ 5색 전환 직후 (3,020점)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+            <span class="icon-mini g">G</span>
+            <span class="icon-mini p">P</span>
+          </div>
+          <div class="title">Quantum 5!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">3,020</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--b); --next-dark: var(--b-dark); --next-shadow: var(--b-shadow);">
+        <div class="next-strip" data-c="b">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="b"><div class="mouth smile"></div></div>
+          <span class="next-text">BLUE</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="mid-5"></div></div>
+      </div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>48</b></div>
+        <div class="stat-pill">매치 <b>18</b></div>
+      </div>
+    </div>
+    <div class="state-desc">3,000점 돌파. 헤더 아이콘이 5개로 확장, 보드에 PURPLE 셀이 합류해 5색 보드 완성.</div>
+  </div>
+
+  <!-- ============ State 7: 5색 플레이 ============ -->
+  <div class="state-wrap">
+    <div class="state-label">⑦ 5색 후반 (4,200점)</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+            <span class="icon-mini g">G</span>
+            <span class="icon-mini p">P</span>
+          </div>
+          <div class="title">Quantum 5!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">4,200</div>
+        </div>
+        <div>
+          <div class="best-label">BEST</div>
+          <div class="best-value">5,820</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--p); --next-dark: var(--p-dark); --next-shadow: var(--p-shadow);">
+        <div class="next-strip" data-c="p">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="p"><div class="mouth smile"></div></div>
+          <span class="next-text">PURPLE</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="mid-5"></div></div>
+      </div>
+      <div class="combo-badge">
+        <div class="combo-mascot"><div class="m-mouth"></div></div>
+        <div class="combo-text">×6 콤보!</div>
+      </div>
+      <div class="footer-stats">
+        <div class="stat-pill">관측 <b>62</b></div>
+        <div class="stat-pill">매치 <b>24</b></div>
+      </div>
+    </div>
+    <div class="state-desc">5색 보드. 도넛이 5등분으로 더 복잡, 매치 만들기 어려움. 콤보 ×6.</div>
+  </div>
+
+  <!-- ============ State 8: Game over ============ -->
+  <div class="state-wrap">
+    <div class="state-label">⑧ 게임오버 — NEW BEST!</div>
+    <div class="phone">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="title-icons">
+            <span class="icon-mini">R</span>
+            <span class="icon-mini b">B</span>
+            <span class="icon-mini y">Y</span>
+            <span class="icon-mini g">G</span>
+            <span class="icon-mini p">P</span>
+          </div>
+          <div class="title">Quantum 5!</div>
+        </div>
+        <div class="menu-btn">☰</div>
+      </div>
+      <div class="score-card">
+        <div>
+          <div class="score-label">SCORE</div>
+          <div class="score-value">6,240</div>
+        </div>
+        <div>
+          <div class="best-label">BEST ↑</div>
+          <div class="best-value">6,240</div>
+        </div>
+      </div>
+      <div class="board-frame" style="--next-color: var(--b); --next-dark: var(--b-dark); --next-shadow: var(--b-shadow);">
+        <div class="next-strip" data-c="b">
+          <span class="next-label">NEXT</span>
+          <div class="mascot" data-c="b"><div class="mouth smile"></div></div>
+          <span class="next-text">BLUE</span>
+        </div>
+        <div class="board-wrap"><div class="board" data-state="mid-5"></div></div>
+      </div>
+      <div class="gameover">
+        <div class="go-tag">🎉 NEW BEST!</div>
+        <div class="go-trio">
+          <div class="go-mascot r"><div class="gm"></div></div>
+          <div class="go-mascot b"><div class="gm"></div></div>
+          <div class="go-mascot y"><div class="gm"></div></div>
+          <div class="go-mascot g"><div class="gm"></div></div>
+          <div class="go-mascot p"><div class="gm"></div></div>
+        </div>
+        <div class="go-title">🌟 5색 마스터!</div>
+        <div class="go-score-card">
+          <div class="go-score-label">FINAL SCORE</div>
+          <div class="go-score">6,240</div>
+        </div>
+        <div class="go-stats">
+          <div class="go-stat">콤보 <b>×8</b></div>
+          <div class="go-stat">매치 <b>32</b></div>
+          <div class="go-stat">5색 <b>달성</b></div>
+        </div>
+        <div class="go-actions">
+          <button class="go-btn share">📤 자랑하기</button>
+          <button class="go-btn restart">↻ 다시</button>
+        </div>
+      </div>
+    </div>
+    <div class="state-desc">최고 점수 갱신. 5명의 친구가 함께 통통. SNS 공유용 카드 디자인.</div>
+  </div>
+
+</div>
+
+<script>
+  // Layouts per state. Cells encoded as:
+  //   sX = super with dominant color X (R/B/Y/G/P)
+  //   oX = observed color X
+  //   eX = exploding (observed but matching)
+  const layouts = {
+    'start-3': [
+      'sR','sB','sY','sR','sB',
+      'sY','sR','sB','sY','sR',
+      'sB','sY','sR','sB','sY',
+      'sR','sB','sY','sR','sB',
+      'sY','sR','sB','sY','sR',
+    ],
+    'mid-3': [
+      'sR','sB','oY','oY','oY',
+      'sB','sB','sB','sR','sY',
+      'oR','sB','sR','sY','sB',
+      'sB','sR','sB','oR','sB',
+      'sY','sB','sR','sB','sR',
+    ],
+    'mid-4': [
+      'sR','sG','oY','oY','sG',
+      'sB','sG','sB','sR','sY',
+      'oR','sB','sG','sY','sB',
+      'sG','sR','sB','oG','sB',
+      'sY','sG','sR','sB','sR',
+    ],
+    'exploding-4': [
+      'sR','sB','sY','sR','sB',
+      'oY','sG','sR','sY','oR',
+      'eG','eG','eG','sB','sR',
+      'sB','sY','sR','oG','sB',
+      'sG','oB','sR','sB','sY',
+    ],
+    'mid-5': [
+      'sR','sP','sY','sG','sB',
+      'sP','sG','oB','sR','sP',
+      'oR','sP','sG','sY','sB',
+      'sG','sR','sP','oG','sP',
+      'sY','sB','sP','sB','sR',
+    ],
+  };
+
+  // Generate conic-gradient donut for a super cell based on dominant color.
+  // For 3-color states, only R/B/Y appear; for 4-color, R/B/Y/G; for 5-color, R/B/Y/G/P.
+  // The dominant color gets 50%, others share the rest evenly.
+  function donutFor(dom, palette) {
+    // palette: array like ['r','b','y'] or ['r','b','y','g'] or ['r','b','y','g','p']
+    const dominantWeight = 0.50;
+    const otherWeight = (1 - dominantWeight) / (palette.length - 1);
+    const stops = [];
+    let acc = 0;
+    palette.forEach(c => {
+      const w = c === dom.toLowerCase() ? dominantWeight : otherWeight;
+      const start = (acc * 100).toFixed(2);
+      acc += w;
+      const end = (acc * 100).toFixed(2);
+      stops.push(`var(--${c}) ${start}% ${end}%`);
+    });
+    return `conic-gradient(${stops.join(', ')})`;
+  }
+  // Even thirds for initial state
+  function donutEven(palette) {
+    const w = 1 / palette.length;
+    const stops = [];
+    let acc = 0;
+    palette.forEach(c => {
+      const start = (acc * 100).toFixed(2);
+      acc += w;
+      const end = (acc * 100).toFixed(2);
+      stops.push(`var(--${c}) ${start}% ${end}%`);
+    });
+    return `conic-gradient(${stops.join(', ')})`;
+  }
+
+  const pipColor = { R: 'var(--r)', B: 'var(--b)', Y: 'var(--y)', G: 'var(--g)', P: 'var(--p)' };
+  const pipDark  = { R: 'var(--r-dark)', B: 'var(--b-dark)', Y: 'var(--y-dark)', G: 'var(--g-dark)', P: 'var(--p-dark)' };
+
+  // Determine palette size from state name
+  function paletteFor(stateName) {
+    if (stateName.includes('-5')) return ['r','b','y','g','p'];
+    if (stateName.includes('-4')) return ['r','b','y','g'];
+    return ['r','b','y'];
+  }
+  const isInitialState = (s) => s === 'start-3';
+
+  document.querySelectorAll('.board[data-state]').forEach(board => {
+    const state = board.dataset.state;
+    const palette = paletteFor(state);
+    const cells = layouts[state];
+    cells.forEach(s => {
+      const c = document.createElement('div');
+      c.className = 'cell';
+      const kind = s[0], color = s[1];
+      if (kind === 's') {
+        c.classList.add('super');
+        c.dataset.pipC = color.toLowerCase();
+        const donut = document.createElement('div');
+        donut.className = 'donut';
+        donut.style.background = isInitialState(state) ? donutEven(palette) : donutFor(color, palette);
+        const mini = document.createElement('div');
+        mini.className = 'mini';
+        mini.style.setProperty('--pip', pipColor[color]);
+        mini.style.setProperty('--pip-dark', pipDark[color]);
+        const mm = document.createElement('div');
+        mm.className = 'mm';
+        mini.appendChild(mm);
+        c.appendChild(donut);
+        c.appendChild(mini);
+      } else if (kind === 'o') {
+        c.classList.add('observed');
+        c.dataset.c = color.toLowerCase();
+        const fm = document.createElement('div');
+        fm.className = 'face-mouth';
+        c.appendChild(fm);
+      } else if (kind === 'e') {
+        c.classList.add('observed', 'exploding');
+        c.dataset.c = color.toLowerCase();
+        const particles = document.createElement('div');
+        particles.className = 'particles';
+        c.appendChild(particles);
+      }
+      board.appendChild(c);
+    });
+  });
+</script>
+</body>
+</html>

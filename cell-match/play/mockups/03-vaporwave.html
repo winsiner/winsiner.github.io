@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup — Y2K Vaporwave</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --r: #ff71ce;
+    --b: #01cdfe;
+    --y: #fffb96;
+    --pink: #ff71ce;
+    --purple: #b967ff;
+    --cyan: #01cdfe;
+    --lime: #05ffa1;
+    --ink: #fff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background:
+      radial-gradient(ellipse at top, #ff71ce 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, #01cdfe 0%, transparent 50%),
+      linear-gradient(180deg, #2d1b69, #0a0033);
+    color: var(--ink);
+    display: grid; place-items: center;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .phone {
+    width: 390px; height: 844px;
+    border-radius: 32px;
+    background:
+      linear-gradient(180deg, rgba(255,113,206,0.3), transparent 30%),
+      linear-gradient(0deg, rgba(1,205,254,0.3), transparent 30%),
+      repeating-linear-gradient(0deg, transparent 0 60px, rgba(185,103,255,0.06) 60px 61px),
+      repeating-linear-gradient(90deg, transparent 0 60px, rgba(185,103,255,0.06) 60px 61px),
+      #1a0a44;
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+    display: flex; flex-direction: column;
+    box-shadow:
+      0 0 60px rgba(255,113,206,0.6),
+      0 0 120px rgba(1,205,254,0.4);
+  }
+  /* Star sparkles */
+  .stars {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(2px 2px at 20px 30px, white, transparent),
+      radial-gradient(1px 1px at 80px 120px, var(--lime), transparent),
+      radial-gradient(2px 2px at 200px 80px, var(--y), transparent),
+      radial-gradient(1px 1px at 320px 200px, white, transparent),
+      radial-gradient(2px 2px at 60px 400px, var(--pink), transparent),
+      radial-gradient(1px 1px at 250px 600px, var(--cyan), transparent),
+      radial-gradient(2px 2px at 340px 720px, white, transparent),
+      radial-gradient(1px 1px at 100px 750px, var(--lime), transparent);
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+  }
+  /* Horizon grid */
+  .horizon {
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 200px;
+    background:
+      linear-gradient(180deg, transparent, var(--cyan) 80%, var(--pink)),
+      repeating-linear-gradient(180deg, transparent 0 20px, rgba(255,113,206,0.2) 20px 21px);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 3; }
+  .title {
+    font-family: 'Bungee', sans-serif;
+    font-size: 22px;
+    background: linear-gradient(180deg, var(--y), var(--pink) 50%, var(--cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(255,113,206,0.5);
+    letter-spacing: 1px;
+  }
+  .menu-btn {
+    width: 40px; height: 40px;
+    border: 2px solid var(--cyan);
+    background: rgba(1,205,254,0.15);
+    color: var(--cyan);
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-size: 18px;
+    backdrop-filter: blur(8px);
+  }
+  .score-card {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, rgba(255,113,206,0.25), rgba(1,205,254,0.25));
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 18px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(12px);
+    position: relative; z-index: 3;
+    box-shadow: 0 8px 32px rgba(255,113,206,0.3);
+  }
+  .score-label {
+    font-size: 11px;
+    color: var(--y);
+    letter-spacing: 4px;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(255,251,150,0.6);
+  }
+  .score-value {
+    font-family: 'Bungee';
+    font-size: 42px;
+    background: linear-gradient(180deg, white, var(--y));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .score-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
+  .best { color: var(--lime); font-size: 12px; font-weight: 700; }
+  .next-banner {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(1,205,254,0.3), rgba(185,103,255,0.3));
+    border: 2px solid var(--cyan);
+    border-radius: 999px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(12px);
+    position: relative; z-index: 3;
+    box-shadow: 0 0 24px rgba(1,205,254,0.5);
+  }
+  .next-label { font-size: 11px; color: var(--y); letter-spacing: 3px; font-weight: 700; }
+  .next-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, white, var(--cyan));
+    box-shadow: 0 0 18px var(--cyan), 0 0 36px var(--cyan);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.18); }
+  }
+  .next-text {
+    font-family: 'Bungee';
+    font-size: 18px;
+    color: var(--cyan);
+    text-shadow: 0 0 12px var(--cyan);
+    letter-spacing: 1px;
+  }
+  .combo-badge {
+    position: absolute; top: 215px; right: 26px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: white;
+    font-family: 'Bungee';
+    font-size: 14px;
+    letter-spacing: 1px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(255,113,206,0.6), 0 0 20px var(--pink);
+    transform: rotate(-8deg);
+    z-index: 4;
+  }
+  .board {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 6px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(255,113,206,0.15), rgba(1,205,254,0.15));
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 22px;
+    backdrop-filter: blur(8px);
+    position: relative; z-index: 3;
+    min-height: 0;
+    box-shadow: inset 0 0 30px rgba(255,113,206,0.2), 0 0 40px rgba(1,205,254,0.3);
+  }
+  .cell {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    position: relative;
+    display: grid; place-items: center;
+    backdrop-filter: blur(4px);
+  }
+  .cell.super::after {
+    content: "";
+    width: 32%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, white, var(--pip));
+    box-shadow: 0 0 12px var(--pip);
+  }
+  .cell.observed {
+    background: linear-gradient(135deg, var(--obs), rgba(255,255,255,0.4));
+    box-shadow: 0 0 16px var(--obs), inset 0 0 20px rgba(255,255,255,0.3);
+    border-color: white;
+  }
+  .cell.observed[data-color="r"] { --obs: var(--pink); }
+  .cell.observed[data-color="b"] { --obs: var(--cyan); }
+  .cell.observed[data-color="y"] { --obs: var(--y); }
+  .cell.picks-next {
+    box-shadow: 0 0 0 2px var(--cyan), 0 0 24px var(--cyan);
+  }
+  .cell.picks-next::after {
+    animation: dotPulse 0.9s ease-in-out infinite alternate;
+  }
+  @keyframes dotPulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.35); }
+  }
+  .popup {
+    position: absolute;
+    top: 340px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Bungee';
+    font-size: 48px;
+    background: linear-gradient(180deg, var(--y), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255,113,206,0.8));
+    pointer-events: none;
+    z-index: 5;
+    letter-spacing: 1px;
+  }
+  .vibes-tag {
+    position: absolute; top: 50px; left: 24px;
+    font-family: 'Outfit';
+    font-size: 11px;
+    color: var(--lime);
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-shadow: 0 0 8px var(--lime);
+    z-index: 3;
+  }
+  .footer-stats { display: flex; justify-content: space-between; margin-top: 12px; position: relative; z-index: 3; }
+  .stat-pill {
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--lime);
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+    font-weight: 700;
+  }
+  .stat-pill b { color: white; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="stars"></div>
+  <div class="horizon"></div>
+  <div class="header">
+    <div class="title">QUANTUM</div>
+    <div class="menu-btn">★</div>
+  </div>
+  <div class="score-card">
+    <div class="score-label">★ POINTS ★</div>
+    <div class="score-row">
+      <div class="score-value">1,240</div>
+      <div class="best">↑ best 5,820</div>
+    </div>
+  </div>
+  <div class="next-banner">
+    <span class="next-label">★ NEXT</span>
+    <span class="next-dot"></span>
+    <span class="next-text">CYAN</span>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="combo-badge">x4 VIBES ✨</div>
+  <div class="popup">+90 ✨</div>
+  <div class="footer-stats">
+    <div class="stat-pill">OBS <b>23</b></div>
+    <div class="stat-pill">MATCH <b>8</b></div>
+    <div class="stat-pill">MOOD <b>HIGH</b></div>
+  </div>
+</div>
+<script>
+  const state = [
+    'sR','sB','oY','oY','oY',
+    'sB','sB','sB','sR','sY',
+    'oR','sB','sR','sY','sB',
+    'sB','sR','sB','oR','sB',
+    'sY','sB','sR','sB','sR',
+  ];
+  const board = document.getElementById('board');
+  const pip = { R: 'var(--pink)', B: 'var(--cyan)', Y: 'var(--y)' };
+  state.forEach(s => {
+    const c = document.createElement('div');
+    c.className = 'cell';
+    const kind = s[0], color = s[1];
+    if (kind === 's') {
+      c.classList.add('super');
+      c.style.setProperty('--pip', pip[color]);
+      if (color === 'B') c.classList.add('picks-next');
+    } else {
+      c.classList.add('observed');
+      c.dataset.color = color.toLowerCase();
+    }
+    board.appendChild(c);
+  });
+</script>
+</body>
+</html>

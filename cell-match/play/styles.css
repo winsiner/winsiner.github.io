@@ -1,0 +1,3648 @@
+/* ===================================================================
+   Cell Match — Mascot Trio theme
+   ================================================================= */
+
+/* Local round-ish display fonts packaged with the app so we don't rely on
+   external CDNs at runtime. Used as Korean/Japanese fallback so non-Latin
+   scripts feel as friendly as the Latin Fredoka. */
+@font-face {
+  font-family: 'Cafe24Ssurround';
+  src: url('fonts/Cafe24Ssurround.woff2') format('woff2'),
+       url('fonts/Cafe24Ssurround.woff')  format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  /* Restrict to Korean (Hangul) so Latin glyphs continue to come from Fredoka. */
+  unicode-range: U+AC00-D7AF, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+}
+@font-face {
+  font-family: 'KosugiMaru';
+  src: url('fonts/KosugiMaru-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  /* Restrict to Japanese ranges so Latin glyphs still come from Fredoka. */
+  unicode-range: U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF;
+}
+
+:root {
+  /* 5-color palette */
+  --r: 255,107,139;   --r-dark: 208,64,96;
+  --b: 95,179,255;    --b-dark: 64,144,216;
+  --y: 255,206,90;    --y-dark: 216,160,48;
+  --g: 111,219,138;   --g-dark: 69,165,96;
+  --p: 184,133,255;   --p-dark: 136,85,216;
+  /* surfaces */
+  --bg-1: #fff4d9;
+  --bg-2: #ffe0e8;
+  --ink: #443322;
+  --shadow: rgba(140, 80, 80, 0.22);
+  --soft: #a08070;
+  /* dynamic NEXT color (set by JS) */
+  --next-color: rgb(var(--b));
+  --next-dark:  rgb(var(--b-dark));
+  --next-shadow: rgba(95, 179, 255, 0.45);
+  /* safe areas
+     `env(safe-area-inset-top)` is the platform-reported inset (notch /
+     status bar). Most devices report a meaningful value (44px iPhone X+,
+     24-28px Android with notch), but some Android WebView builds report 0
+     even when the status bar is overlaid by the webview — that's how the
+     header ends up clipped under the clock. max(env, 24px) guarantees we
+     reserve at least the standard Android status bar height, while still
+     yielding to the larger reported values on devices with cutouts. */
+  --safe-top: max(env(safe-area-inset-top, 0px), 24px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-bottom-collapsed: env(safe-area-inset-bottom, 0px);
+  --ad-height: 0px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  color: var(--ink);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+  background:
+    radial-gradient(circle at 80% 12%, rgba(255,206,90,0.18), transparent 35%),
+    radial-gradient(circle at 18% 88%, rgba(184,133,255,0.16), transparent 38%),
+    radial-gradient(circle at 88% 92%, rgba(95,179,255,0.14), transparent 32%),
+    linear-gradient(170deg, var(--bg-1), var(--bg-2));
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 480px;
+  /* Center horizontally on screens wider than max-width (iPad / desktop /
+     ultra-wide phones). `place-items: center` on body covers vertical
+     centering; `margin-inline: auto` handles the horizontal case where
+     a grid item's stretch can otherwise pin the box to the start edge. */
+  margin-inline: auto;
+  height: 100vh;
+  height: 100dvh;
+  position: relative;
+  /* Bottom padding reserves space for the ad banner + safe area, plus a
+     transparent buffer above the ad so the board never sits flush against
+     it (the buffer doubles as the visual breathing room when the ad isn't
+     rendered, e.g. in a browser). */
+  padding: calc(var(--safe-top) + 6px) 18px calc(var(--ad-height) + var(--safe-bottom-collapsed) + 12px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Floating ambient sparkles in margins */
+.ambient-sparkles {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1.5px 1.5px at 30px 100px, rgba(184,133,255,0.6), transparent),
+    radial-gradient(2px 2px at calc(100% - 50px) 220px, rgba(255,206,90,0.7), transparent),
+    radial-gradient(1.5px 1.5px at calc(100% - 30px) 660px, rgba(95,179,255,0.6), transparent),
+    radial-gradient(2px 2px at 50px 720px, rgba(255,107,139,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 200px 760px, rgba(111,219,138,0.6), transparent),
+    radial-gradient(1.5px 1.5px at calc(100% - 40px) 90px, rgba(255,107,139,0.5), transparent);
+  z-index: 0;
+}
+/* Stack normal children above the ambient sparkles. Overlays (tutorial,
+   gameover, settings-modal) keep their own position:fixed/absolute and are
+   excluded so they aren't forced into the flow. */
+.app > *:not(.ambient-sparkles):not(.tutorial):not(.gameover):not(.settings-modal):not(.autoplay-modal):not(.toast):not(.combo-break-fx):not(.coach) {
+  position: relative;
+  z-index: 1;
+}
+
+/* === Header === */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.title-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.title-icons { display: flex; }
+/* Header roster icons — miniature mascots (same eyes/mouth proportions as
+   the NEXT-strip mascot for visual consistency). Letter labels removed. */
+.icon-mini {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  position: relative;
+  border: 2px solid white;
+  box-shadow: 0 3px 7px rgba(0,0,0,0.18);
+  margin-left: -8px;
+  font-size: 0;  /* hide any text content */
+}
+.icon-mini:first-child { margin-left: 0; }
+.icon-mini.r { background: rgb(var(--r)); }
+.icon-mini.b { background: rgb(var(--b)); }
+.icon-mini.y { background: rgb(var(--y)); }
+.icon-mini.g { background: rgb(var(--g)); }
+.icon-mini.p { background: rgb(var(--p)); }
+.icon-mini::before, .icon-mini::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.icon-mini::before { left: 28%; }
+.icon-mini::after  { right: 28%; }
+.icon-mini > .face-mouth {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  border-radius: 0 0 99px 99px;
+  background: white;
+}
+.title {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1;
+  background: linear-gradient(90deg, rgb(var(--r)), rgb(var(--y)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.3px;
+}
+.menu-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 4px 10px var(--shadow);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  position: relative;
+  z-index: 20;
+  -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+  touch-action: manipulation;
+}
+
+/* === Score card === */
+.score-card {
+  background: white;
+  border-radius: 16px;
+  padding: 8px 16px;
+  box-shadow: 0 6px 16px var(--shadow);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.score-label { font-size: 10px; color: var(--soft); font-weight: 700; letter-spacing: 2px; }
+.score-value {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  color: rgb(var(--r));
+  line-height: 1;
+  margin-top: 2px;
+  letter-spacing: -0.5px;
+}
+.best-label { font-size: 10px; color: var(--soft); font-weight: 700; letter-spacing: 2px; text-align: right; }
+.best-value {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  color: rgb(var(--b));
+  line-height: 1;
+  margin-top: 2px;
+  letter-spacing: -0.5px;
+  text-align: right;
+}
+
+/* Combo display in the middle of the score-card. */
+.combo-center {
+  text-align: center;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.combo-center.is-zero { opacity: 0.35; }
+.combo-center-label {
+  font-size: 10px; color: var(--soft); font-weight: 700; letter-spacing: 2px;
+}
+.combo-center-value {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1;
+  margin-top: 2px;
+  letter-spacing: -0.5px;
+  color: var(--combo-color, rgb(var(--r)));
+  text-align: center;
+}
+.combo-center.bump { transform: scale(1.18); }
+
+/* === Combo stack (centered between score card and board frame) ===
+   Uses flexbox auto-margin tricks: both .combo-stack and .board-frame have
+   margin auto, so the remaining vertical space is split between them — the
+   combo stack ends up centered in the upper half, the board in the lower. */
+/* In-flow flex child. score-card has margin-bottom: auto and board-frame
+   has margin-top: auto, so the leftover vertical space gets split into two
+   equal regions — one above combo-stack and one below. Combo lands at the
+   exact midpoint of (score-card bottom, board-frame top) with no JS needed. */
+.combo-stack {
+  /* The floating combo-stack above the board is replaced by the score-card
+     combo readout. Kept in DOM for backward compatibility but hidden. */
+  display: none;
+}
+.combo-stamp {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform-origin: center center;
+  background: white;
+  padding: 8px 18px 8px 8px;
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(255,107,139,0.4), 0 0 0 2px rgba(255,255,255,0.7);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  white-space: nowrap;
+  /* Translation + rotation set per-instance via CSS vars; the stamp animation
+     itself runs from "punched in" (large, opaque) to "ghost" (smaller, fading)
+     when a NEW stamp is added on top. Most recent stamp keeps full opacity. */
+  --rot: 0deg;
+  --tx: 0px;
+  --ty: 0px;
+  transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot));
+  animation: stampIn 0.35s cubic-bezier(.2, .8, .3, 1.5) backwards;
+}
+@keyframes stampIn {
+  0%   { opacity: 0; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1.6); }
+  60%  { opacity: 1; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.92); }
+  100% { opacity: 1; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1); }
+}
+.combo-stamp.fading {
+  /* Each prior stamp gets a fade level via --fade (0..1). 0 = brand new, 1 =
+     about to disappear. Layered stamps remain visible but faint. */
+  opacity: calc(0.85 - var(--fade, 0) * 0.85);
+  filter: saturate(calc(1 - var(--fade, 0) * 0.7))
+          blur(calc(var(--fade, 0) * 0.6px));
+  transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
+}
+.combo-stamp.gone {
+  opacity: 0;
+  transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.6);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+/* Latest stamp gets a subtle float */
+.combo-stamp.latest {
+  animation: stampIn 0.35s cubic-bezier(.2, .8, .3, 1.5) backwards,
+             stampFloat 1.8s ease-in-out 0.35s infinite;
+}
+@keyframes stampFloat {
+  0%, 100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) translateY(0); }
+  50%      { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) translateY(-3px); }
+}
+
+.combo-mascot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgb(var(--r));
+  border: 2px solid white;
+  position: relative;
+  box-shadow: 0 3px 0 rgb(var(--r-dark));
+  flex-shrink: 0;
+}
+.combo-mascot::before, .combo-mascot::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.combo-mascot::before { left: 28%; }
+.combo-mascot::after  { right: 28%; }
+.combo-mascot .m-mouth {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  border-radius: 0 0 99px 99px;
+  background: white;
+}
+.combo-text {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: rgb(var(--r));
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+
+/* === Board stack (frame + outside autoplay bar) — vertical centering is
+   handled by sibling .flex-spacer elements (one above, one below); the
+   stack itself has no auto margins so it does not jitter when ad-banner
+   padding changes. */
+.board-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  width: 100%;
+  /* Reserve room for the chrome stacked above and below the board.
+     Post-compaction breakdown (approx):
+       header (.top)   ~58
+       score-card      ~60   (padding 8+8 + 24px value + 10px label + 8px margin)
+       next-unlock     ~48   (padding 6+6 + 4px gap + 12px bar + 11px text + 8px margin)
+       next-strip      ~52
+       autoplay-bar    ~38   (padding 4 + 34px button)
+     Plus the 12px app bottom padding above the ad banner — totals
+     ~310 px. We hold reserve at 300 px and let the safe-area /
+     ad-height vars + the app padding cover the rest, since pushing
+     reserve lower than the actual chrome causes the board to overlap
+     the autoplay buttons on short viewports (SE, Surface Duo single
+     pane). Bump it up if a new device crowds the bottom buttons. */
+  max-width: min(100%, calc(100dvh - 300px - var(--ad-height, 0px) - var(--safe-top) - var(--safe-bottom-collapsed)));
+  flex: 0 0 auto;
+}
+/* === Board frame (NEXT strip + board) === */
+.board-frame {
+  background: white;
+  border-radius: 22px;
+  padding: 0;
+  box-shadow: 0 8px 22px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+.next-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, var(--next-color), color-mix(in oklab, var(--next-color) 80%, white));
+  border-radius: 18px 18px 0 0;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  transition: background 0.4s ease;
+}
+.next-label {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+.next-text {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  letter-spacing: 0.5px;
+}
+/* NEXT mascot (in strip) */
+.mascot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--next-color);
+  border: 2px solid white;
+  position: relative;
+  box-shadow: 0 4px 0 var(--next-dark), 0 6px 14px var(--next-shadow);
+  animation: hop 1.2s ease-in-out infinite;
+  flex-shrink: 0;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+@keyframes hop {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+/* All mascots share the same face proportions, matching the game-over trio
+   that the user prefers: round-ish eyes at 28% from each edge, wide smile
+   spanning ~38% of the body. */
+.mascot::before, .mascot::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  border-radius: 50%;
+  background: white;
+  top: 32%;
+}
+.mascot::before { left: 28%; }
+.mascot::after  { right: 28%; }
+.mouth {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  border-radius: 0 0 99px 99px;
+  background: #333;
+}
+.mouth.smile { background: white; }
+.mouth.party { width: 18px; height: 10px; border-radius: 0 0 18px 18px; background: #333; }
+.mouth.sad {
+  width: 14px; height: 6px;
+  border-radius: 14px 14px 0 0;
+  bottom: 18%;
+  background: transparent;
+  border: 2.5px solid #333;
+  border-bottom: none;
+}
+
+/* === Board === */
+.board-wrap {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+}
+.board {
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 6px;
+  position: relative;
+}
+
+/* === Cells: shared === */
+.cell {
+  position: absolute;
+  top: 0; left: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #f8f0ea;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform var(--fall-ms, 320ms) cubic-bezier(.34, 1.2, .5, 1),
+              background 0.2s ease, box-shadow 0.2s ease;
+  width: var(--cs, 60px);
+  height: var(--cs, 60px);
+}
+/* Single grid layout: stack mini and face-mouth in the same cell so neither
+   pushes the other. The element irrelevant to the current state is hidden via
+   display:none, leaving only one visible item that grid centers. */
+.cell > .donut,
+.cell > .mini,
+.cell > .face-mouth { grid-area: 1 / 1; }
+.cell.super .face-mouth { display: none; }
+.cell.observed .donut,
+.cell.observed .mini { display: none; }
+.cell.above,
+.cell.no-transition {
+  transition: none !important;
+}
+/* Hide cells until JS has positioned them. Without this, the default
+   top:0/left:0 + transform:none means freshly-added cells flash at the
+   board origin before transform is applied. */
+.cell.pre-paint { visibility: hidden; }
+.cell.spawning {
+  z-index: 1;
+}
+
+/* === Super cell: donut + mini mascot === */
+.cell.super .donut {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* Default 3-color donut for the very first paint before JS paints over.
+     Only R/B/Y appear pre-unlock — G/P are not drawn here so they never
+     accidentally show on a board that hasn't unlocked them yet. */
+  background: conic-gradient(rgb(var(--r)) 0% 33.3%, rgb(var(--b)) 33.3% 66.6%, rgb(var(--y)) 66.6% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+  mask: radial-gradient(circle, transparent 60%, black 64%);
+  pointer-events: none;
+  z-index: 1;
+}
+.cell.super .mini {
+  width: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--pip, rgb(var(--r)));
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 var(--pip-dark, rgb(var(--r-dark)));
+  position: relative;
+  z-index: 2;
+}
+.cell.super .mini::before,
+.cell.super .mini::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.cell.super .mini::before { left: 28%; }
+.cell.super .mini::after  { right: 28%; }
+.cell.super .mini .mm {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  border-radius: 0 0 99px 99px;
+  background: white;
+}
+
+/* === Observed cell: full mascot === */
+.cell.observed {
+  background: var(--obs, rgb(var(--r)));
+  border: 2px solid white;
+  box-shadow: 0 3px 0 var(--obs-dark, rgb(var(--r-dark))),
+              0 4px 10px var(--obs-shadow, rgba(255,107,139,0.4));
+}
+.cell.observed[data-c="r"] { --obs: rgb(var(--r)); --obs-dark: rgb(var(--r-dark)); --obs-shadow: rgba(255,107,139,0.4); }
+.cell.observed[data-c="b"] { --obs: rgb(var(--b)); --obs-dark: rgb(var(--b-dark)); --obs-shadow: rgba(95,179,255,0.4); }
+.cell.observed[data-c="y"] { --obs: rgb(var(--y)); --obs-dark: rgb(var(--y-dark)); --obs-shadow: rgba(255,206,90,0.4); }
+.cell.observed[data-c="g"] { --obs: rgb(var(--g)); --obs-dark: rgb(var(--g-dark)); --obs-shadow: rgba(111,219,138,0.4); }
+.cell.observed[data-c="p"] { --obs: rgb(var(--p)); --obs-dark: rgb(var(--p-dark)); --obs-shadow: rgba(184,133,255,0.4); }
+.cell.observed.is-next-match {
+  box-shadow:
+    0 3px 0 var(--obs-dark, rgb(var(--r-dark))),
+    0 4px 10px var(--obs-shadow, rgba(255,107,139,0.4)),
+    0 0 18px 6px var(--obs, rgb(var(--r)));
+}
+.cell.observed::before,
+.cell.observed::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.cell.observed::before { left: 28%; }
+.cell.observed::after  { right: 28%; }
+.cell.observed .face-mouth {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  border-radius: 0 0 99px 99px;
+  background: white;
+}
+
+/* === Metal cell: faceted gem + corner rivets. Class is added by
+   createCellElement when cell.special === 'metal'. === */
+.cell.spawned-observed {
+  box-shadow:
+    0 3px 0 var(--obs-dark, rgb(var(--r-dark))),
+    0 4px 10px var(--obs-shadow, rgba(255,107,139,0.4)),
+    inset 0 0 0 1px rgba(0,0,0,0.22);
+}
+.cell.spawned-observed .cursed-facet {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 12px;
+  background: conic-gradient(from 45deg at 50% 50%,
+    rgba(255,255,255,0.32) 0deg,
+    rgba(0,0,0,0.12) 90deg,
+    rgba(255,255,255,0.32) 180deg,
+    rgba(0,0,0,0.12) 270deg,
+    rgba(255,255,255,0.32) 360deg);
+}
+@keyframes cursedReject {
+  0%, 100% { filter: none; }
+  30%      { filter: brightness(1.5) saturate(0.6); }
+  60%      { filter: brightness(1.2); }
+}
+.cell.cursed-shake {
+  animation: cursedReject 0.36s ease-in-out;
+}
+.cell.spawned-observed .cursed-rivets {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+.cell.spawned-observed .cursed-rivet {
+  position: absolute;
+  width: 11%; height: 11%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%,
+    #ffffff 0%,
+    #cccccc 18%,
+    #888894 50%,
+    #444450 80%,
+    #14141c 100%);
+  box-shadow:
+    0 1px 1.5px rgba(0,0,0,0.5),
+    inset -0.5px -1px 1px rgba(0,0,0,0.4),
+    inset 1px 1px 0 rgba(255,255,255,0.45);
+}
+.cell.spawned-observed .cursed-rivet.tl { top: 6%; left: 6%; }
+.cell.spawned-observed .cursed-rivet.tr { top: 6%; right: 6%; }
+.cell.spawned-observed .cursed-rivet.bl { bottom: 6%; left: 6%; }
+.cell.spawned-observed .cursed-rivet.br { bottom: 6%; right: 6%; }
+
+/* === Match / collapse animations === */
+.cell.collapsing .mini,
+.cell.collapsing .donut {
+  animation: collapseFx 0.42s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes collapseFx {
+  0%   { transform: translate(-50%, -50%) scale(1);   filter: brightness(1); }
+  50%  { transform: translate(-50%, -50%) scale(1.3); filter: brightness(1.8) saturate(1.3); }
+  100% { transform: translate(-50%, -50%) scale(1);   filter: brightness(1); }
+}
+/* mini was a child div without translate, override gracefully */
+.cell.collapsing .mini { transform: scale(1); animation-name: miniBurst; }
+@keyframes miniBurst {
+  0%   { transform: scale(1); filter: brightness(1); }
+  50%  { transform: scale(1.4); filter: brightness(1.8) saturate(1.3); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Matching cell — the cell itself keeps its translate (set in positionCell);
+   the explosion animation only touches scale/opacity, applied via a child
+   transform layer so we don't clobber the cell's translate. */
+.cell.matching {
+  z-index: 6;
+  background: var(--obs);
+  animation: matchPulse 0.36s ease-out forwards;
+}
+.cell.matching > .donut,
+.cell.matching > .mini,
+.cell.matching > .face-mouth,
+.cell.matching > .cursed-facet,
+.cell.matching > .cursed-rivets,
+.cell.matching::before,
+.cell.matching::after {
+  animation: matchExplode 0.36s cubic-bezier(.3,.6,.4,1) forwards;
+}
+@keyframes matchPulse {
+  0%   { box-shadow: inset 0 2px 4px rgba(0,0,0,0.08), 0 0 0 rgba(255,255,255,0.9); }
+  40%  { box-shadow: inset 0 2px 4px rgba(0,0,0,0.08), 0 0 24px 6px rgba(255,255,255,0.7); }
+  100% { box-shadow: inset 0 2px 4px rgba(0,0,0,0.08); opacity: 0; }
+}
+@keyframes matchExplode {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* === Particles === */
+.particle {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 7;
+  animation: particle 0.8s ease-out forwards;
+}
+@keyframes particle {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.3); opacity: 0; }
+}
+
+/* === Propagation waves === */
+.propagation {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  animation: propagate 0.45s ease-out forwards;
+}
+@keyframes propagate {
+  0%   { transform: translate(-50%, -50%) translate(0, 0) scale(0.5); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) translate(var(--dx, 0), var(--dy, 0)) scale(1.2); opacity: 0; }
+}
+
+/* === Match flash line === */
+.match-flash {
+  position: absolute;
+  pointer-events: none;
+  z-index: 7;
+  border-radius: 4px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
+  animation: flashLine 0.5s ease-out forwards;
+}
+.match-flash.h { height: 6px; }
+.match-flash.v {
+  width: 6px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.95), transparent);
+}
+@keyframes flashLine {
+  0% { opacity: 0; transform: scaleY(0.2); }
+  40% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; }
+}
+
+/* === Score popup === */
+.score-pop {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  pointer-events: none;
+  z-index: 8;
+  animation: scorePop 0.85s cubic-bezier(.2,.7,.3,1) forwards;
+}
+@keyframes scorePop {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  20%  { transform: translate(-50%, -120%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -240%) scale(1); opacity: 0; }
+}
+/* Regional "+N" — one popup at the match centroid (positioned via
+   left/top on .board). Translucent and drifts a short distance up. */
+.score-pop.region {
+  top: 0; left: 0;
+  font-size: 26px;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  animation: scorePopRegion 0.7s cubic-bezier(.2, .7, .3, 1) forwards;
+}
+@keyframes scorePopRegion {
+  0%   { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+  20%  { transform: translate(-50%, -70%) scale(1.1); opacity: 0.85; }
+  100% { transform: translate(-50%, -120%) scale(1); opacity: 0; }
+}
+
+/* === Footer stats === */
+
+/* === Toast === */
+.toast {
+  position: fixed;
+  top: 28%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: white;
+  color: var(--ink);
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 10px 28px var(--shadow);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.2,.7,.3,1.3);
+  z-index: 110;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* === Match stamp (4+ matches and cascades) === */
+.match-stamp {
+  --rot: -4deg;
+  --c: rgb(var(--r));
+  --c-dark: rgb(var(--r-dark));
+  position: fixed;
+  top: 32%;
+  left: 50%;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, var(--c), var(--c-dark));
+  padding: 10px 24px;
+  border-radius: 999px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 0 0 3px white, 0 10px 26px rgba(0,0,0,0.3);
+  pointer-events: none;
+  z-index: 180;
+  white-space: nowrap;
+  animation: matchStampPop 1.1s cubic-bezier(.2,.7,.3,1.5) forwards;
+}
+.match-stamp.small {
+  font-size: 20px;
+  padding: 8px 18px;
+}
+.match-stamp.big {
+  font-size: 30px;
+  padding: 12px 28px;
+  letter-spacing: 0.5px;
+}
+@keyframes matchStampPop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.4); }
+  25%  { opacity: 1; transform: translate(-50%, -50%) rotate(var(--rot)) scale(1.18); }
+  55%  { opacity: 1; transform: translate(-50%, -50%) rotate(var(--rot)) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -90%) rotate(var(--rot)) scale(0.95); }
+}
+
+/* === Color unlock banner (G/P unlock — distinct from match stamps) === */
+.unlock-banner {
+  --c: rgb(var(--g));
+  --c-dark: rgb(var(--g-dark));
+  position: fixed;
+  top: 14%;
+  left: 50%;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: 1px;
+  color: white;
+  background: linear-gradient(135deg, var(--c), var(--c-dark));
+  padding: 14px 32px;
+  border-radius: 999px;
+  border: 3px solid white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.55), 0 14px 32px rgba(0,0,0,0.35);
+  pointer-events: none;
+  z-index: 185;
+  white-space: nowrap;
+  animation: unlockBannerPop 1.8s cubic-bezier(.2,.7,.3,1.5) forwards;
+}
+@keyframes unlockBannerPop {
+  0%   { opacity: 0; transform: translate(-50%, -10%) scale(0.5); }
+  15%  { opacity: 1; transform: translate(-50%, 0) scale(1.2); }
+  30%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  80%  { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+}
+
+/* === Combo break FX ===
+   Subdued: the combo number itself jiggles and fades to its zero color,
+   and the board edge gets a brief red pulse. No center toast, no
+   full-screen shake — the player already feels the loss when their
+   combo resets, and louder effects added frustration without clarity. */
+.combo-break-jiggle {
+  animation: comboBreakJiggle 0.7s ease-out;
+}
+@keyframes comboBreakJiggle {
+  0%   { transform: translateX(0); }
+  15%  { transform: translateX(-3px); }
+  30%  { transform: translateX(3px); }
+  45%  { transform: translateX(-2px); }
+  60%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+.combo-break-jiggle .combo-center-value {
+  animation: comboBreakValueFlash 0.7s ease-out;
+}
+@keyframes comboBreakValueFlash {
+  0%   { color: inherit; }
+  15%  { color: #ff5a6e; }
+  60%  { color: #ff5a6e; }
+  100% { color: inherit; }
+}
+.combo-break-pulse {
+  /* Brief red outline around the play-area panel. We use a positioned
+     pseudo-element so the outline can sit just outside the panel's
+     rounded corner without clipping by overflow rules and without
+     fighting the panel's own drop shadow. */
+  position: relative;
+}
+.combo-break-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 3px solid rgba(255, 90, 110, 0);
+  border-radius: 25px;
+  pointer-events: none;
+  animation: comboBreakFramePulse 0.42s ease-out forwards;
+}
+@keyframes comboBreakFramePulse {
+  0%   { border-color: rgba(255, 90, 110, 0); transform: scale(1); }
+  35%  { border-color: rgba(255, 90, 110, 0.65); transform: scale(1); }
+  100% { border-color: rgba(255, 90, 110, 0); transform: scale(1.01); }
+}
+
+/* === Game over overlay === */
+.gameover {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 244, 217, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 150;
+}
+.gameover.show { display: flex; }
+.gameover-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 360px;
+}
+.go-trio {
+  display: flex;
+  margin-bottom: 14px;
+}
+.go-mascot {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  margin: 0 -8px;
+  position: relative;
+  border: 3px solid white;
+  animation: hop 1s ease-in-out infinite;
+}
+/* Stacking order: leftmost is at the back, rightmost overlaps everything in
+   front of it. The negative margin between mascots makes each successive one
+   visually pop over the previous. */
+.go-mascot:nth-child(1) { z-index: 1; }
+.go-mascot:nth-child(2) { animation-delay: 0.1s; z-index: 2; }
+.go-mascot:nth-child(3) { animation-delay: 0.2s; z-index: 3; }
+.go-mascot:nth-child(4) { animation-delay: 0.3s; z-index: 4; }
+.go-mascot:nth-child(5) { animation-delay: 0.4s; z-index: 5; }
+.go-mascot.r { background: rgb(var(--r)); box-shadow: 0 4px 0 rgb(var(--r-dark)), 0 6px 14px rgba(0,0,0,0.2); }
+.go-mascot.b { background: rgb(var(--b)); box-shadow: 0 4px 0 rgb(var(--b-dark)), 0 6px 14px rgba(0,0,0,0.2); }
+.go-mascot.y { background: rgb(var(--y)); box-shadow: 0 4px 0 rgb(var(--y-dark)), 0 6px 14px rgba(0,0,0,0.2); }
+.go-mascot.g { background: rgb(var(--g)); box-shadow: 0 4px 0 rgb(var(--g-dark)), 0 6px 14px rgba(0,0,0,0.2); }
+.go-mascot.p { background: rgb(var(--p)); box-shadow: 0 4px 0 rgb(var(--p-dark)), 0 6px 14px rgba(0,0,0,0.2); }
+.go-mascot::before, .go-mascot::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.go-mascot::before { left: 28%; }
+.go-mascot::after  { right: 28%; }
+.go-mascot .gm {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  background: white;
+  border-radius: 0 0 99px 99px;
+}
+/* Score hero — emphasised "최종 점수" label above the number, then the
+   final score, then "최고 점수" on a faint pill. The evaluative title
+   ("멋져요!") was removed because it read as sarcastic at low scores;
+   the section now communicates the same celebratory framing through the
+   gradient-tinted label alone. */
+.go-score-block {
+  text-align: center;
+  margin-bottom: 22px;
+}
+.go-score-label {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  background: linear-gradient(90deg, rgb(var(--r)), rgb(var(--y)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.5px;
+  margin: 0 0 2px;
+  line-height: 1.1;
+}
+.final {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 900;
+  font-size: 56px;
+  color: rgb(var(--r));
+  line-height: 1;
+  margin-bottom: 10px;
+}
+/* Pill containing "최고 점수 NN". Label and number share the SAME font
+   family and the SAME font-size so they sit on the same baseline — the
+   recurring misalignment came from the number inheriting the display
+   font (Baloo 2) while the Korean label used Fredoka/Cafe24, two faces
+   with incompatible ascender/descender metrics. */
+.gameover-best {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--soft);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+.gameover-best b {
+  font: inherit;
+  font-weight: 800;
+  color: rgb(var(--b));
+}
+
+/* Per-game stats block between score and revive button. Three compact
+   rows: max combo, max chain, matches/taps. Each row shows this game's
+   value with the all-time best as a small inline note. */
+.go-stats {
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 14px 0 18px;
+  font-family: 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.go-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  font-size: 13px;
+}
+.go-stat-label {
+  color: var(--soft);
+  font-weight: 600;
+}
+.go-stat-value {
+  color: var(--ink);
+}
+.go-stat-value b {
+  font-weight: 800;
+  color: rgb(var(--r));
+  font-size: 15px;
+}
+.go-stat-best {
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--soft);
+  opacity: 0.8;
+}
+.go-stat-sep {
+  margin: 0 4px;
+  opacity: 0.4;
+}
+.go-stat-tap-label {
+  margin-left: 4px;
+  font-size: 11px;
+  color: var(--soft);
+}
+
+/* Revive — primary CTA, full-width pill. AD badge sits inside the button
+   so the player knows the action plays a rewarded ad. */
+.action.revive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 280px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(var(--g)), rgb(var(--b)));
+  color: white;
+  border: none;
+  font: 700 15px/1.2 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  box-shadow: 0 6px 16px rgba(95,179,255,0.45);
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.action.revive[hidden] { display: none; }
+.revive-text { letter-spacing: 0.2px; }
+.revive-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffb84a, #ff7a3d);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Share / restart — equal-weight secondary row */
+.gameover-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}
+.action {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.action.primary {
+  background: linear-gradient(135deg, rgb(var(--r)), rgb(var(--y)));
+  color: white;
+  box-shadow: 0 5px 14px rgba(255,107,139,0.45);
+}
+.action.share {
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.link {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--soft);
+  margin-top: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: 'Fredoka', sans-serif;
+}
+.link[hidden] { display: none; }
+
+/* === Settings modal === */
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  z-index: 150;
+  padding: 24px;
+}
+.settings-modal[hidden] { display: none; }
+.settings-inner {
+  background: white;
+  border-radius: 22px;
+  padding: 22px 20px 18px;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  position: relative;
+}
+.settings-close-x {
+  position: absolute;
+  top: 10px; right: 12px;
+  width: 30px; height: 30px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #aaa;
+  cursor: pointer;
+}
+.settings-inner h3 {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  margin: 0 0 16px;
+  text-align: center;
+  color: var(--ink);
+}
+
+/* Rulebook — scrollable list of mechanic sections.
+   Locked sections are dimmed and uninteractive. Unlocked sections expand
+   on tap to show their body text. */
+.rulebook-inner {
+  max-width: 420px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+.rulebook-progress-text {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+.rulebook-list {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+.rulebook-item {
+  background: #f6f4ef;
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+.rulebook-item:hover {
+  background: #efece5;
+}
+.rulebook-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rulebook-item-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+}
+.rulebook-item-icon {
+  font-size: 14px;
+  color: #888;
+  transition: transform 0.2s ease;
+}
+.rulebook-item.expanded .rulebook-item-icon {
+  transform: rotate(90deg);
+}
+.rulebook-item-body {
+  display: none;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #555;
+}
+.rulebook-item.expanded .rulebook-item-body { display: block; }
+.rulebook-item.locked {
+  background: #ece9e0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.rulebook-item.locked .rulebook-item-title {
+  color: #999;
+  font-family: 'Baloo 2', sans-serif;
+  letter-spacing: 2px;
+}
+.rulebook-item.locked .rulebook-item-icon::before {
+  content: '🔒';
+}
+.rulebook-item.locked:hover { background: #ece9e0; }
+.settings-row-progress {
+  font-size: 12px;
+  color: #888;
+  margin-right: 4px;
+}
+/* Volume / haptic slider rows */
+.settings-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px;
+}
+.settings-slider-row + .settings-slider-row {
+  margin-top: 2px;
+}
+/* Last slider row inside a group should not push the group's own spacer
+   further apart; the group's margin-bottom is the source of truth for the
+   gap between groups. */
+.settings-group > .settings-slider-row:last-child {
+  margin-bottom: 0;
+}
+.settings-slider-label {
+  flex: 0 0 64px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.settings-slider {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.12);
+  outline: none;
+  margin: 0;
+}
+.settings-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgb(var(--r));
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+.settings-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgb(var(--r));
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+.settings-slider-value {
+  flex: 0 0 36px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+  opacity: 0.75;
+}
+/* Main CTA: remove ads */
+.settings-cta {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgb(var(--b)), rgb(var(--p)));
+  color: #fff;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(136, 85, 216, 0.3);
+}
+
+/* Settings grouping: thematic clusters separated by a vertical gap so the
+   settings list reads as Audio / Info / Account / Danger rather than one
+   long flat column. Hairlines inside a group divide rows; the last row
+   in each group drops its hairline so the gap (not a stray line) is what
+   separates groups. */
+.settings-group {
+  margin-bottom: 18px;
+}
+.settings-group:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Secondary list (restore / language / help / privacy) */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-family: 'Fredoka', sans-serif;
+}
+#language-row, #help-row, #privacy-row { cursor: pointer; }
+.settings-group > .settings-row:last-child { border-bottom: none; }
+.settings-row[hidden] { display: none; }
+.settings-row-label {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.75;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.settings-row-icon {
+  font-size: 15px;
+  opacity: 1;
+  line-height: 1;
+}
+.settings-row-sub {
+  font-size: 11px;
+  opacity: 0.55;
+}
+.settings-row-btn {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settings-row-toggle { cursor: pointer; }
+.settings-toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.settings-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.settings-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.18);
+  border-radius: 999px;
+  transition: background 160ms ease;
+}
+.settings-toggle-slider::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 160ms ease;
+}
+.settings-toggle input:checked + .settings-toggle-slider {
+  background: rgb(var(--r));
+}
+.settings-toggle input:checked + .settings-toggle-slider::before {
+  transform: translateX(16px);
+}
+
+/* Danger zone: give up */
+.settings-danger-zone {
+  margin-top: 14px;
+}
+.settings-give-up {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: rgba(0,0,0,0.04);
+  color: rgb(var(--r-dark));
+  border: none;
+  border-radius: 12px;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.settings-version {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.55;
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+.settings-version-sep {
+  opacity: 0.5;
+}
+.settings-version-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+.settings-version-link:hover { opacity: 0.8; }
+.settings-chevron {
+  display: inline-block;
+  margin-left: 4px;
+  opacity: 0.55;
+}
+
+/* Language picker modal — keep modal a sensible height and scroll the list. */
+.language-inner {
+  padding-bottom: 14px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+.language-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Add a little bottom padding so the last row doesn't hug the modal edge. */
+  padding-bottom: 4px;
+}
+.language-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 8px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-family: 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+}
+/* Per-language font tweaks for the picker. CJK rows prefer rounded/native
+   faces when available; Latin rows keep Fredoka through the base chain. */
+.language-option[lang="ja"] {
+  font-family: 'KosugiMaru', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+}
+.language-option[lang="ko"] {
+  font-family: 'Cafe24Ssurround', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+.language-option[lang="zh-Hans"] {
+  font-family: 'PingFang SC Rounded', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans SC Rounded', 'Noto Sans SC', sans-serif;
+}
+.language-option[lang="zh-Hant"] {
+  font-family: 'PingFang TC Rounded', 'PingFang TC', 'Hiragino Sans CNS', 'Source Han Sans TC Rounded', 'Noto Sans TC', sans-serif;
+}
+.language-option:last-child { border-bottom: none; }
+.language-option .language-check {
+  color: rgb(var(--g-dark));
+  display: inline-flex;
+  align-items: center;
+}
+.language-option .language-check .qm-icon { width: 20px; height: 20px; }
+.language-option:not(.is-active) .language-check { visibility: hidden; }
+.language-option.is-active { color: rgb(var(--p-dark)); }
+
+/* === Coach (slide-based tutorial modal) === */
+.coach {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  background: rgba(40, 20, 50, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: coachFadeIn 0.3s ease-out;
+}
+.coach[hidden] { display: none !important; }
+@keyframes coachFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.coach-card {
+  position: relative;
+  background: white;
+  border-radius: 28px;
+  padding: 24px 22px 20px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  font-family: 'Fredoka', sans-serif;
+  text-align: center;
+  animation: coachPop 0.4s cubic-bezier(.2,.7,.3,1.3);
+}
+@keyframes coachPop {
+  from { transform: scale(0.86); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.coach-skip {
+  position: absolute;
+  top: 4px; right: 4px;
+  background: none;
+  border: none;
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--soft);
+  cursor: pointer;
+  padding: 0;
+}
+.coach-skip:hover { background: #f3eadc; }
+
+.coach-slides {
+  position: relative;
+  margin-bottom: 8px;
+  min-height: 280px;
+}
+.coach-slide {
+  display: none;
+  animation: coachSlideIn 0.35s cubic-bezier(.2,.7,.3,1.2);
+}
+.coach-slide.active { display: block; }
+@keyframes coachSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.coach-slide h3 {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  background: linear-gradient(90deg, rgb(var(--r)), rgb(var(--y)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 6px 0 10px;
+  letter-spacing: -0.3px;
+}
+.coach-slide p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+  padding: 0 6px;
+  /* Wrap on word boundaries only — CJK lines stay readable instead of
+     breaking mid-token, and Latin lines still respect the explicit
+     <br> we placed between the concept and action sentences. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+/* Keep emphasized terms (the <b> chunks) on a single line so a wrap
+   doesn't split "NEXT" or "3 in a row" across two rows. */
+.coach-slide p b { color: rgb(var(--r)); font-weight: 700; white-space: nowrap; }
+/* Color-coded letter labels inside tutorial text */
+.coach-slide .c-r { color: rgb(var(--r)); }
+.coach-slide .c-b { color: rgb(var(--b)); }
+.coach-slide .c-y { color: rgb(var(--y)); }
+.coach-slide .c-sep { color: var(--ink); font-weight: 700; }
+/* Secondary "did-you-know" tip line at the end of a slide */
+.coach-slide .coach-tip {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  color: var(--ink);
+  opacity: 0.8;
+}
+
+/* === Illustration area === */
+.coach-art {
+  display: grid;
+  place-items: center;
+  height: 150px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+/* Slide 1: single donut cell */
+.art-cell {
+  position: relative;
+  width: 110px; height: 110px;
+  background: #f8f0ea;
+  border-radius: 22px;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.08);
+  display: grid;
+  place-items: center;
+}
+.art-donut {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(rgb(var(--r)) 0% 50%, rgb(var(--b)) 50% 75%, rgb(var(--y)) 75% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+  mask: radial-gradient(circle, transparent 60%, black 64%);
+}
+.art-mini {
+  width: 50%; aspect-ratio: 1;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+.art-mini.r { background: rgb(var(--r)); box-shadow: 0 2px 0 rgb(var(--r-dark)); }
+.art-mini.b { background: rgb(var(--b)); box-shadow: 0 2px 0 rgb(var(--b-dark)); }
+.art-mini.y { background: rgb(var(--y)); box-shadow: 0 2px 0 rgb(var(--y-dark)); }
+/* Mascot face (eyes + mouth) — matches go-mascot proportions */
+.art-mini::before, .art-mini::after,
+.art-mascot::before, .art-mascot::after,
+.art-cell.observed::before, .art-cell.observed::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.art-mini::before, .art-mascot::before, .art-cell.observed::before { left: 28%; }
+.art-mini::after,  .art-mascot::after,  .art-cell.observed::after  { right: 28%; }
+.art-face {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  background: white;
+  border-radius: 0 0 99px 99px;
+}
+
+/* Slide 2: NEXT strip mock */
+.art-next {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(180deg, rgb(var(--b)), color-mix(in oklab, rgb(var(--b)) 80%, white));
+  padding: 12px 22px;
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(95,179,255,0.4);
+}
+.art-next-label {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 700;
+}
+.art-next-text {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.art-mascot {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: artHop 1.2s ease-in-out infinite;
+}
+.art-mascot.r { background: rgb(var(--r)); box-shadow: 0 4px 0 rgb(var(--r-dark)); }
+.art-mascot.b { background: rgb(var(--b)); box-shadow: 0 4px 0 rgb(var(--b-dark)); }
+.art-mascot.y { background: rgb(var(--y)); box-shadow: 0 4px 0 rgb(var(--y-dark)); }
+.art-mascot.small { width: 36px; height: 36px; box-shadow: 0 3px 0 rgb(var(--y-dark)); }
+@keyframes artHop {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* Slide 3: matched row + tap hint */
+.art-row {
+  display: flex;
+  gap: 6px;
+}
+/* Slide 3 transform illustration: super cell → arrow → observed cell */
+.art-transform {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.art-arrow {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--soft);
+  animation: artArrowPulse 1.4s ease-in-out infinite;
+}
+@keyframes artArrowPulse {
+  0%, 100% { opacity: 0.6; transform: translateX(0); }
+  50%      { opacity: 1; transform: translateX(4px); }
+}
+.art-cell.tiny {
+  width: 76px; height: 76px;
+  border-radius: 14px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.art-cell.tiny.super {
+  background: #f8f0ea;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+}
+.art-cell.tiny.observed {
+  background: var(--obs);
+  box-shadow: 0 3px 0 var(--obs-dark);
+}
+.art-cell.tiny.observed.b { --obs: rgb(var(--b)); --obs-dark: rgb(var(--b-dark)); }
+.art-cell.tiny.observed.r { --obs: rgb(var(--r)); --obs-dark: rgb(var(--r-dark)); }
+.art-cell.tiny.observed.y { --obs: rgb(var(--y)); --obs-dark: rgb(var(--y-dark)); }
+.art-cell.tiny .art-face {
+  width: 38%; height: 16%;
+}
+/* mini donut ring inside super tiny cell */
+.art-donut-mini {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 84%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(rgb(var(--r)) 0% 25%, rgb(var(--b)) 25% 75%, rgb(var(--y)) 75% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+  mask: radial-gradient(circle, transparent 60%, black 64%);
+}
+.art-mini-pip {
+  position: relative;
+  z-index: 2;
+  width: 46%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c, rgb(var(--b)));
+  box-shadow: 0 2px 0 var(--c-dark, rgb(var(--b-dark)));
+}
+.art-mini-pip.b { --c: rgb(var(--b)); --c-dark: rgb(var(--b-dark)); }
+.art-mini-pip.r { --c: rgb(var(--r)); --c-dark: rgb(var(--r-dark)); }
+.art-mini-pip.y { --c: rgb(var(--y)); --c-dark: rgb(var(--y-dark)); }
+/* Mascot face on the mini pip (matches the go-mascot proportions used
+   elsewhere in the game so it reads as the same character). */
+.art-mini-pip::before, .art-mini-pip::after {
+  content: "";
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: white;
+  border-radius: 50%;
+  top: 32%;
+}
+.art-mini-pip::before { left: 28%; }
+.art-mini-pip::after  { right: 28%; }
+.art-mini-pip .art-face {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  background: white;
+  border-radius: 0 0 99px 99px;
+}
+.art-tap {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: rgb(var(--r));
+  background: white;
+  padding: 4px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(255,107,139,0.4);
+  animation: artBounce 0.9s ease-in-out infinite;
+}
+@keyframes artBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-6px); }
+}
+
+/* Slide 4: combo badge + break X */
+/* Mini score-card visual for the combo tutorial slide (mirrors the real
+   score-card layout with SCORE / COMBO / BEST columns). */
+.art-scorecard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(140, 80, 80, 0.18);
+}
+.art-sc-cell { text-align: center; min-width: 56px; }
+.art-sc-cell:first-child { text-align: left; }
+.art-sc-cell:last-child { text-align: right; }
+.art-sc-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--soft);
+}
+.art-sc-value {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1;
+  margin-top: 2px;
+}
+.art-sc-combo .art-sc-value {
+  animation: artComboBump 1.4s ease-in-out infinite;
+}
+@keyframes artComboBump {
+  0%, 100% { transform: scale(1); }
+  20%      { transform: scale(1.18); }
+  40%      { transform: scale(1); }
+}
+/* === Slide 1 (NEW): single-cell tap demo ===
+   Mirrors the real .cell.super → .cell.observed transition so the player
+   learns the rule by watching: super state shows ring of color
+   candidates + tiny mascot center; tap animates the center color
+   expanding to fill the cell. */
+.art-tap-demo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* Cell uses overflow:hidden for its donut mask, so the finger lives
+     on this wrapper to avoid getting clipped. */
+}
+.art-td-cell {
+  --td-color: rgb(var(--b));
+  --td-color-dark: rgb(var(--b-dark));
+  --td-color-shadow: rgba(95,179,255,0.4);
+  position: relative;
+  width: 120px; height: 120px;
+  border-radius: 22px;
+  background: #f8f0ea;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.08);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transition: transform 200ms ease;
+}
+/* Donut ring: same conic-gradient + radial-mask technique as the real
+   game so the candidate ratios visually match. */
+.art-td-donut {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(rgb(var(--r)) 0% 33.3%, rgb(var(--b)) 33.3% 66.6%, rgb(var(--y)) 66.6% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+  mask: radial-gradient(circle, transparent 60%, black 64%);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 320ms ease;
+}
+/* Mini mascot in the center — its color is what the cell collapses to. */
+.art-td-mini {
+  position: relative;
+  width: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--td-color);
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 var(--td-color-dark);
+  z-index: 2;
+  transition: width 380ms cubic-bezier(.34,1.2,.5,1),
+              height 380ms cubic-bezier(.34,1.2,.5,1),
+              border-radius 380ms ease,
+              box-shadow 380ms ease;
+}
+.art-td-mini .art-cd-eye,
+.art-td-mini .art-cd-mouth { transition: none; opacity: 1; }
+/* Tap pulse — a ring that ripples out from the cell, mimicking the
+   real game's tap feedback so the player connects the gesture with the
+   collapse. */
+.art-td-tap-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 30%; height: 30%;
+  border: 3px solid rgba(255,255,255,0.85);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.art-td-cell.is-tapping .art-td-tap-ring {
+  animation: artTdTap 520ms ease-out;
+}
+@keyframes artTdTap {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}
+/* Observed state: the ring fades out and the mini mascot grows to fill
+   the cell — exactly the visual cue from the real game. */
+.art-td-cell.is-observed .art-td-donut { opacity: 0; }
+.art-td-cell.is-observed .art-td-mini {
+  width: 92%;
+  border-radius: 18px;
+  box-shadow: 0 3px 0 var(--td-color-dark), 0 4px 10px var(--td-color-shadow);
+}
+.art-td-cell.is-b { --td-color: rgb(var(--b)); --td-color-dark: rgb(var(--b-dark)); --td-color-shadow: rgba(95,179,255,0.4); }
+.art-td-cell.is-r { --td-color: rgb(var(--r)); --td-color-dark: rgb(var(--r-dark)); --td-color-shadow: rgba(255,107,139,0.4); }
+.art-td-cell.is-y { --td-color: rgb(var(--y)); --td-color-dark: rgb(var(--y-dark)); --td-color-shadow: rgba(255,206,90,0.4); }
+
+/* Finger glyph for slide 1: lives on .art-tap-demo, not inside the cell,
+   because the cell needs overflow:hidden for its donut mask. The cell
+   sits at the wrapper center (120x120 box), so we anchor the finger
+   relative to that center. */
+.art-td-finger {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 38px;
+  line-height: 1;
+  /* Resting position: lower-right corner of the cell. */
+  transform: translate(38px, 42px) rotate(-12deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25));
+  transition: transform 280ms cubic-bezier(.34,1.2,.5,1),
+              opacity 220ms ease;
+}
+.art-tap-demo.is-pressing .art-td-finger {
+  opacity: 1;
+  transform: translate(18px, 22px) rotate(-12deg);
+}
+.art-tap-demo.is-lifting .art-td-finger {
+  opacity: 0;
+  transform: translate(26px, 12px) rotate(-12deg);
+}
+/* Cell press-down — subtle scale to read the contact. Driven from the
+   wrapper since the press class lives there too. */
+.art-tap-demo.is-pressing .art-td-cell {
+  transform: scale(0.96);
+}
+
+/* === Slide 2 (NEW): adjacent-cell probability demo ===
+   3x3 grid. Center cell is tapped → the four orthogonal neighbors
+   redistribute their donut conic-gradient so the tapped color gets a
+   bigger slice. Corner cells stay neutral.
+
+   Slice weights are intentionally asymmetric so the boost reads at a
+   glance: pre-tap the donut is red-leaning (R 45 / B 25 / Y 30), and
+   post-tap blue jumps to dominant (R 18 / B 65 / Y 17). That ~40-point
+   swing on blue is what the player needs to perceive. */
+.art-neighbor-demo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  width: 180px;
+  height: 180px;
+}
+.art-nb-cell {
+  --nb-tap-color: rgb(var(--b));
+  --nb-tap-color-dark: rgb(var(--b-dark));
+  position: relative;
+  border-radius: 9px;
+  background: #f8f0ea;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+/* Donut ring under the mascot. Slice weights come from CSS vars so JS
+   only flips a single class to redistribute them. */
+.art-nb-cell::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 86%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(
+    rgb(var(--r)) 0% var(--nb-r, 45%),
+    rgb(var(--b)) var(--nb-r, 45%) var(--nb-rb, 70%),
+    rgb(var(--y)) var(--nb-rb, 70%) 100%
+  );
+  -webkit-mask: radial-gradient(circle, transparent 58%, black 62%);
+  mask: radial-gradient(circle, transparent 58%, black 62%);
+}
+/* Inner mini mascot. Default color tracks the dominant slice (red
+   pre-boost). When the neighbors get boosted we swap it to blue. */
+.art-nb-mini {
+  position: relative;
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(var(--r));
+  border: 1.5px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 1px 0 rgb(var(--r-dark));
+  z-index: 2;
+  transition: background 480ms ease, box-shadow 480ms ease, transform 480ms ease;
+}
+.art-nb-mini .art-cd-eye {
+  top: 30%;
+  width: 14%;
+}
+.art-nb-mini .art-cd-eye-l { left: 26%; }
+.art-nb-mini .art-cd-eye-r { right: 26%; }
+.art-nb-mini .art-cd-mouth {
+  bottom: 20%;
+  width: 42%; height: 18%;
+}
+/* Boost: adjacent cells flip the mascot color toward the tapped hue and
+   the donut weight shifts dramatically toward blue. */
+.art-neighbor-demo.is-boosted .art-nb-adj {
+  --nb-r: 18%;
+  --nb-rb: 83%;
+}
+.art-neighbor-demo.is-boosted .art-nb-adj .art-nb-mini {
+  background: rgb(var(--b));
+  box-shadow: 0 1px 0 rgb(var(--b-dark));
+  /* Tiny pop to draw the eye when the color flips. */
+  transform: scale(1.08);
+}
+
+/* Center cell starts as a super cell just like its neighbors and only
+   collapses to observed after the demo's tap. The pre-tap state reuses
+   the neighbor cell styles (donut ::before + mini mascot), so the only
+   thing we override here is overflow + stacking — and then a separate
+   .is-observed rule swaps in the full observed-cell skin. */
+.art-nb-cell.art-nb-center {
+  /* Center cell has no donut mask once tapped, and the finger needs to
+     extend past the cell boundary, so drop overflow:hidden here. */
+  overflow: visible;
+  /* Raise the center above the neighbor cells so the finger that pokes
+     out from its bottom-right corner isn't covered by c5/c7. */
+  z-index: 5;
+  /* Center is the cell the demo taps. Pre-paint its donut so blue
+     dominates — that way the central mascot reads as "the color this
+     cell will commit to" (blue), matching what observed state shows. */
+  --nb-r: 22%;
+  --nb-rb: 78%;
+}
+/* Center cell's mini mascot mirrors its dominant slice (blue). */
+.art-nb-cell.art-nb-center .art-nb-mini {
+  background: rgb(var(--b));
+  box-shadow: 0 1px 0 rgb(var(--b-dark));
+}
+/* Observed (tapped) state: hide the donut + mini mascot, paint the full
+   cell blue, and reveal the larger observed-cell face. */
+.art-nb-cell.art-nb-center .art-nb-observed-face { display: none; }
+.art-nb-cell.art-nb-center.is-observed::before { display: none; }
+.art-nb-cell.art-nb-center.is-observed .art-nb-mini { display: none; }
+.art-nb-cell.art-nb-center.is-observed {
+  background: var(--nb-tap-color);
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 var(--nb-tap-color-dark), 0 3px 8px rgba(95,179,255,0.4);
+}
+.art-nb-cell.art-nb-center.is-observed .art-nb-observed-face {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+/* Observed-state face: positioned and sized like the real game's
+   .cell.observed face (eyes + mouth). */
+.art-nb-observed-face .art-cd-eye {
+  top: 32%;
+  width: 12%;
+}
+.art-nb-observed-face .art-cd-eye-l { left: 28%; }
+.art-nb-observed-face .art-cd-eye-r { right: 28%; }
+.art-nb-observed-face .art-cd-mouth {
+  bottom: 22%;
+  width: 40%; height: 18%;
+}
+
+/* Tap pulse on the center, reusing the slide-1 ring. */
+.art-nb-center.is-tapping .art-td-tap-ring {
+  animation: artTdTap 520ms ease-out;
+}
+
+/* Finger glyph for slide 2. Same anchoring + emoji size as slide 1; the
+   translate offsets are scaled down to match the smaller center cell. */
+.art-nb-finger {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 38px;
+  line-height: 1;
+  transform: translate(16px, 18px) rotate(-12deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.28));
+  transition: transform 280ms cubic-bezier(.34,1.2,.5,1),
+              opacity 220ms ease;
+}
+.art-nb-center.is-pressing .art-nb-finger {
+  opacity: 1;
+  transform: translate(8px, 10px) rotate(-12deg);
+}
+.art-nb-center.is-lifting .art-nb-finger {
+  opacity: 0;
+  transform: translate(12px, 4px) rotate(-12deg);
+}
+.art-nb-center.is-pressing {
+  /* Subtle press-down — same idea as slide 1 but the center cell is
+     smaller so we keep the scale change gentle. */
+  transform: scale(0.95);
+}
+.art-nb-cell.art-nb-center {
+  transition: transform 200ms ease;
+}
+
+/* Make CSS variables animatable (Chromium/WebKit honor @property; older
+   engines silently fall back to a hard swap, which still reads clearly
+   because the donut transitions on background via filter/opacity. We
+   register both axis vars so animation is smooth where supported). */
+@property --nb-r {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 45%;
+}
+@property --nb-rb {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 70%;
+}
+.art-nb-cell {
+  transition: --nb-r 600ms ease, --nb-rb 600ms ease;
+}
+
+/* === Slide 3 (NEW): match-of-three rule demo ===
+   Three horizontal super cells. The finger taps each one in turn, each
+   collapses to blue, then all three pop together while a +score
+   indicator floats up. Loops back to the super state. */
+.art-match-demo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+.art-md-row {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+.art-md-cell {
+  --md-color: rgb(var(--b));
+  --md-color-dark: rgb(var(--b-dark));
+  --md-color-shadow: rgba(95,179,255,0.4);
+  position: relative;
+  width: 72px; height: 72px;
+  border-radius: 14px;
+  background: #f8f0ea;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+.art-md-donut {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 86%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(rgb(var(--r)) 0% 33.3%, rgb(var(--b)) 33.3% 66.6%, rgb(var(--y)) 66.6% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+  mask: radial-gradient(circle, transparent 60%, black 64%);
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+.art-md-mini {
+  position: relative;
+  width: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--md-color);
+  border: 1.5px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 1px 0 var(--md-color-dark);
+  z-index: 2;
+  transition: opacity 220ms ease;
+}
+.art-md-mini .art-cd-eye { top: 30%; width: 14%; }
+.art-md-mini .art-cd-eye-l { left: 26%; }
+.art-md-mini .art-cd-eye-r { right: 26%; }
+.art-md-mini .art-cd-mouth { bottom: 22%; width: 42%; height: 18%; }
+.art-md-observed {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: var(--md-color);
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 var(--md-color-dark), 0 3px 8px var(--md-color-shadow);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.art-md-observed .art-cd-eye { top: 32%; width: 12%; }
+.art-md-observed .art-cd-eye-l { left: 28%; }
+.art-md-observed .art-cd-eye-r { right: 28%; }
+.art-md-observed .art-cd-mouth { bottom: 22%; width: 40%; height: 18%; }
+.art-md-cell.is-observed .art-md-donut,
+.art-md-cell.is-observed .art-md-mini { opacity: 0; }
+.art-md-cell.is-observed .art-md-observed { opacity: 1; }
+/* Pop animation when the trio matches. */
+.art-md-cell.is-popping {
+  animation: artMdPop 480ms ease-out forwards;
+}
+@keyframes artMdPop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18); }
+  100% { transform: scale(0.2); opacity: 0; }
+}
+
+/* Finger glyph. Same anchoring + size as slides 1/2/4; an extra
+   margin-left (--md-finger-x) lets JS slide it across the three cells. */
+.art-md-finger {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: var(--md-finger-x, 0px);
+  font-size: 38px;
+  line-height: 1;
+  transform: translate(22px, 26px) rotate(-12deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25));
+  transition: opacity 200ms ease,
+              transform 220ms cubic-bezier(.34,1.2,.5,1),
+              margin-left 280ms cubic-bezier(.4,0,.4,1);
+}
+.art-match-demo.is-pressing .art-md-finger {
+  opacity: 1;
+  transform: translate(10px, 14px) rotate(-12deg);
+}
+
+/* Floating +score popup. */
+.art-md-score {
+  font: 800 22px/1 'Baloo 2', 'Fredoka', 'Cafe24Ssurround', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  color: rgb(var(--y-dark));
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 220ms ease, transform 220ms ease;
+  font-variant-numeric: tabular-nums;
+  min-height: 24px;
+}
+.art-match-demo.is-scoring .art-md-score {
+  opacity: 1;
+  transform: translateY(-6px);
+}
+
+/* === Slide 4 (RENUMBERED): long-press probability inspector demo ===
+   Single super cell + an animated hold ring that fills up over the same
+   LONG_PRESS_MS the real game uses (450ms). Once the ring completes the
+   probability tooltip slides in with R/B/Y rows that mirror the real
+   .cell-prob-tooltip layout. Loops with a brief release-and-retry pause. */
+.art-press-demo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+}
+.art-pd-cell {
+  position: relative;
+  width: 96px; height: 96px;
+  border-radius: 18px;
+  background: #f8f0ea;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.08);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.art-pd-donut {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 86%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(rgb(var(--r)) 0% 45%, rgb(var(--b)) 45% 80%, rgb(var(--y)) 80% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 60%, black 64%);
+  mask: radial-gradient(circle, transparent 60%, black 64%);
+  pointer-events: none;
+}
+.art-pd-mini {
+  position: relative;
+  width: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(var(--r));
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 rgb(var(--r-dark));
+  z-index: 2;
+}
+/* Finger glyph that travels in from the corner, "presses" on the cell,
+   then lifts off once the tooltip appears. The cell itself only
+   reacts with a subtle press-down — no fake hold ring, no purple
+   overlay, since the real game doesn't paint anything during the hold. */
+/* Long-press demo. Same anchoring + size pattern as slides 1-3; the
+   cell here is 96px, so offsets sit between slide 1 (120px) and
+   slide 3 (72px). */
+.art-pd-finger {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 38px;
+  line-height: 1;
+  transform: translate(30px, 34px) rotate(-12deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25));
+  transition: transform 320ms cubic-bezier(.34,1.2,.5,1),
+              opacity 240ms ease;
+}
+.art-pd-cell.is-holding .art-pd-finger {
+  opacity: 1;
+  transform: translate(14px, 18px) rotate(-12deg);
+}
+/* Tiny press-down on the cell itself — read as "yes, the finger is
+   making contact" without inventing any UI the real game lacks. */
+.art-pd-cell.is-holding {
+  transform: scale(0.96);
+  transition: transform 200ms ease;
+}
+.art-pd-cell {
+  transition: transform 200ms ease;
+}
+
+/* Tooltip that appears once the hold completes. Static layout matches
+   the real .cell-prob-tooltip so the player recognizes the in-game
+   version when they see it. */
+.art-pd-tooltip {
+  background: rgba(20, 20, 28, 0.95);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  min-width: 130px;
+  font: 600 12px/1.3 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  opacity: 0;
+  transform: scale(0.92);
+  transform-origin: left center;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.art-press-demo.is-showing .art-pd-tooltip {
+  opacity: 1;
+  transform: scale(1);
+}
+.art-pd-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+.art-pd-swatch {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.art-pd-swatch.r { background: rgb(var(--r)); }
+.art-pd-swatch.b { background: rgb(var(--b)); }
+.art-pd-swatch.y { background: rgb(var(--y)); }
+.art-pd-name { flex: 1; }
+.art-pd-pct {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+  font-weight: 700;
+}
+
+/* === Slide 4 (RENUMBERED): live NEXT + combo demo ===
+   Mini reproduction of the real board so the player learns the rule by
+   watching: pink NEXT strip on top, 3 observed cells below, combo
+   counter. Match the NEXT color → combo bumps; match an off-color → it
+   breaks. JS in mobile.js drives the script.
+   Cells use the same observed-cell visual language as the real .cell
+   (white border, color drop-shadow, mouth+eye face) so what the player
+   sees here matches what they tap on the real board. */
+.coach-art.tall { height: 200px; }
+
+.art-combo-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  max-width: 280px;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+/* NEXT strip — mirrors .next-strip from the real game.
+   Uses a CSS custom property for the active color so JS just swaps it. */
+.art-cd-next-strip {
+  --cd-color: rgb(var(--b));
+  --cd-color-dark: rgb(var(--b-dark));
+  --cd-color-shadow: rgba(95,179,255,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: linear-gradient(180deg, var(--cd-color), color-mix(in oklab, var(--cd-color) 80%, white));
+  border-radius: 12px 12px 4px 4px;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
+  transition: background 280ms ease;
+}
+.art-cd-next-label {
+  font: 700 9px/1 'Baloo 2', 'Fredoka', 'Cafe24Ssurround', sans-serif;
+  letter-spacing: 2.2px;
+  color: rgba(255,255,255,0.9);
+}
+.art-cd-next-text {
+  font: 800 14px/1 'Baloo 2', 'Fredoka', 'Cafe24Ssurround', sans-serif;
+  letter-spacing: 0.5px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.18);
+}
+.art-cd-next-mascot {
+  position: relative;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--cd-color);
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 var(--cd-color-dark), 0 3px 8px var(--cd-color-shadow);
+  transition: background 280ms ease, box-shadow 280ms ease;
+  flex-shrink: 0;
+}
+
+/* Eyes + smile — shared markup, used both for NEXT mascot and observed
+   cells. Sized in % so a single ruleset covers both 28px and 38px hosts. */
+.art-cd-eye {
+  position: absolute;
+  top: 32%;
+  width: 12%; aspect-ratio: 1;
+  background: #fff;
+  border-radius: 50%;
+}
+.art-cd-eye-l { left: 28%; }
+.art-cd-eye-r { right: 28%; }
+.art-cd-mouth {
+  position: absolute;
+  bottom: 22%; left: 50%;
+  transform: translateX(-50%);
+  width: 40%; height: 18%;
+  border-radius: 0 0 99px 99px;
+  background: #fff;
+}
+
+/* Mini 3-cell board — same observed-cell look (white border, color drop
+   shadow). One CSS variable per cell so the pop and color swap stay
+   together when JS toggles state classes. */
+.art-cd-board {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  background: #f8f0ea;
+  border-radius: 4px 4px 12px 12px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+  min-height: 48px;
+}
+.art-cd-cell {
+  --cd-color: #d8c8b8;
+  --cd-color-dark: #a89685;
+  --cd-color-shadow: rgba(0,0,0,0.18);
+  position: relative;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--cd-color);
+  border: 2px solid white;
+  box-sizing: border-box;
+  box-shadow: 0 2px 0 var(--cd-color-dark), 0 3px 8px var(--cd-color-shadow);
+  transition: background 200ms ease, box-shadow 200ms ease, transform 200ms ease, opacity 200ms ease;
+}
+.art-cd-cell .art-cd-eye,
+.art-cd-cell .art-cd-mouth { opacity: 0; transition: opacity 200ms ease; }
+.art-cd-cell.is-filled .art-cd-eye,
+.art-cd-cell.is-filled .art-cd-mouth { opacity: 1; }
+.art-cd-cell.is-popping {
+  animation: artCdPop 480ms ease-out forwards;
+}
+@keyframes artCdPop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18); }
+  100% { transform: scale(0.2); opacity: 0; }
+}
+
+/* Color presets — applied as classes to NEXT mascot, NEXT strip, and
+   cells. The drop-shadow color comes from --cd-color-shadow which has to
+   be tweaked per hue (yellow uses a different alpha base). */
+.art-cd-next-strip.is-r,
+.art-cd-next-mascot.is-r,
+.art-cd-cell.is-r { --cd-color: rgb(var(--r)); --cd-color-dark: rgb(var(--r-dark)); --cd-color-shadow: rgba(255,107,139,0.4); }
+.art-cd-next-strip.is-b,
+.art-cd-next-mascot.is-b,
+.art-cd-cell.is-b { --cd-color: rgb(var(--b)); --cd-color-dark: rgb(var(--b-dark)); --cd-color-shadow: rgba(95,179,255,0.4); }
+.art-cd-next-strip.is-y,
+.art-cd-next-mascot.is-y,
+.art-cd-cell.is-y { --cd-color: rgb(var(--y)); --cd-color-dark: rgb(var(--y-dark)); --cd-color-shadow: rgba(255,206,90,0.4); }
+
+/* NEXT-watch hint arrow. A short ↓ chevron appears between the NEXT strip
+   and the board the first time the demo starts, reinforcing the
+   "look up here" cue. Fades out after the second cycle. */
+.art-cd-hint {
+  align-self: center;
+  font: 800 18px/1 'Baloo 2', 'Fredoka', sans-serif;
+  color: var(--cd-color, rgb(var(--b)));
+  margin: -4px 0;
+  opacity: 0;
+  transition: opacity 320ms ease;
+  pointer-events: none;
+}
+.art-combo-demo.is-hinting .art-cd-hint { opacity: 1; }
+
+/* Combo readout — labeled like the real score card. */
+/* Mirrors the real score-card: label sits on top, value below — keeps
+   the two from fighting baseline alignment with different font sizes. */
+.art-cd-combo-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 2px;
+}
+.art-cd-combo-label {
+  font: 700 9px/1 'Baloo 2', 'Fredoka', sans-serif;
+  letter-spacing: 2px;
+  color: var(--soft);
+}
+.art-cd-combo {
+  font: 800 22px/1 'Baloo 2', 'Fredoka', 'Cafe24Ssurround', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  color: rgb(var(--y-dark));
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: center;
+  transition: transform 220ms ease, color 220ms ease;
+}
+.art-cd-combo.is-bumping { animation: artCdBump 480ms ease-out; }
+.art-cd-combo.is-breaking { color: rgb(var(--r)); animation: artCdBreak 480ms ease-out; }
+@keyframes artCdBump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+@keyframes artCdBreak {
+  0%   { transform: scale(1) rotate(0); }
+  25%  { transform: scale(1.15) rotate(-8deg); }
+  50%  { transform: scale(0.95) rotate(7deg); }
+  75%  { transform: scale(1.08) rotate(-4deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* === Slide 5 (NEW): quest / unlock-progress demo ===
+   Mirrors the real .next-unlock chip so the player sees the actual UI
+   they'll be tracking. JS counts the score up, the bar fills, and at
+   100% an "Unlocked!" toast pulses before the chip swaps to the next
+   milestone. Three quests cycle to communicate "more keep coming". */
+.art-quest-demo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+.art-qd-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 260px;
+  font-family: 'Cafe24Ssurround', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.art-qd-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.1;
+}
+.art-qd-label {
+  font-weight: 700;
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.art-qd-icon {
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.art-qd-name {
+  font-weight: 700;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+  transition: opacity 240ms ease;
+}
+.art-qd-name.is-locked {
+  color: #999;
+  letter-spacing: 1px;
+}
+.art-qd-lock {
+  font-size: 13px;
+  line-height: 1;
+  filter: grayscale(0.3);
+}
+.art-qd-bar {
+  position: relative;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.art-qd-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(90deg, rgb(var(--g)), rgb(var(--b)));
+  border-radius: 7px;
+  /* Smooth fill while the counter is rolling; the JS sets width every
+     ~32ms so a short transition smooths intermediate frames. */
+  transition: width 80ms linear;
+}
+.art-qd-bar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #444;
+  pointer-events: none;
+}
+/* Brief celebratory pulse when a quest completes. The toast slides up
+   from the chip and fades, then we move on to the next quest. */
+.art-qd-toast {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translate(-50%, 6px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgb(var(--y)), rgb(var(--r)));
+  color: #fff;
+  font: 800 11px/1 'Fredoka', 'Cafe24Ssurround', sans-serif;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 3px 10px rgba(255, 107, 139, 0.4);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.art-quest-demo.is-celebrating .art-qd-toast {
+  opacity: 1;
+  transform: translate(-50%, -2px);
+  animation: artQdToastBounce 600ms ease-out;
+}
+@keyframes artQdToastBounce {
+  0%   { transform: translate(-50%, 6px) scale(0.7); opacity: 0; }
+  35%  { transform: translate(-50%, -4px) scale(1.12); opacity: 1; }
+  60%  { transform: translate(-50%, -2px) scale(1); }
+  100% { transform: translate(-50%, -2px) scale(1); opacity: 1; }
+}
+/* When the toast is up the bar fill briefly glows. */
+.art-quest-demo.is-celebrating .art-qd-bar-fill {
+  box-shadow: 0 0 12px 2px rgba(255, 206, 90, 0.7);
+}
+
+/* === Slide 5 (LEGACY): roster of mascots with mystery placeholders === */
+.art-roster {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.art-mascot.tiny {
+  width: 44px; height: 44px;
+  animation: artHop 1.4s ease-in-out infinite;
+}
+.art-mascot.tiny:nth-child(1) { animation-delay: 0s; }
+.art-mascot.tiny:nth-child(2) { animation-delay: 0.1s; }
+.art-mascot.tiny:nth-child(3) { animation-delay: 0.2s; }
+.art-mascot.tiny:nth-child(4) { animation-delay: 0.3s; }
+.art-mascot.tiny:nth-child(5) { animation-delay: 0.4s; }
+.art-mascot.tiny.r { box-shadow: 0 3px 0 rgb(var(--r-dark)); }
+.art-mascot.tiny.b { box-shadow: 0 3px 0 rgb(var(--b-dark)); }
+.art-mascot.tiny.y { box-shadow: 0 3px 0 rgb(var(--y-dark)); }
+.art-mascot.tiny.mystery {
+  background: #e0d4c8;
+  box-shadow: 0 3px 0 #b8a496;
+  display: grid;
+  place-items: center;
+}
+.art-mascot.tiny.mystery::before,
+.art-mascot.tiny.mystery::after {
+  display: none;  /* hide mascot eyes — placeholder instead */
+}
+.art-mystery {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: white;
+  text-shadow: 0 2px 0 #b8a496;
+}
+
+/* === Dots indicator === */
+.coach-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0 16px;
+}
+.coach-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #e0d4c8;
+  transition: all 0.3s ease;
+}
+.coach-dot.active {
+  width: 24px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(var(--r)), rgb(var(--y)));
+}
+
+/* === Actions === */
+.coach-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.coach-prev,
+.coach-next {
+  border: none;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+.coach-prev {
+  background: none;
+  color: var(--soft);
+  padding: 10px 18px;
+}
+.coach-prev[hidden] { display: none; }
+.coach-next {
+  background: linear-gradient(135deg, rgb(var(--r)), rgb(var(--y)));
+  color: white;
+  padding: 12px 28px;
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(255,107,139,0.5);
+  margin-left: auto;
+}
+.coach-next.last {
+  background: linear-gradient(135deg, rgb(var(--g)), rgb(var(--b)));
+  box-shadow: 0 6px 14px rgba(95,179,255,0.5);
+}
+
+/* === Tutorial (modal popup) === */
+.tutorial {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 20, 50, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 120;
+  animation: tutorialFadeIn 0.3s ease-out;
+}
+.tutorial[style*="display: none"] { display: none !important; }
+.tutorial[hidden] { display: none !important; }
+@keyframes tutorialFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.tutorial-card {
+  background: white;
+  border-radius: 24px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  text-align: center;
+  animation: tutorialPop 0.4s cubic-bezier(.2,.7,.3,1.3);
+}
+@keyframes tutorialPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.tutorial h3 {
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 900;
+  font-size: 28px;
+  background: linear-gradient(90deg, rgb(var(--r)), rgb(var(--y)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0 0 16px;
+}
+.tutorial p {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 20px;
+}
+.tutorial p b {
+  font-weight: 700;
+  color: rgb(var(--r));
+}
+.tutorial button {
+  background: linear-gradient(135deg, rgb(var(--r)), rgb(var(--y)));
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 999px;
+  font-family: 'Baloo 2', 'Cafe24Ssurround', 'KosugiMaru', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(255,107,139,0.5);
+}
+
+/* === Ad slot === */
+.ad-slot {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--ad-height);
+  z-index: 90;
+  pointer-events: none;
+}
+
+.cell.autoplay-pick {
+  outline: 3px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -3px;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.6), 0 0 32px rgba(120, 200, 255, 0.5);
+  transition: outline 120ms ease-in, box-shadow 120ms ease-in;
+  z-index: 5;
+}
+
+/* "Next unlock" quest indicator: header row + tier progress bar. */
+.next-unlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  font-size: 11px;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+  /* Korean-only font stack so Hangul + digits share one baseline. */
+  font-family: 'Cafe24Ssurround', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  line-height: 1;
+}
+.next-unlock-head,
+.next-unlock-bar-text {
+  line-height: 1;
+}
+/* Digits rendered in a Latin-first font + nudged down to share the
+   Hangul baseline. Applied by wrapNumbers() in game.js. */
+.quest-num {
+  font-family: 'Fredoka', 'Baloo 2', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  position: relative;
+  top: 0.08em;
+}
+.next-unlock-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.next-unlock-label {
+  font-weight: 700;
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.next-unlock-name {
+  font-weight: 700;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+  /* Wrap on regular word boundaries only — keep tokens like "(1 ogni 4)"
+     intact instead of splitting around the parenthesis. */
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.next-unlock-bar {
+  position: relative;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.next-unlock-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(90deg, rgb(var(--g)), rgb(var(--b)));
+  border-radius: 6px;
+  transition: width 320ms cubic-bezier(.34, 1.2, .5, 1);
+}
+.next-unlock-bar-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 10px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 0.3px;
+}
+.next-unlock-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+}
+.next-unlock-icon .quest-icon {
+  width: 18px; height: 18px;
+}
+.next-unlock-icon .qm-icon { width: 18px; height: 18px; }
+
+/* Mini mascot dot — mirrors .cell.observed at 18px. */
+.quest-mascot {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+}
+.quest-mascot.g {
+  background: rgb(var(--g));
+  box-shadow: 0 2px 0 rgb(var(--g-dark));
+}
+.quest-mascot.p {
+  background: rgb(var(--p));
+  box-shadow: 0 2px 0 rgb(var(--p-dark));
+}
+.quest-mascot::before,
+.quest-mascot::after {
+  content: '';
+  position: absolute;
+  width: 11.5%; height: 13.5%;
+  background: #fff;
+  border-radius: 50%;
+  top: 32%;
+}
+.quest-mascot::before { left: 28%; }
+.quest-mascot::after  { right: 28%; }
+.quest-mascot-face {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 38%; height: 16%;
+  border-radius: 0 0 99px 99px;
+  background: #fff;
+}
+
+/* AI mini avatar — mirrors .ai-icon at 18px. */
+.quest-ai {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgb(var(--p)) 0%, rgb(var(--b)) 100%);
+  border: 1.2px solid #fff;
+  box-shadow: 0 2px 0 rgb(var(--p-dark));
+  position: relative;
+  /* border-box keeps the 18px outer size despite the 1.2px border, so
+     the AI icon stays vertically aligned with sibling quest icons. */
+  box-sizing: border-box;
+}
+.quest-ai::before,
+.quest-ai::after {
+  content: '';
+  position: absolute;
+  width: 14%; height: 16%;
+  background: #fff;
+  border-radius: 50%;
+  top: 32%;
+}
+.quest-ai::before { left: 26%; }
+.quest-ai::after  { right: 26%; }
+.quest-ai-face {
+  position: absolute;
+  bottom: 24%; left: 50%;
+  transform: translateX(-50%);
+  width: 36%; height: 14%;
+  border-radius: 0 0 99px 99px;
+  background: #fff;
+}
+
+/* Painted cell mini preview — plain dot, no facet/rivets.
+   Neutral gray instead of a mascot color because the in-game special
+   cell can land on any color. */
+.quest-painted {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  background: #b8b8c2;
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 2px 0 #6a6a76;
+}
+
+/* Cursed cell mini preview — faceted gradient + 4 corner rivets at
+   18px. Same neutral gray as painted to avoid implying a fixed color. */
+.quest-cursed {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  background: #b8b8c2;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 2px 0 #6a6a76;
+}
+.quest-cursed-facet {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 45deg at 50% 50%,
+    rgba(255,255,255,0.32) 0deg,
+    rgba(0,0,0,0.12) 90deg,
+    rgba(255,255,255,0.32) 180deg,
+    rgba(0,0,0,0.12) 270deg,
+    rgba(255,255,255,0.32) 360deg);
+}
+.quest-cursed-rivet {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%,
+    #ffffff 0%, #cccccc 20%, #888894 55%, #444450 85%, #14141c 100%);
+}
+.quest-cursed-rivet.tl { top: 1px; left: 1px; }
+.quest-cursed-rivet.tr { top: 1px; right: 1px; }
+.quest-cursed-rivet.bl { bottom: 1px; left: 1px; }
+.quest-cursed-rivet.br { bottom: 1px; right: 1px; }
+
+.autoplay-bar {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 8px;
+  padding: 4px 4px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+#autoplay-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(136, 85, 216, 0.14);
+  color: #444;
+  border: 1px solid rgba(136, 85, 216, 0.22);
+  border-radius: 999px;
+  /* Fixed height keeps autoplay aligned with the destroy button despite
+     the larger AI mascot icon (22 px vs the 18 px hammer). */
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 12px 0 6px;
+  font: 600 12px/1 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  cursor: pointer;
+}
+#autoplay-btn[hidden] { display: none; }
+#autoplay-btn:disabled { cursor: default; }
+#autoplay-btn.locked {
+  opacity: 0.55;
+  filter: grayscale(0.5);
+}
+#autoplay-btn .ai-text { white-space: nowrap; }
+/* Remaining-ad-watch badge on the AI button. Each AI use costs one ad,
+   so the badge always carries the AD label + the remaining count. */
+.autoplay-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #8855d8;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+.autoplay-badge[hidden] { display: none; }
+.autoplay-badge.is-exhausted {
+  background: #c8c8d0;
+  color: #fff;
+}
+#autoplay-btn.is-exhausted {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* Destroy (1-cell remover) button — sits to the right of autoplay. */
+#destroy-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(208, 64, 96, 0.14);
+  color: #6a2030;
+  border: 1px solid rgba(208, 64, 96, 0.26);
+  border-radius: 999px;
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 12px 0 10px;
+  font: 600 12px/1 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  cursor: pointer;
+}
+/* `display: inline-flex` above wins over the user-agent
+   `[hidden] { display: none }` due to ID specificity. Restore the hide
+   behavior explicitly so updateDestroyUI()'s score gate works. */
+#destroy-btn[hidden] { display: none; }
+#destroy-btn.is-active {
+  background: rgb(var(--r));
+  color: #fff;
+  border-color: rgb(var(--r-dark));
+}
+#destroy-btn .destroy-icon {
+  width: 18px; height: 18px;
+  display: block;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.18));
+}
+#destroy-btn.is-active .destroy-icon {
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.28));
+}
+#destroy-btn .destroy-text {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  line-height: 1;
+}
+/* Count badge — visually separates the number from the label, fixes the
+   baseline mismatch (label uses the heading font, the number uses a
+   tabular face), and turns the "0" state into a clear "AD" affordance
+   so the player knows the rewarded-ad flow is the next step. */
+.destroy-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgb(var(--r));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+#destroy-btn.is-active .destroy-badge {
+  background: #fff;
+  color: rgb(var(--r-dark));
+}
+.destroy-badge.is-ad {
+  background: linear-gradient(135deg, #ffb84a, #ff7a3d);
+  color: #fff;
+  letter-spacing: 0.4px;
+  font-size: 10px;
+}
+#destroy-btn.is-active .destroy-badge.is-ad {
+  color: #fff;
+}
+.destroy-badge.is-exhausted {
+  background: #c8c8d0;
+  color: #fff;
+}
+#destroy-btn.is-exhausted {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* Destroy mascot in modal — hammer icon styled like AI mascot. */
+.destroy-mascot {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgb(var(--r)) 0%, rgb(var(--y)) 100%);
+  border: 2.5px solid #fff;
+  box-shadow: 0 4px 0 rgb(var(--r-dark)), 0 8px 18px rgba(0,0,0,0.28);
+  display: grid; place-items: center;
+}
+.destroy-mascot svg {
+  width: 40px; height: 40px;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+}
+
+/* Destroy mode visuals: NEXT strip splits — left side shows the prompt,
+   right side keeps the NEXT mascot/text. Board gets a soft red ring. */
+.next-strip.destroy-mode {
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><g transform='rotate(-32 12 12)' fill='white' opacity='0.18'><rect x='11' y='9' width='2.5' height='13' rx='1.25'/><rect x='6.2' y='3' width='11.6' height='6.6' rx='1.6'/></g></svg>"),
+    linear-gradient(180deg, #3a3a44, #5a5a66) !important;
+  background-size: 32px 32px, auto;
+  background-repeat: repeat, no-repeat;
+}
+.destroy-mode .board-frame {
+  box-shadow: 0 8px 22px var(--shadow), 0 0 0 2px rgb(var(--r));
+}
+
+/* Autoplay-active: lock the board against user input. The autoplay button
+   itself stays interactive so the user can press Stop AI. The board dims
+   subtly so the interaction lock is visually self-evident. */
+.autoplay-active .board {
+  pointer-events: none;
+}
+.autoplay-active .board-frame {
+  opacity: 0.92;
+  filter: saturate(0.92);
+  transition: opacity 200ms ease, filter 200ms ease;
+}
+
+/* Cell destroy flash animation — keeps the grid transform intact (no scale/
+   rotate, which would clobber the inline translate). Only opacity + filter
+   change so the cell visibly "pops" at its current position before removal. */
+.cell.destroy-flash {
+  animation: destroyFlash 200ms cubic-bezier(.2,.6,.3,1) forwards;
+  z-index: 4;
+}
+@keyframes destroyFlash {
+  0%   { filter: brightness(1) saturate(1); opacity: 1; }
+  35%  { filter: brightness(1.8) saturate(1.4); opacity: 1; }
+  100% { filter: brightness(2.4) saturate(1.6); opacity: 0; }
+}
+
+/* Shatter shards: small color chunks flying outward with rotation + gravity. */
+.shatter-shard {
+  position: absolute;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  animation: shatterFly 700ms cubic-bezier(.25,.7,.4,1) forwards;
+}
+@keyframes shatterFly {
+  0%   { transform: translate(-50%, -50%) rotate(0) scale(1); opacity: 1; }
+  60%  { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)) scale(0.4); opacity: 0; }
+}
+
+/* Shock ring expanding outward at the destroy point. */
+.shatter-ring {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.85);
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: none;
+  z-index: 4;
+  animation: shatterRing 500ms cubic-bezier(.2,.7,.3,1) forwards;
+}
+@keyframes shatterRing {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 1; border-width: 4px; }
+  100% { transform: translate(-50%, -50%) scale(4.5); opacity: 0; border-width: 1px; }
+}
+
+/* Remove legacy rewind animation rules (kept here as no-op shells in case
+   any old DOM still has these classes). */
+.cell.rewind-fade-out, .cell.rewind-flash { animation: none; }
+
+/* Mascot+sparkle icon — used in the button and the modal. */
+.ai-icon { position: relative; width: 22px; height: 22px; display: inline-block; flex: 0 0 auto; }
+.ai-icon.big { width: 64px; height: 64px; }
+.ai-icon .ai-face {
+  position: absolute; inset: 2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgb(var(--p)) 0%, rgb(var(--b)) 100%);
+  border: 1.5px solid #fff;
+  box-shadow: 0 2px 0 rgb(var(--p-dark)), 0 4px 10px rgba(0,0,0,0.22);
+}
+.ai-icon.big .ai-face {
+  inset: 2px;
+  border-width: 2.5px;
+  box-shadow: 0 4px 0 rgb(var(--p-dark)), 0 8px 18px rgba(0,0,0,0.28);
+}
+.ai-icon .ai-face::before, .ai-icon .ai-face::after {
+  content: ""; position: absolute;
+  width: 14%; height: 16%; background: #fff; border-radius: 50%; top: 32%;
+}
+.ai-icon .ai-face::before { left: 26%; }
+.ai-icon .ai-face::after  { right: 26%; }
+.ai-icon .ai-mouth {
+  position: absolute; bottom: 24%; left: 50%; transform: translateX(-50%);
+  width: 36%; height: 14%;
+  border-radius: 0 0 99px 99px;
+  background: #fff;
+}
+.ai-icon .ai-sparkle {
+  position: absolute; right: -2px; top: -2px;
+  width: 9px; height: 9px;
+  background: #ffeb6e;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  filter: drop-shadow(0 0 2px rgba(255,200,0,0.85));
+}
+.ai-icon.big .ai-sparkle { width: 22px; height: 22px; right: -4px; top: -4px; }
+
+#autoplay-status {
+  background: rgba(136, 85, 216, 0.14);
+  color: #444;
+  border: 1px solid rgba(136, 85, 216, 0.22);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font: 600 12px/1 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  white-space: nowrap;
+  display: none;
+}
+#autoplay-status.show { display: inline-block; }
+
+/* Autoplay confirmation modal — friendly mascot-led prompt. */
+.autoplay-modal {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.autoplay-modal[hidden] { display: none; }
+.autoplay-modal-inner {
+  position: relative;
+  background: white;
+  border-radius: 18px;
+  padding: 28px 24px 22px;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+  text-align: center;
+}
+.autoplay-modal-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 28px; height: 28px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 16px; color: #888;
+}
+.autoplay-modal-mascot {
+  display: flex; justify-content: center;
+  margin: 4px 0 14px;
+}
+.challenge-score {
+  font: 800 56px/1 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, system-ui, sans-serif;
+  letter-spacing: -1.5px;
+  background: linear-gradient(135deg, rgb(var(--r)), rgb(var(--p)));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-align: center;
+  margin: 4px 0 14px;
+}
+.autoplay-modal-title {
+  margin: 0 0 10px;
+  font: 700 17px/1.3 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  color: #333;
+}
+.autoplay-modal-desc {
+  margin: 0 0 22px;
+  font: 500 13px/1.55 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  color: #666;
+}
+.autoplay-modal-actions {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.autoplay-modal-primary {
+  background: linear-gradient(135deg, rgb(var(--p)), rgb(var(--b)));
+  color: white; border: none;
+  border-radius: 999px;
+  padding: 12px 16px;
+  font: 600 14px/1.2 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(136, 85, 216, 0.3);
+}
+.autoplay-modal-secondary {
+  background: transparent;
+  color: #888; border: none;
+  padding: 8px;
+  font: 600 13px/1.2 'Fredoka', 'Cafe24Ssurround', 'KosugiMaru', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Hiragino Sans', system-ui, sans-serif;
+  cursor: pointer;
+}
+/* "Don't show again" checkbox under the primary/secondary buttons.
+   Small, low-contrast — it's an opt-out, not a primary action. */
+.autoplay-modal-dontshow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  user-select: none;
+}
+.autoplay-modal-dontshow input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: rgb(var(--p));
+}
+
+/* === Rewind animation helpers === */
+.cell.rewind-fade-out {
+  animation: rewindFadeOut 500ms ease forwards;
+}
+.cell.rewind-flash {
+  animation: rewindFlash 500ms ease;
+}
+@keyframes rewindFadeOut {
+  0%   { opacity: 1; transform: var(--cell-transform, none) scale(1); filter: brightness(1); }
+  60%  { opacity: 0.8; filter: brightness(1.4); }
+  100% { opacity: 0; transform: var(--cell-transform, none) scale(0.5); filter: brightness(1.6); }
+}
+@keyframes rewindFlash {
+  0%   { filter: brightness(1); transform: var(--cell-transform, none) scale(1); }
+  40%  { filter: brightness(1.5); transform: var(--cell-transform, none) scale(1.06); }
+  100% { filter: brightness(1); transform: var(--cell-transform, none) scale(1); }
+}
+
+/* While an ad banner shows/hides, the .app padding changes and the board
+   reflows; suppress cell + frame transitions briefly so nothing jitters. */
+html.ads-reflowing .cell,
+html.ads-reflowing .board-frame,
+html.ads-reflowing .board-stack {
+  transition: none !important;
+}
+
+/* === Inline SVG icons (replace emoji to avoid OS-specific rendering) === */
+.qm-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  /* The icon must not absorb taps; the parent button needs to receive them. */
+  pointer-events: none;
+}
+/* Filled-style icons inherit fill from currentColor (default for most of the
+   icon set). Stroke-style icons declare fill="none" + stroke="currentColor"
+   on the SVG itself; nothing else needed. */
+.qm-icon:not([fill="none"]) { fill: currentColor; }
+.qm-icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+}
+/* Buttons/text containers that host both an icon slot AND a text label become
+   a flex row so the SVG and label sit on a shared center axis (avoids the
+   inline-block + baseline drift problem). */
+.settings-cta,
+.action,
+.gtitle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  line-height: 1.2;
+}
+.settings-cta { width: 100%; }
+.action { /* keep existing padding/radius */ }
+/* When the slot is the only thing in the element (icon-only tile), no gap. */
+.qa-icon, .revive-icon, .menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.qa-icon .qm-icon-slot,
+.revive-icon .qm-icon-slot,
+.menu-btn .qm-icon-slot { margin: 0; }
+.qa-icon .qm-icon { width: 22px; height: 22px; }
+.revive-icon .qm-icon { width: 0.9em; height: 0.9em; }
+.menu-btn .qm-icon { width: 18px; height: 18px; }
+/* Action buttons (share / restart on the game-over screen) — make icons
+   big enough to read at 14 px button font-size. The icons use stroke-based
+   geometry so they need more pixel real estate than a filled glyph. */
+.action .qm-icon { width: 18px; height: 18px; }
+
+/* ─── Cell probability tooltip (long-press inspector) ───────────────────── */
+.cell-prob-tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: rgba(20, 20, 28, 0.95);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  min-width: 110px;
+  animation: cell-prob-pop 120ms ease-out;
+}
+@keyframes cell-prob-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.cell-prob-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+.cell-prob-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.cell-prob-name {
+  flex: 1;
+  font-weight: 500;
+}
+.cell-prob-pct {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
