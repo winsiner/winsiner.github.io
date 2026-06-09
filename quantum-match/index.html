@@ -1,24 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=/cell-match/">
-<title>Cell Match</title>
-<script>
-(function () {
-  // Preserve the full path/query/hash. The new home shares the same
-  // tree layout; only the top-level folder name changed.
-  var loc = window.location;
-  var next = loc.pathname.replace('/quantum-match/', '/cell-match/') + loc.search + loc.hash;
-  window.location.replace(next);
-})();
-</script>
+<title>Quantum Match</title>
+<meta name="description" content="Quantum Match — a fresh match-3 puzzle.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://winsiner.github.io/quantum-match/en/">
+<link rel="alternate" hreflang="en" href="https://winsiner.github.io/quantum-match/en/">
+<link rel="alternate" hreflang="ko" href="https://winsiner.github.io/quantum-match/ko/">
+<link rel="alternate" hreflang="ja" href="https://winsiner.github.io/quantum-match/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://winsiner.github.io/quantum-match/zh-Hans/">
+<link rel="alternate" hreflang="zh-Hant" href="https://winsiner.github.io/quantum-match/zh-Hant/">
+<link rel="alternate" hreflang="es" href="https://winsiner.github.io/quantum-match/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://winsiner.github.io/quantum-match/pt-BR/">
+<link rel="alternate" hreflang="fr" href="https://winsiner.github.io/quantum-match/fr/">
+<link rel="alternate" hreflang="de" href="https://winsiner.github.io/quantum-match/de/">
+<link rel="alternate" hreflang="it" href="https://winsiner.github.io/quantum-match/it/">
+<link rel="alternate" hreflang="tr" href="https://winsiner.github.io/quantum-match/tr/">
+<link rel="alternate" hreflang="id" href="https://winsiner.github.io/quantum-match/id/">
+<link rel="alternate" hreflang="x-default" href="https://winsiner.github.io/quantum-match/en/">
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 40px; text-align: center; background: linear-gradient(180deg, #ffe1d6 0%, #c0e0ff 100%); min-height: 100vh; color: #22243d; }
+  noscript a { display: inline-block; margin: 8px; padding: 10px 18px; background: #1a1d2e; color: white; border-radius: 12px; text-decoration: none; font-weight: 600; }
+</style>
 </head>
 <body>
-<p>This page has moved. <a id="link" href="/cell-match/">Open Cell Match</a>.</p>
+<p style="font-size:20px;font-weight:700;">Quantum Match</p>
+<p id="msg" style="color:#5d6280;margin-top:8px;">Loading…</p>
+<noscript>
+  <p style="color:#5d6280;margin-top:16px;">Choose your language:</p>
+    <a href="./en/">English</a>
+  <a href="./ko/">한국어</a>
+  <a href="./ja/">日本語</a>
+  <a href="./zh-Hans/">简体中文</a>
+  <a href="./zh-Hant/">繁體中文</a>
+  <a href="./es/">Español</a>
+  <a href="./pt-BR/">Português</a>
+  <a href="./fr/">Français</a>
+  <a href="./de/">Deutsch</a>
+  <a href="./it/">Italiano</a>
+  <a href="./tr/">Türkçe</a>
+  <a href="./id/">Bahasa Indonesia</a>
+</noscript>
 <script>
-document.getElementById('link').href =
-  window.location.pathname.replace('/quantum-match/', '/cell-match/') + window.location.search + window.location.hash;
+(function() {
+  var SUPPORTED = ["en","ko","ja","zh-Hans","zh-Hant","es","pt-BR","fr","de","it","tr","id"];
+  var DEFAULT_LANG = 'en';
+  function pick() {
+    try {
+      var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+      for (var i = 0; i < langs.length; i++) {
+        var raw = (langs[i] || '').toLowerCase();
+        if (!raw) continue;
+        if (raw.indexOf('zh-tw') === 0 || raw.indexOf('zh-hk') === 0 || raw.indexOf('zh-mo') === 0 || raw.indexOf('zh-hant') === 0) {
+          if (SUPPORTED.indexOf('zh-Hant') >= 0) return 'zh-Hant';
+        }
+        if (raw.indexOf('zh') === 0) {
+          if (SUPPORTED.indexOf('zh-Hans') >= 0) return 'zh-Hans';
+        }
+        if (raw.indexOf('pt') === 0) {
+          if (SUPPORTED.indexOf('pt-BR') >= 0) return 'pt-BR';
+        }
+        var base = raw.split('-')[0];
+        if (SUPPORTED.indexOf(base) >= 0) return base;
+        if (SUPPORTED.indexOf(raw) >= 0) return raw;
+      }
+    } catch (_) {}
+    return DEFAULT_LANG;
+  }
+  var target = pick();
+  // Preserve query string + hash (for /?score=N pasted into root by mistake)
+  var qs = window.location.search || '';
+  var hash = window.location.hash || '';
+  window.location.replace('./' + target + '/' + qs + hash);
+})();
 </script>
 </body>
 </html>

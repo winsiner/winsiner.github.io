@@ -1,24 +1,364 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-Hans" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=/cell-match/zh-Hans/">
-<title>Cell Match</title>
-<script>
-(function () {
-  // Preserve the full path/query/hash. The new home shares the same
-  // tree layout; only the top-level folder name changed.
-  var loc = window.location;
-  var next = loc.pathname.replace('/quantum-match/', '/cell-match/') + loc.search + loc.hash;
-  window.location.replace(next);
-})();
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>量子配对 — 点击定色,连击爆分</title>
+<meta name="description" content="颜色流动、连击爆发的全新消除益智游戏。点击格子确定颜色,用 NEXT 颜色累积连击。">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="量子配对">
+<meta property="og:description" content="点击定色,连击爆分。全新消除玩法。">
+<meta property="og:image" content="https://winsiner.github.io/quantum-match/og.png">
+<meta property="og:url" content="https://winsiner.github.io/quantum-match/zh-Hans/">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="alternate" hreflang="en" href="https://winsiner.github.io/quantum-match/en/">
+<link rel="alternate" hreflang="ko" href="https://winsiner.github.io/quantum-match/ko/">
+<link rel="alternate" hreflang="ja" href="https://winsiner.github.io/quantum-match/ja/">
+<link rel="alternate" hreflang="zh-Hans" href="https://winsiner.github.io/quantum-match/zh-Hans/">
+<link rel="alternate" hreflang="zh-Hant" href="https://winsiner.github.io/quantum-match/zh-Hant/">
+<link rel="alternate" hreflang="es" href="https://winsiner.github.io/quantum-match/es/">
+<link rel="alternate" hreflang="pt-BR" href="https://winsiner.github.io/quantum-match/pt-BR/">
+<link rel="alternate" hreflang="fr" href="https://winsiner.github.io/quantum-match/fr/">
+<link rel="alternate" hreflang="de" href="https://winsiner.github.io/quantum-match/de/">
+<link rel="alternate" hreflang="it" href="https://winsiner.github.io/quantum-match/it/">
+<link rel="alternate" hreflang="tr" href="https://winsiner.github.io/quantum-match/tr/">
+<link rel="alternate" hreflang="id" href="https://winsiner.github.io/quantum-match/id/">
+<link rel="alternate" hreflang="x-default" href="https://winsiner.github.io/quantum-match/en/">
+
+<link rel="icon" href="../icon.png">
+
+<style>
+  :root {
+    --r: 255,107,139;   --r-dark: 208,64,96;
+    --y: 255,206,90;    --y-dark: 216,160,48;
+    --b: 95,179,255;    --b-dark: 64,144,216;
+    --accent-r: #ff5a6e;
+    --accent-p: #b078ff;
+    --text: #22243d;
+    --muted: #5d6280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(180deg, #ffe1d6 0%, #ffd0e1 35%, #d8d0ff 70%, #c0e0ff 100%);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ───────────────────────────────────────────── */
+  /* Fountain background wraps the hero block. The image fades into the
+     surrounding gradient at the bottom so the page scrolls without a hard
+     edge. On narrow viewports we crop in tighter so the side mascots
+     stay visible. */
+  .hero-wrap {
+    position: relative;
+    background-image: url('../hero-fountain.png');
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+  }
+  .hero-wrap::after {
+    /* Soft fade at the bottom so the fountain image dissolves into the
+       page's main gradient — no hard cut line. */
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, #d8d0ff);
+    pointer-events: none;
+  }
+  .hero {
+    text-align: center;
+    padding: 64px 24px 48px;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  h1 {
+    font-size: clamp(48px, 12vw, 88px);
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    line-height: 0.95;
+    background: linear-gradient(135deg, var(--accent-r), var(--accent-p));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 16px;
+  }
+  .tag {
+    font-size: clamp(16px, 4vw, 20px);
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 500;
+  }
+  /* Mascot trio (red / blue / yellow only — green & purple stay hidden as
+     unlock rewards in-game) using the in-game flat .go-mascot style. */
+  .mascots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 24px 0 36px;
+  }
+  .m {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    border: 4px solid white;
+    position: relative;
+    margin: 0 -8px;
+  }
+  .m::before, .m::after {
+    content: ""; position: absolute;
+    width: 11.5%; height: 13.5%;
+    background: white;
+    border-radius: 50%;
+    top: 32%;
+  }
+  .m::before { left: 28%; }
+  .m::after  { right: 28%; }
+  .m .gm {
+    position: absolute;
+    bottom: 24%; left: 50%;
+    transform: translateX(-50%);
+    width: 38%; height: 16%;
+    background: white;
+    border-radius: 0 0 99px 99px;
+  }
+  .m.r { background: rgb(var(--r)); box-shadow: 0 6px 0 rgb(var(--r-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 1; }
+  .m.b { background: rgb(var(--b)); box-shadow: 0 6px 0 rgb(var(--b-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 2; }
+  .m.y { background: rgb(var(--y)); box-shadow: 0 6px 0 rgb(var(--y-dark)), 0 9px 20px rgba(0,0,0,0.16); z-index: 3; }
+
+  /* Official store badges — Apple "Download on the App Store" and Google's
+     "Get it on Google Play" per Apple Marketing Guidelines + Google brand
+     guidelines. Both badges are PNG/SVG provided by the respective store
+     and must be rendered at the original aspect ratio without
+     modification. We just size by height. */
+  .stores {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .store-badge {
+    display: inline-block;
+    text-decoration: none;
+    transition: transform 0.15s ease;
+  }
+  .store-badge img {
+    display: block;
+    height: 52px;
+    width: auto;
+  }
+  .store-badge:hover { transform: translateY(-1px); }
+  .store-badge:active { transform: translateY(1px); }
+
+  /* ── Screenshot sections ────────────────────────────── */
+  .scenes {
+    max-width: 520px;
+    margin: 24px auto 0;
+    padding: 24px;
+  }
+  .scene {
+    margin-bottom: 64px;
+    text-align: center;
+  }
+  .scene img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 32px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+    margin-bottom: 20px;
+  }
+  .scene .punch {
+    font-size: clamp(28px, 7vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    line-height: 1.05;
+    color: var(--text);
+    margin-top: 12px;
+  }
+  .scene .punch .accent {
+    background: linear-gradient(135deg, var(--accent-r), var(--accent-p));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ── Closing CTA ───────────────────────────────────── */
+  .closing {
+    text-align: center;
+    padding: 24px 24px 32px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .closing h2 {
+    font-size: clamp(32px, 8vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, var(--accent-r), var(--accent-p));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ── Language dropdown (top-right, fixed) ──────────── */
+  /* Native <select> so mobile users get the OS picker. The visual wrap
+     is a pill with a small caret; the actual <select> covers it via
+     opacity:0 so clicks are still handled natively. */
+  .lang-picker {
+    position: fixed;
+    top: 16px; right: 16px;
+    z-index: 50;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 8px 30px 8px 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.4) inset;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 700 13px/1 'Fredoka', -apple-system, system-ui, sans-serif;
+    color: var(--text);
+    pointer-events: none;
+  }
+  .lang-picker::after {
+    /* Caret */
+    content: "";
+    position: absolute;
+    right: 14px; top: 50%;
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--text);
+    border-bottom: 2px solid var(--text);
+    transform: translateY(-70%) rotate(45deg);
+  }
+  .lang-picker select {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    font: inherit;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 24px;
+    padding: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
 </head>
 <body>
-<p>This page has moved. <a id="link" href="/cell-match/">Open Cell Match</a>.</p>
+
+<div class="lang-picker">
+  <span id="lang-picker-label">简体中文</span>
+  <select id="lang-picker-select" aria-label="语言">
+          <option value="en">English</option>
+      <option value="ko">한국어</option>
+      <option value="ja">日本語</option>
+      <option value="zh-Hans" selected>简体中文</option>
+      <option value="zh-Hant">繁體中文</option>
+      <option value="es">Español</option>
+      <option value="pt-BR">Português (BR)</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="it">Italiano</option>
+      <option value="tr">Türkçe</option>
+      <option value="id">Bahasa Indonesia</option>
+  </select>
+</div>
+
+<div class="hero-wrap">
+  <section class="hero">
+    <h1>点击定色,<br>连击爆分。</h1>
+    <p class="tag">颜色概率流动的全新消除益智游戏。</p>
+
+    <div class="stores">
+      <a class="store-badge" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener" aria-label="App Store">
+        <img src="../badges/app-store-en.svg" alt="App Store">
+      </a>
+      <a class="store-badge" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener" aria-label="Google Play">
+        <img src="../badges/google-play-en.svg" alt="Google Play">
+      </a>
+    </div>
+  </section>
+</div>
+
+<section class="scenes">
+  <div class="scene">
+    <img src="../shots/zh-Hans/1-hero.png" alt="" loading="lazy">
+    <p class="punch">一次点击,<br><span class="accent">颜色就在流动。</span></p>
+  </div>
+  <div class="scene">
+    <img src="../shots/zh-Hans/2-target.png" alt="" loading="lazy">
+    <p class="punch">锁定目标色,<br><span class="accent">引爆连击。</span></p>
+  </div>
+  <div class="scene">
+    <img src="../shots/zh-Hans/3-smash.png" alt="" loading="lazy">
+    <p class="punch">卡关?<br><span class="accent">砸碎就好。</span></p>
+  </div>
+  <div class="scene">
+    <img src="../shots/zh-Hans/4-cascade.png" alt="" loading="lazy">
+    <p class="punch"><span class="accent">史诗连击,</span><br>更高得分。</p>
+  </div>
+</section>
+
+<section class="closing">
+  <h2>准备好爆连击了吗?</h2>
+  <div class="stores">
+    <a class="store-badge" id="ios-btn-2" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener" aria-label="App Store">
+      <img src="../badges/app-store-en.svg" alt="App Store">
+    </a>
+    <a class="store-badge" id="android-btn-2" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener" aria-label="Google Play">
+      <img src="../badges/google-play-en.svg" alt="Google Play">
+    </a>
+  </div>
+</section>
+
+<footer>
+  <a href="/privacy/zh-Hans.html">隐私政策</a> · <a href="/">winsiner</a> · 2026
+</footer>
+
 <script>
-document.getElementById('link').href =
-  window.location.pathname.replace('/quantum-match/', '/cell-match/') + window.location.search + window.location.hash;
+  (function () {
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    if (isiOS) {
+      document.getElementById('android-btn').style.opacity = '0.55';
+      document.getElementById('android-btn-2').style.opacity = '0.55';
+    } else if (isAndroid) {
+      document.getElementById('ios-btn').style.opacity = '0.55';
+      document.getElementById('ios-btn-2').style.opacity = '0.55';
+    }
+
+    // Language picker: navigate to the chosen locale on change. We swap the
+    // last path segment (current lang) for the new one, preserving the rest.
+    var sel = document.getElementById('lang-picker-select');
+    if (sel) {
+      sel.addEventListener('change', function () {
+        var target = sel.value;
+        if (!target) return;
+        // Path looks like /quantum-match/<lang>/ — replace <lang> in place.
+        var parts = window.location.pathname.split('/');
+        // Find the quantum-match segment then replace the following one.
+        for (var i = 0; i < parts.length - 1; i++) {
+          if (parts[i] === 'quantum-match') {
+            parts[i + 1] = target;
+            break;
+          }
+        }
+        window.location.href = parts.join('/') || ('/quantum-match/' + target + '/');
+      });
+    }
+  })();
 </script>
 </body>
 </html>

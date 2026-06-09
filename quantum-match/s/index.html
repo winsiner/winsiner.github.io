@@ -1,24 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=/cell-match/s/">
-<title>Cell Match</title>
-<script>
-(function () {
-  // Preserve the full path/query/hash. The new home shares the same
-  // tree layout; only the top-level folder name changed.
-  var loc = window.location;
-  var next = loc.pathname.replace('/quantum-match/', '/cell-match/') + loc.search + loc.hash;
-  window.location.replace(next);
+<!doctype html><html><head><meta charset="utf-8"><title>Quantum Match</title><meta name="robots" content="noindex"><script>
+(function() {
+  var SUPPORTED = ["en","ko","ja","zh-Hans","zh-Hant","es","pt-BR","fr","de","it","tr","id"];
+  function pick() {
+    try {
+      var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+      for (var i = 0; i < langs.length; i++) {
+        var raw = (langs[i] || '').toLowerCase();
+        if (!raw) continue;
+        if (raw.indexOf('zh-tw') === 0 || raw.indexOf('zh-hk') === 0 || raw.indexOf('zh-mo') === 0 || raw.indexOf('zh-hant') === 0) {
+          if (SUPPORTED.indexOf('zh-Hant') >= 0) return 'zh-Hant';
+        }
+        if (raw.indexOf('zh') === 0) {
+          if (SUPPORTED.indexOf('zh-Hans') >= 0) return 'zh-Hans';
+        }
+        if (raw.indexOf('pt') === 0) {
+          if (SUPPORTED.indexOf('pt-BR') >= 0) return 'pt-BR';
+        }
+        var base = raw.split('-')[0];
+        if (SUPPORTED.indexOf(base) >= 0) return base;
+        if (SUPPORTED.indexOf(raw) >= 0) return raw;
+      }
+    } catch(_) {}
+    return 'en';
+  }
+  var target = pick();
+  var qs = window.location.search || '';
+  var hash = window.location.hash || '';
+  window.location.replace('../' + target + '/s/' + qs + hash);
 })();
-</script>
-</head>
-<body>
-<p>This page has moved. <a id="link" href="/cell-match/">Open Cell Match</a>.</p>
-<script>
-document.getElementById('link').href =
-  window.location.pathname.replace('/quantum-match/', '/cell-match/') + window.location.search + window.location.hash;
-</script>
-</body>
-</html>
+</script></head><body></body></html>

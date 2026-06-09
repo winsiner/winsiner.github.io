@@ -1,24 +1,240 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ja" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=/cell-match/ja/s/">
-<title>Cell Match</title>
-<script>
-(function () {
-  // Preserve the full path/query/hash. The new home shares the same
-  // tree layout; only the top-level folder name changed.
-  var loc = window.location;
-  var next = loc.pathname.replace('/quantum-match/', '/cell-match/') + loc.search + loc.hash;
-  window.location.replace(next);
-})();
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>クォンタム マッチ — このスコアを超えろ!</title>
+<meta name="description" content="友達がクォンタム マッチで高得点を出しました。超えられますか?">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="クォンタム マッチ — このスコアを超えられる?">
+<meta property="og:description" content="友達からのスコア挑戦状!">
+<meta property="og:image" content="https://winsiner.github.io/quantum-match/og-ja.png">
+<meta property="og:locale" content="ja">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="../../icon.png">
+
+<style>
+  :root {
+    --c-r:#ff5a6e; --c-r-d:#c8344a;
+    --c-y:#ffd23f; --c-y-d:#c79b1f;
+    --c-b:#4aa8ff; --c-b-d:#1f6cc7;
+    --c-g:#5acf6a; --c-g-d:#2f9a3f;
+    --c-p:#b078ff; --c-p-d:#7a44d6;
+    --text:#22243d;
+    --muted:#5d6280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    overflow-x: hidden;
+    background: linear-gradient(180deg, #ffe1d6 0%, #ffd0e1 35%, #d8d0ff 70%, #c0e0ff 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  body { position: relative; }
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.45) 45%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap { position: relative; z-index: 1; }
+  footer { position: relative; z-index: 1; }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 40px 20px 32px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+  .score-card { background: white; border-radius: 28px; padding: 32px 20px 28px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); margin-bottom: 28px; position: relative; overflow: hidden; }
+  .score-card::before { content: ""; position: absolute; inset: -2px; background: linear-gradient(135deg, var(--c-r), var(--c-y), var(--c-b), var(--c-g), var(--c-p)); border-radius: 28px; z-index: -1; opacity: 0.4; }
+  .score-label { font-size: 14px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .score-num { font-size: clamp(48px, 13vw, 88px); font-weight: 800; letter-spacing: -2px; line-height: 1; background: linear-gradient(135deg, var(--c-r), var(--c-p)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; word-break: keep-all; }
+  .score-msg { font-size: 17px; color: var(--muted); line-height: 1.45; }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 22px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--c-r), var(--c-y));
+    color: white;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 0.2px;
+    box-shadow: 0 6px 16px rgba(255, 90, 110, 0.45);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(255, 90, 110, 0.5); }
+  .cta:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(255, 90, 110, 0.4); }
+  .stores { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center; }
+  .store-badge { display: inline-block; text-decoration: none; transition: transform 0.15s ease; }
+  .store-badge img { display: block; height: 52px; width: auto; max-width: 100%; }
+
+  @media (max-width: 420px) {
+    .stores { gap: 10px; }
+    .store-badge img { height: 44px; }
+    .cta { font-size: 17px; padding: 14px 22px; }
+    .fountain { width: 56vw; height: 60vw; --u: 11vw; }
+    .fountain.left  { left: -18vw; }
+    .fountain.right { right: -18vw; }
+  }
+  .store-badge:hover { transform: translateY(-1px); }
+  .store-badge:active { transform: translateY(2px); }
+  footer {
+    text-align: center;
+    padding: 16px 24px;
+    font-size: 13px;
+    color: var(--muted);
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 35%, rgba(255,255,255,0.85) 100%);
+  }
+  footer a { color: var(--muted); text-decoration: underline; }
+  /* ── Mascot fountain backdrop ─────────────────────────
+     Live DOM rendition of the in-game mascots (copied from quantum-stack
+     store-assets/feature-graphic.html). Two .fountain origins anchor at the
+     bottom-left and bottom-right of the viewport; mascots erupt outward and
+     upward from each. `clamp()` on the unit size scales the whole spray with
+     viewport width so the layout looks balanced on phone and desktop alike. */
+  .fountain {
+    position: fixed;
+    bottom: 0;
+    width: clamp(220px, 42vw, 460px);
+    height: clamp(260px, 50vw, 540px);
+    pointer-events: none;
+    z-index: 0;
+    /* `--u` is the unit (a 100px mascot at desktop). All inner sizes scale
+       from it so a single var() tweak rescales the whole fountain. */
+    --u: clamp(48px, 9vw, 100px);
+  }
+  .fountain.left  { left: -6vw; }
+  .fountain.right { right: -6vw; transform: scaleX(-1); }
+  .fm {
+    position: absolute;
+    border-radius: 50%;
+    border: 0.06em solid white;
+    box-sizing: border-box;
+  }
+  .fm::before, .fm::after {
+    content: ""; position: absolute;
+    width: 11.5%; height: 13.5%;
+    background: white;
+    border-radius: 50%;
+    top: 32%;
+  }
+  .fm::before { left: 28%; }
+  .fm::after  { right: 28%; }
+  .fm .fgm {
+    position: absolute;
+    bottom: 24%; left: 50%;
+    transform: translateX(-50%);
+    width: 38%; height: 16%;
+    background: white;
+    border-radius: 0 0 99px 99px;
+  }
+  .fm.r { background: var(--c-r); box-shadow: 0 0.06em 0 var(--c-r-d), 0 0.09em 0.22em rgba(0,0,0,0.18); }
+  .fm.b { background: var(--c-b); box-shadow: 0 0.06em 0 var(--c-b-d), 0 0.09em 0.22em rgba(0,0,0,0.18); }
+  .fm.y { background: var(--c-y); box-shadow: 0 0.06em 0 var(--c-y-d), 0 0.09em 0.22em rgba(0,0,0,0.18); }
+  /* Default size = 1× --u. Modifier classes scale down for smaller drops. */
+  .fm        { width: var(--u);              height: var(--u);              font-size: var(--u); }
+  .fm.lg     { width: calc(var(--u) * 1.4);  height: calc(var(--u) * 1.4);  font-size: calc(var(--u) * 1.4); }
+  .fm.md     { width: calc(var(--u) * 0.95); height: calc(var(--u) * 0.95); font-size: calc(var(--u) * 0.95); }
+  .fm.sm     { width: calc(var(--u) * 0.6);  height: calc(var(--u) * 0.6);  font-size: calc(var(--u) * 0.6); }
+  .fm.xs     { width: calc(var(--u) * 0.38); height: calc(var(--u) * 0.38); font-size: calc(var(--u) * 0.38); }
+  .fm.tiny   { width: calc(var(--u) * 0.24); height: calc(var(--u) * 0.24); font-size: calc(var(--u) * 0.24); }
+</style>
 </head>
 <body>
-<p>This page has moved. <a id="link" href="/cell-match/">Open Cell Match</a>.</p>
+<div class="fountain left" aria-hidden="true">
+  <div class="fm b lg"   style="bottom: 0%;  left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r"      style="bottom: 4%;  left: 30%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y"      style="bottom: 4%;  left: 70%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 24%; left: 14%; transform: translateX(-50%) rotate(-12deg);"><div class="fgm"></div></div>
+  <div class="fm y md"   style="bottom: 26%; left: 82%; transform: translateX(-50%) rotate(14deg);"><div class="fgm"></div></div>
+  <div class="fm b md"   style="bottom: 42%; left: 36%; transform: translateX(-50%) rotate(-5deg);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 44%; left: 64%; transform: translateX(-50%) rotate(8deg);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 58%; left: 10%; transform: translateX(-50%) rotate(-22deg);"><div class="fgm"></div></div>
+  <div class="fm b sm"   style="bottom: 64%; left: 28%; transform: translateX(-50%) rotate(-10deg);"><div class="fgm"></div></div>
+  <div class="fm r sm"   style="bottom: 72%; left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 66%; left: 72%; transform: translateX(-50%) rotate(12deg);"><div class="fgm"></div></div>
+  <div class="fm r xs"   style="bottom: 82%; left: 38%; transform: translateX(-50%) rotate(-15deg);"><div class="fgm"></div></div>
+  <div class="fm b xs"   style="bottom: 88%; left: 56%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y tiny" style="bottom: 95%; left: 46%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r tiny" style="bottom: 92%; left: 64%; transform: translateX(-50%);"><div class="fgm"></div></div>
+</div>
+<div class="fountain right" aria-hidden="true">
+  <div class="fm b lg"   style="bottom: 0%;  left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r"      style="bottom: 4%;  left: 30%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y"      style="bottom: 4%;  left: 70%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 24%; left: 14%; transform: translateX(-50%) rotate(-12deg);"><div class="fgm"></div></div>
+  <div class="fm y md"   style="bottom: 26%; left: 82%; transform: translateX(-50%) rotate(14deg);"><div class="fgm"></div></div>
+  <div class="fm b md"   style="bottom: 42%; left: 36%; transform: translateX(-50%) rotate(-5deg);"><div class="fgm"></div></div>
+  <div class="fm r md"   style="bottom: 44%; left: 64%; transform: translateX(-50%) rotate(8deg);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 58%; left: 10%; transform: translateX(-50%) rotate(-22deg);"><div class="fgm"></div></div>
+  <div class="fm b sm"   style="bottom: 64%; left: 28%; transform: translateX(-50%) rotate(-10deg);"><div class="fgm"></div></div>
+  <div class="fm r sm"   style="bottom: 72%; left: 50%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y sm"   style="bottom: 66%; left: 72%; transform: translateX(-50%) rotate(12deg);"><div class="fgm"></div></div>
+  <div class="fm r xs"   style="bottom: 82%; left: 38%; transform: translateX(-50%) rotate(-15deg);"><div class="fgm"></div></div>
+  <div class="fm b xs"   style="bottom: 88%; left: 56%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm y tiny" style="bottom: 95%; left: 46%; transform: translateX(-50%);"><div class="fgm"></div></div>
+  <div class="fm r tiny" style="bottom: 92%; left: 64%; transform: translateX(-50%);"><div class="fgm"></div></div>
+</div>
+
+<div class="wrap">
+
+  <div class="score-card">
+    <div class="score-label">友達のスコア</div>
+    <div class="score-num" id="score">—</div>
+    <div class="score-msg">超えられますか?</div>
+  </div>
+
+  <button class="cta" id="try-it">🎮 挑戦する</button>
+
+  <div class="stores">
+    <a class="store-badge" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener" aria-label="App Store">
+      <img src="../../badges/app-store-en.svg" alt="App Store">
+    </a>
+    <a class="store-badge" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener" aria-label="Google Play">
+      <img src="../../badges/google-play-en.svg" alt="Google Play">
+    </a>
+  </div>
+</div>
+
+<footer>
+  <a href="../">クォンタム マッチについて</a> · <a href="/">winsiner</a> · 2026
+</footer>
+
 <script>
-document.getElementById('link').href =
-  window.location.pathname.replace('/quantum-match/', '/cell-match/') + window.location.search + window.location.hash;
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var score = parseInt(params.get('score'), 10);
+    if (!isFinite(score) || score < 0) score = 0;
+    var locale = "ja";
+    var formatted = score.toLocaleString(locale);
+    document.getElementById('score').textContent = formatted;
+
+    var ua = navigator.userAgent || '';
+    var isiOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    var IOS_STORE = 'https://apps.apple.com/app/quantum-match/id0000000000';
+    var ANDROID_STORE = 'https://play.google.com/store/apps/details?id=com.winsiner.quantummatch';
+
+    document.getElementById('try-it').addEventListener('click', function () {
+      if (isAndroid) { window.location.href = ANDROID_STORE; return; }
+      if (isiOS) { window.location.href = IOS_STORE; return; }
+      var stores = document.querySelector('.stores');
+      if (stores) stores.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  })();
 </script>
 </body>
 </html>
