@@ -1,11 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.winsiner.quantummatch",
       "sha256_cert_fingerprints": [
-        "TODO_REPLACE_WITH_PLAY_APP_SIGNING_SHA256_QUANTUMMATCH"
+        "TODO_REPLACE_WITH_PLAY_APP_SIGNING_SHA256_QUANTUMMATCH",
+        "65:2B:37:2D:4C:0E:31:89:E7:F8:D5:01:3D:C0:7F:AB:0C:27:BB:74:E1:CD:68:AC:2B:B9:27:07:05:5E:A1:FA"
       ]
     }
   },
