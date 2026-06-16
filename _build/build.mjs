@@ -91,7 +91,9 @@ const LANG_LABEL = {
 // so each locale links to the storefront whose primary language matches the page.
 const QM_APPSTORE_ID = '6771239973';
 const QM_APPSTORE_CC = {
-  'en': 'us', 'ko': 'kr', 'ja': 'jp', 'zh-Hans': 'cn', 'zh-Hant': 'tw',
+  // zh-Hans falls back to the US store: the app isn't published on the
+  // mainland China (cn) storefront, so a /cn/ link would 404.
+  'en': 'us', 'ko': 'kr', 'ja': 'jp', 'zh-Hans': 'us', 'zh-Hant': 'tw',
   'es': 'es', 'pt-BR': 'br', 'fr': 'fr', 'de': 'de', 'it': 'it', 'tr': 'tr', 'id': 'id',
 };
 function qmAppStoreUrl(lang) {
