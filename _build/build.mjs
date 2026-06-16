@@ -86,6 +86,22 @@ const LANG_LABEL = {
   'it': 'Italiano', 'tr': 'Türkçe', 'id': 'Bahasa Indonesia',
 };
 
+// Quantum Match App Store listing. The storefront country code in the URL path
+// drives the language Apple shows (e.g. /jp/ → Japanese, no code → US/English),
+// so each locale links to the storefront whose primary language matches the page.
+const QM_APPSTORE_ID = '6771239973';
+const QM_APPSTORE_CC = {
+  // zh-Hans points to the Taiwan (tw) store: the app isn't on the mainland
+  // China (cn) storefront, and Traditional Chinese is far more readable to
+  // Simplified readers than the English (US) listing would be.
+  'en': 'us', 'ko': 'kr', 'ja': 'jp', 'zh-Hans': 'tw', 'zh-Hant': 'tw',
+  'es': 'es', 'pt-BR': 'br', 'fr': 'fr', 'de': 'de', 'it': 'it', 'tr': 'tr', 'id': 'id',
+};
+function qmAppStoreUrl(lang) {
+  const cc = QM_APPSTORE_CC[lang] || 'us';
+  return `https://apps.apple.com/${cc}/app/id${QM_APPSTORE_ID}`;
+}
+
 function buildLangLinksHTML(slug, locales, currentLang) {
   return locales.map(l => {
     const cls = l.lang === currentLang ? 'active' : '';
@@ -163,6 +179,7 @@ function buildGame(game) {
       hreflangBlock: hreflangLanding,
     };
     const shareData = { ...loc, hreflangBlock: hreflangShare };
+    if (game.slug === 'quantum-match') shareData.appStoreUrl = qmAppStoreUrl(loc.lang);
 
     const landingHtml = interpolate(landingTpl, landingData);
     const shareHtml = interpolate(shareTpl, shareData);

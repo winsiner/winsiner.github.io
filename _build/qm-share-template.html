@@ -200,7 +200,7 @@
   <button class="cta" id="try-it">🎮 {{share.cta}}</button>
 
   <div class="stores">
-    <a class="store-badge" id="ios-btn" href="https://apps.apple.com/app/quantum-match/id0000000000" target="_blank" rel="noopener" aria-label="App Store">
+    <a class="store-badge" id="ios-btn" href="{{appStoreUrl}}" target="_blank" rel="noopener" aria-label="App Store">
       <img src="../../badges/app-store-en.svg" alt="App Store">
     </a>
     <a class="store-badge" id="android-btn" href="https://play.google.com/store/apps/details?id=com.winsiner.quantummatch" target="_blank" rel="noopener" aria-label="Google Play">
@@ -225,7 +225,7 @@
     var ua = navigator.userAgent || '';
     var isiOS = /iPhone|iPad|iPod/i.test(ua);
     var isAndroid = /Android/i.test(ua);
-    var IOS_STORE = 'https://apps.apple.com/app/quantum-match/id0000000000';
+    var IOS_STORE = '{{appStoreUrl}}';
     var ANDROID_STORE = 'https://play.google.com/store/apps/details?id=com.winsiner.quantummatch';
 
     document.getElementById('try-it').addEventListener('click', function () {
